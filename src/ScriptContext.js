@@ -1,20 +1,20 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
-import PropTypes from "prop-types";
-import { loadScript } from "@paypal/paypal-js";
+import React, {createContext, useContext, useEffect, useReducer} from 'react';
+import PropTypes from 'prop-types';
+import {loadScript} from '@paypal/paypal-js';
 
 const ScriptContext = createContext();
 const ScriptDispatchContext = createContext();
 
 function scriptReducer(state, action) {
     switch (action.type) {
-        case "setLoadingState":
+        case 'setLoadingState':
             return {
                 options: {
                     ...state.options,
                 },
                 isLoaded: action.value,
             };
-        case "changeCurrency":
+        case 'changeCurrency':
             return {
                 options: {
                     ...state.options,
@@ -34,13 +34,13 @@ function useScriptReducer() {
     const dispatchContext = React.useContext(ScriptDispatchContext);
     if (scriptContext === undefined || dispatchContext === undefined) {
         throw new Error(
-            "useScriptReducer must be used within a ScriptProvider"
+            'useScriptReducer must be used within a ScriptProvider'
         );
     }
     return [scriptContext, dispatchContext];
 }
 
-function ScriptProvider({ options, children }) {
+function ScriptProvider({options, children}) {
     const initialState = {
         options,
         isLoaded: false,
@@ -54,7 +54,7 @@ function ScriptProvider({ options, children }) {
         let isSubscribed = true;
         loadScript(state.options).then(() => {
             if (isSubscribed) {
-                dispatch({ type: "setLoadingState", value: true });
+                dispatch({type: 'setLoadingState', value: true});
             }
         });
         return () => {
@@ -74,8 +74,8 @@ function ScriptProvider({ options, children }) {
 ScriptProvider.propTypes = {
     children: PropTypes.any,
     options: PropTypes.shape({
-        "client-id": PropTypes.string.isRequired,
+        'client-id': PropTypes.string.isRequired,
     }),
 };
 
-export { ScriptProvider, useScriptReducer };
+export {ScriptProvider, useScriptReducer};

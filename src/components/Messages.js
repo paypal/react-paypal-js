@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
-import { useScriptReducer } from "../ScriptContext";
+import React, {useEffect, useRef} from 'react';
+import {useScriptReducer} from '../ScriptContext';
 
 export default function Messages() {
-    const [{ isLoaded }] = useScriptReducer();
+    const [{isLoaded}] = useScriptReducer();
     const messagesContainerRef = useRef(null);
 
     useEffect(() => {
@@ -10,12 +10,12 @@ export default function Messages() {
             // TODO: get message options from props
             const messagingOptions = {
                 amount: 500,
-                placement: "product",
+                placement: 'product',
                 style: {
-                    layout: "text",
+                    layout: 'text',
                     logo: {
-                        type: "primary",
-                        position: "top",
+                        type: 'primary',
+                        position: 'top',
                     },
                 },
             };

@@ -1,16 +1,16 @@
-import React, { useEffect, useRef } from "react";
-import PropTypes from "prop-types";
-import { useScriptReducer } from "../ScriptContext";
+import React, {useEffect, useRef} from 'react';
+import PropTypes from 'prop-types';
+import {useScriptReducer} from '../ScriptContext';
 
 export default function CheckoutButtons(props) {
-    const [{ isLoaded }] = useScriptReducer();
+    const [{isLoaded}] = useScriptReducer();
     const buttonsContainerRef = useRef(null);
     const buttons = useRef(null);
 
     useEffect(() => {
         if (isLoaded) {
-            const { createOrder, style } = props;
-            const options = { createOrder, style };
+            const {createOrder, style} = props;
+            const options = {createOrder, style};
             buttons.current = window.paypal.Buttons(options);
             buttons.current.render(buttonsContainerRef.current);
         } else {
@@ -18,9 +18,9 @@ export default function CheckoutButtons(props) {
                 try {
                     buttons.current
                         .close()
-                        .then(() => console.log("button cleaned up"));
+                        .then(() => console.log('button cleaned up'));
                 } catch (err) {
-                    console.log("button cleanup failed", err);
+                    console.log('button cleanup failed', err);
                 }
             }
         }
