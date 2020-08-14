@@ -1,16 +1,17 @@
 import React from 'react';
-import {render, waitFor} from '@testing-library/react';
-import * as payPalJS from '@paypal/paypal-js';
-import {ScriptProvider, useScriptReducer} from './ScriptContext';
+import { render, waitFor } from '@testing-library/react';
+import { loadScript } from '@paypal/paypal-js';
+
+import { ScriptProvider, useScriptReducer } from './ScriptContext';
 
 describe('<ScriptProvider />', () => {
-    let loadScriptBackup = payPalJS.loadScript;
+    const loadScriptBackup = loadScript;
 
     beforeEach(() => {
         document.head.innerHTML = '';
 
         // eslint-disable-next-line no-import-assign
-        payPalJS.loadScript = jest.fn().mockImplementation((options) => {
+        loadScript = jest.fn().mockImplementation((options) => {
             return new Promise((resolve) => {
                 loadScriptBackup(options);
                 process.nextTick(() => resolve());
@@ -19,7 +20,7 @@ describe('<ScriptProvider />', () => {
     });
 
     test('should add the JS SDK <script> to the DOM', () => {
-        render(<ScriptProvider options={{'client-id': 'sb'}} />);
+        render(<ScriptProvider options={ { 'client-id': 'sb' } } />);
 
         const script = document.querySelector('head script');
         expect(script).toBeTruthy();
@@ -27,9 +28,9 @@ describe('<ScriptProvider />', () => {
     });
 
     test('should set "isLoaded" state to true after loading the script', async () => {
-        const {state, TestComponent} = setupTestComponent();
+        const { state, TestComponent } = setupTestComponent();
         render(
-            <ScriptProvider options={{'client-id': 'sb'}}>
+            <ScriptProvider options={ { 'client-id': 'sb' } }>
                 <TestComponent />
             </ScriptProvider>
         );
@@ -42,9 +43,9 @@ describe('<ScriptProvider />', () => {
 
 describe('useScriptReducer', () => {
     test('should manage state for loadScript() options and for "isLoaded"', () => {
-        const {state, TestComponent} = setupTestComponent();
+        const { state, TestComponent } = setupTestComponent();
         render(
-            <ScriptProvider options={{'client-id': 'sb'}}>
+            <ScriptProvider options={ { 'client-id': 'sb' } }>
                 <TestComponent />
             </ScriptProvider>
         );
@@ -54,7 +55,7 @@ describe('useScriptReducer', () => {
     });
 
     test('should throw an error when used without <ScriptProvider>', () => {
-        const {TestComponent} = setupTestComponent();
+        const { TestComponent } = setupTestComponent();
 
         jest.spyOn(console, 'error');
         console.error.mockImplementation(() => {});
@@ -67,13 +68,13 @@ describe('useScriptReducer', () => {
 function setupTestComponent() {
     const state = {};
     function TestComponent() {
-        const [scriptState] = useScriptReducer();
+        const [ scriptState ] = useScriptReducer();
         Object.assign(state, scriptState);
         return null;
     }
 
     return {
         state,
-        TestComponent,
+        TestComponent
     };
 }

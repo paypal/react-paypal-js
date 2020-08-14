@@ -1,31 +1,31 @@
-import React, {createContext, useContext, useEffect, useReducer} from 'react';
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import {loadScript} from '@paypal/paypal-js';
+import { loadScript } from '@paypal/paypal-js';
 
 const ScriptContext = createContext();
 const ScriptDispatchContext = createContext();
 
 function scriptReducer(state, action) {
     switch (action.type) {
-        case 'setLoadingState':
-            return {
-                options: {
-                    ...state.options,
-                },
-                isLoaded: action.value,
-            };
-        case 'changeCurrency':
-            return {
-                options: {
-                    ...state.options,
-                    currency: action.value,
-                },
-                isLoaded: false,
-            };
+    case 'setLoadingState':
+        return {
+            options: {
+                ...state.options
+            },
+            isLoaded: action.value
+        };
+    case 'changeCurrency':
+        return {
+            options: {
+                ...state.options,
+                currency: action.value
+            },
+            isLoaded: false
+        };
 
-        default: {
-            throw new Error(`Unhandled action type: ${action.type}`);
-        }
+    default: {
+        throw new Error(`Unhandled action type: ${ action.type }`);
+    }
     }
 }
 
@@ -37,24 +37,24 @@ function useScriptReducer() {
             'useScriptReducer must be used within a ScriptProvider'
         );
     }
-    return [scriptContext, dispatchContext];
+    return [ scriptContext, dispatchContext ];
 }
 
-function ScriptProvider({options, children}) {
+function ScriptProvider({ options, children }) {
     const initialState = {
         options,
-        isLoaded: false,
+        isLoaded: false
     };
 
-    const [state, dispatch] = useReducer(scriptReducer, initialState);
+    const [ state, dispatch ] = useReducer(scriptReducer, initialState);
 
     useEffect(() => {
-        if (state.isLoaded) return;
+        if (state.isLoaded) { return; }
 
         let isSubscribed = true;
         loadScript(state.options).then(() => {
             if (isSubscribed) {
-                dispatch({type: 'setLoadingState', value: true});
+                dispatch({ type: 'setLoadingState', value: true });
             }
         });
         return () => {
@@ -63,8 +63,8 @@ function ScriptProvider({options, children}) {
     });
 
     return (
-        <ScriptContext.Provider value={state}>
-            <ScriptDispatchContext.Provider value={dispatch}>
+        <ScriptContext.Provider value={ state }>
+            <ScriptDispatchContext.Provider value={ dispatch }>
                 {children}
             </ScriptDispatchContext.Provider>
         </ScriptContext.Provider>
@@ -73,9 +73,9 @@ function ScriptProvider({options, children}) {
 
 ScriptProvider.propTypes = {
     children: PropTypes.any,
-    options: PropTypes.shape({
-        'client-id': PropTypes.string.isRequired,
-    }),
+    options:  PropTypes.shape({
+        'client-id': PropTypes.string.isRequired
+    })
 };
 
-export {ScriptProvider, useScriptReducer};
+export { ScriptProvider, useScriptReducer };
