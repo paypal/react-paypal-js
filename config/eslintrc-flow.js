@@ -1,11 +1,11 @@
 // eslint-disable-next-line import/no-commonjs
 module.exports = {
-    extends: [ './eslintrc-browser.js' ],
-    plugins: [
+    'extends': [ './eslintrc-browser.js' ],
+    'plugins': [
         'flowtype'
     ],
 
-    rules:   {
+    'rules':   {
         'flowtype/boolean-style':                    [ 'error', 'boolean' ],
         'flowtype/define-flow-type':                 'off',
         'flowtype/delimiter-dangle':                 [ 'error', 'never' ],
