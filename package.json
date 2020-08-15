@@ -46,7 +46,6 @@
         "husky": "^4.2.5",
         "jest": "^26.1.0",
         "lint-staged": "^10.2.11",
-        "prettier": "^2.0.5",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "rollup": "^2.21.0"
@@ -61,12 +60,8 @@
         }
     },
     "lint-staged": {
-        "*.js": [
-            "prettier --write",
+        "*.{js,jsx,json}": [
             "eslint"
-        ],
-        "*.{json,css,html,md}": [
-            "prettier --write"
         ]
     }
 }
