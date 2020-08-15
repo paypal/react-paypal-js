@@ -8,6 +8,7 @@ export default function Messages() {
 
     useEffect(() => {
         if (isLoaded) {
+            // eslint-disable-next-line no-warning-comments
             // TODO: get message options from props
             const messagingOptions = {
                 amount:    500,

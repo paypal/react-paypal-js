@@ -19,12 +19,16 @@ export default function CheckoutButtons(props) {
                 try {
                     buttons.current
                         .close()
-                        .then(() => console.log('button cleaned up'));
+                        .then(() => {
+                            // console.log('button cleaned up');
+                        });
                 } catch (err) {
-                    console.log('button cleanup failed', err);
+                    // console.log('button cleanup failed', err);
                 }
             }
         }
+        
+        // eslint-disable-next-line no-warning-comments
         // TODO: figure out if any cleanup work needs to be done (await buttons.close())
         // return () => {
         //     if (buttons.current) {

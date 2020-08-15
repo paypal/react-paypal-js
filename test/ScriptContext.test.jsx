@@ -60,9 +60,12 @@ describe('useScriptReducer', () => {
         const { TestComponent } = setupTestComponent();
 
         jest.spyOn(console, 'error');
+
+        // eslint-disable-next-line no-console, no-empty-function
         console.error.mockImplementation(() => {});
 
         expect(() => render(<TestComponent />)).toThrow();
+        // eslint-disable-next-line no-console
         console.error.mockRestore();
     });
 });
