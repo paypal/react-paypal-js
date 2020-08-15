@@ -45,7 +45,6 @@
         "http-server": "^0.12.3",
         "husky": "^4.2.5",
         "jest": "^26.1.0",
-        "lint-staged": "^10.2.11",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "rollup": "^2.21.0"
@@ -56,12 +55,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "npm run lint"
         }
-    },
-    "lint-staged": {
-        "*.{js,jsx,json}": [
-            "npm run lint"
-        ]
     }
 }
