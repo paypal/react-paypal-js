@@ -8,7 +8,7 @@
         "build": "rollup --config",
         "format": "prettier .",
         "format-write": "prettier --write .",
-        "lint": "eslint --ext .js --ext .jsx config/ src/ test/ *.js",
+        "lint": "eslint . --ext .js,.jsx",
         "test": "jest"
     },
     "files": [
@@ -33,7 +33,7 @@
         "@testing-library/react": "^10.4.7",
         "babel-eslint": "^10.1.0",
         "babel-jest": "^26.1.0",
-        "eslint": "^7.4.0",
+        "eslint": "^7.7.0",
         "eslint-config-prettier": "^6.11.0",
         "eslint-plugin-compat": "^3.8.0",
         "eslint-plugin-const-immutable": "^2.1.0",
