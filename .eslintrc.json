@@ -1,6 +1,6 @@
 {
     "extends": [
-        "./.eslintrc-browser.js"
+        "./config/.eslintrc-browser.js"
     ],
     "rules": {
         "complexity":                   "off",

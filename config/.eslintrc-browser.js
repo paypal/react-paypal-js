@@ -569,5 +569,14 @@ module.exports = {
       'react/sort-prop-types': 'off',
       'react/style-prop-object': 'error',
       'react/void-dom-elements-no-children': 'error'
-    }
+    },
+
+    "overrides": [
+        {
+            "files": ["**/*package.json"],
+            "rules": {
+                "indent": [ "error", 2]
+            }
+        }
+    ]
 };
