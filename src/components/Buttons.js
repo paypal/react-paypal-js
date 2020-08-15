@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
-import PropTypes from "prop-types";
-import { useScriptReducer } from "../ScriptContext";
+import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+
+import { useScriptReducer } from '../ScriptContext';
 
 export default function CheckoutButtons(props) {
-    const [{ isLoaded }] = useScriptReducer();
+    const [ { isLoaded } ] = useScriptReducer();
     const buttonsContainerRef = useRef(null);
     const buttons = useRef(null);
 
@@ -18,9 +19,9 @@ export default function CheckoutButtons(props) {
                 try {
                     buttons.current
                         .close()
-                        .then(() => console.log("button cleaned up"));
+                        .then(() => console.log('button cleaned up'));
                 } catch (err) {
-                    console.log("button cleanup failed", err);
+                    console.log('button cleanup failed', err);
                 }
             }
         }
@@ -32,10 +33,10 @@ export default function CheckoutButtons(props) {
         // }
     });
 
-    return <div id="paypal-buttons" ref={buttonsContainerRef} />;
+    return <div id="paypal-buttons" ref={ buttonsContainerRef } />;
 }
 
 CheckoutButtons.propTypes = {
     createOrder: PropTypes.func,
-    style: PropTypes.object,
+    style:       PropTypes.object
 };
