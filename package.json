@@ -6,7 +6,8 @@
     "module": "dist/react-paypal.esm.js",
     "scripts": {
         "build": "rollup --config",
-        "format": "prettier --write .",
+        "format": "prettier .",
+        "format-write": "prettier --write .",
         "lint": "eslint . --ext .js,.jsx",
         "test": "jest"
     },

@@ -3,7 +3,6 @@
 
     "overrides": [
         {
-            // https://github.com/npm/npm/issues/4718
             "files": "package.json",
             "options": {
                 "tabWidth": 2
