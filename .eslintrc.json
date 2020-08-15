@@ -5,6 +5,7 @@
     "rules": {
         "complexity":                   "off",
         "max-nested-callbacks":         [ "error", 5 ],
+        "import/no-default-export":     "off",
         "react/prop-types":             "off",
         "react/style-prop-object":      "off",
         "react/display-name":           "off",

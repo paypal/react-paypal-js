@@ -49,7 +49,9 @@ function ScriptProvider({ options, children }) {
     const [ state, dispatch ] = useReducer(scriptReducer, initialState);
 
     useEffect(() => {
-        if (state.isLoaded) { return; }
+        if (state.isLoaded) {
+            return;
+        }
 
         let isSubscribed = true;
         loadScript(state.options).then(() => {
