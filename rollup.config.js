@@ -3,6 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 import pkg from './package.json';
 
+/* eslint import/no-default-export: off */
 export default {
     input:    'src/index.js',
     plugins:  [ nodeResolve(), babel({ presets: [ '@babel/preset-react' ] }) ],
