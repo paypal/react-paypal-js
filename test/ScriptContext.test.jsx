@@ -2,7 +2,9 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { loadScript } from '@paypal/paypal-js';
 
-import { ScriptProvider, useScriptReducer } from '../src/ScriptContext';
+import { ScriptProvider } from '../src/ScriptContext';
+
+import { setupTestComponent } from './util';
 
 describe('<ScriptProvider />', () => {
     const loadScriptBackup = loadScript;
@@ -64,17 +66,3 @@ describe('useScriptReducer', () => {
         console.error.mockRestore();
     });
 });
-
-function setupTestComponent() {
-    const state = {};
-    function TestComponent() {
-        const [ scriptState ] = useScriptReducer();
-        Object.assign(state, scriptState);
-        return null;
-    }
-
-    return {
-        state,
-        TestComponent
-    };
-}
