@@ -5,8 +5,7 @@ module.exports = {
             {
                 targets: {
                     node: 'current'
-                },
-                loose: true,
+                }
             }
         ]
     ],
