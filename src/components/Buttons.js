@@ -14,22 +14,17 @@ export default function CheckoutButtons(props) {
             buttons.current = window.paypal.Buttons(options);
             buttons.current.render(buttonsContainerRef.current);
         } else {
+            // close the buttons when the script is reloaded
             if (buttons.current) {
-                try {
-                    buttons.current
-                        .close()
-                        .then(() => console.log("button cleaned up"));
-                } catch (err) {
-                    console.log("button cleanup failed", err);
-                }
+                buttons.current.close();
             }
         }
-        // TODO: figure out if any cleanup work needs to be done (await buttons.close())
-        // return () => {
-        //     if (buttons.current) {
-        //         buttons.current.close();
-        //     }
-        // }
+        return () => {
+            // close the buttons when the component unmounts
+            if (buttons.current) {
+                buttons.current.close();
+            }
+        };
     });
 
     return <div id="paypal-buttons" ref={buttonsContainerRef} />;
