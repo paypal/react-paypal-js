@@ -2,16 +2,14 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useScriptReducer } from "../ScriptContext";
 
-export default function CheckoutButtons(props) {
+export default function Buttons(props) {
     const [{ isLoaded }] = useScriptReducer();
     const buttonsContainerRef = useRef(null);
     const buttons = useRef(null);
 
     useEffect(() => {
         if (isLoaded) {
-            const { createOrder, style } = props;
-            const options = { createOrder, style };
-            buttons.current = window.paypal.Buttons(options);
+            buttons.current = window.paypal.Buttons({ ...props });
             buttons.current.render(buttonsContainerRef.current);
         } else {
             // close the buttons when the script is reloaded
@@ -27,10 +25,10 @@ export default function CheckoutButtons(props) {
         };
     });
 
-    return <div id="paypal-buttons" ref={buttonsContainerRef} />;
+    return <div ref={buttonsContainerRef} />;
 }
 
-CheckoutButtons.propTypes = {
+Buttons.propTypes = {
     createOrder: PropTypes.func,
     style: PropTypes.object,
 };
