@@ -6,18 +6,18 @@ export default {
     component: PayPalButtons,
     argTypes: {
         shippingPreference: { control: null },
-        style: { control: null }
-    }
+        style: { control: null },
+    },
 };
 
 const defaultOptions = {
     "client-id": "sb",
-    components: "buttons"
+    components: "buttons",
 };
 
 function Template(args) {
     return (
-        <PayPalScriptProvider options={ defaultOptions }>
+        <PayPalScriptProvider options={defaultOptions}>
             <PayPalButtons {...args} />
         </PayPalScriptProvider>
     );
@@ -32,9 +32,9 @@ Default.args = {};
 Default.parameters = {
     docs: {
         source: {
-            code: '<PayPalButtons />'
-        }
-    }
+            code: "<PayPalButtons />",
+        },
+    },
 };
 
 export const Horizontal = Template.bind({});
@@ -47,9 +47,11 @@ Horizontal.args = {
 Horizontal.parameters = {
     docs: {
         source: {
-            code: `<PayPalButtons style={${prettyPrint(Horizontal.args.style)}} />`
-        }
-    }
+            code: `<PayPalButtons style={${prettyPrint(
+                Horizontal.args.style
+            )}} />`,
+        },
+    },
 };
 
 export const CustomStyle = Template.bind({});
@@ -65,7 +67,9 @@ CustomStyle.args = {
 CustomStyle.parameters = {
     docs: {
         source: {
-            code: `<PayPalButtons style={${prettyPrint(CustomStyle.args.style)}} />`
-        }
-    }
+            code: `<PayPalButtons style={${prettyPrint(
+                CustomStyle.args.style
+            )}} />`,
+        },
+    },
 };

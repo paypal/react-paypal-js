@@ -12,7 +12,6 @@ import { useScriptReducer } from "../ScriptContext";
  *     <PayPalButtons style={{ layout: "vertical" }} createOrder={(data, actions) => {}} />
  * ```
  */
-
 export default function PayPalButtons(props) {
     const [{ isLoaded }] = useScriptReducer();
     const buttonsContainerRef = useRef(null);
@@ -80,10 +79,6 @@ PayPalButtons.propTypes = {
      */
     onApprove: PropTypes.func,
     /**
-     * ?
-     */
-    onAuth: PropTypes.func,
-    /**
      * Called when the buyer cancels the transaction. Often used to show the buyer a [cancellation page](https://developer.paypal.com/docs/checkout/integration-features/cancellation-page/).
      */
     onCancel: PropTypes.func,
@@ -103,10 +98,6 @@ PayPalButtons.propTypes = {
      * Called when the buyer changes their shipping address on PayPal.
      */
     onShippingChange: PropTypes.func,
-    /**
-     *
-     */
-    onSuccess: PropTypes.func,
 };
 
 PayPalButtons.defaultProps = {
