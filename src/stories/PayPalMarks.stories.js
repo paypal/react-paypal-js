@@ -33,7 +33,7 @@ function RadioButtonTemplate() {
             options={{ "client-id": "sb", components: "buttons,marks" }}
         >
             <form>
-                <label>
+                <label className="mark">
                     <input
                         onClick={onClick}
                         type="radio"
@@ -43,7 +43,7 @@ function RadioButtonTemplate() {
                     <PayPalMarks fundingSource="paypal" />
                 </label>
 
-                <label>
+                <label className="mark">
                     <input
                         onClick={onClick}
                         type="radio"
@@ -52,7 +52,7 @@ function RadioButtonTemplate() {
                     />
                     <PayPalMarks fundingSource="card" />
                 </label>
-                <label>
+                <label className="mark">
                     <input
                         onClick={onClick}
                         type="radio"

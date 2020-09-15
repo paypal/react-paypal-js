@@ -21,7 +21,6 @@ export default function Marks({ fundingSource }) {
     const mark = useRef(null);
 
     useEffect(() => {
-        //  if isLoaded and fundingSource != current fundingSource with setState then render
         if (isLoaded && !mark.current) {
             mark.current = window.paypal.Marks({
                 fundingSource: fundingSource,
