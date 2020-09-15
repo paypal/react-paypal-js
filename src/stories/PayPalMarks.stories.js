@@ -28,6 +28,7 @@ function RadioButtonTemplate() {
     function onClick(event) {
         setFundingSource(event.target.value);
     }
+
     return (
         <PayPalScriptProvider
             options={{ "client-id": "sb", components: "buttons,marks" }}

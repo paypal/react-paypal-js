@@ -25,9 +25,8 @@ export default function Marks({ fundingSource }) {
             mark.current = window.paypal.Marks({
                 fundingSource: fundingSource,
             });
-            const isEligible = mark.current.isEligible();
 
-            if (isEligible) {
+            if (mark.current.isEligible()) {
                 mark.current.render(markContainerRef.current);
             }
         }
