@@ -31,7 +31,10 @@ function RadioButtonTemplate() {
 
     return (
         <PayPalScriptProvider
-            options={{ "client-id": "sb", components: "buttons,marks" }}
+            options={{
+                "client-id": "sb",
+                components: "buttons,marks,funding-eligibility",
+            }}
         >
             <form>
                 <label className="mark">
@@ -40,6 +43,7 @@ function RadioButtonTemplate() {
                         type="radio"
                         name="fundingSource"
                         value="paypal"
+                        defaultChecked
                     />
                     <PayPalMarks fundingSource="paypal" />
                 </label>
@@ -53,6 +57,7 @@ function RadioButtonTemplate() {
                     />
                     <PayPalMarks fundingSource="card" />
                 </label>
+
                 <label className="mark">
                     <input
                         onClick={onClick}
