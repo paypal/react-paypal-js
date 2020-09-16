@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useScriptReducer } from "../ScriptContext";
 /**
- * The `<PayPalMarks />` component renders all marks for an eligible payment method.
+ * The `<PayPalMarks />` component is used for conditionally rendering different payment options using radio buttons. The [Using Radio Buttons](https://developer.paypal.com/docs/checkout/integration-features/mark-flow/) guide describes this style of integration in detail.
  * It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
  *
  * ```jsx
  *     <PayPalMarks />
  * ```
  *
- * It can also be configured as a [standalone buttons](https://developer.paypal.com/docs/checkout/integration-features/standalone-buttons/) using props with the `fundingSource` option.
+ * It can also be configured to use a single funding source similar to the [standalone buttons](https://developer.paypal.com/docs/checkout/integration-features/standalone-buttons/) approach using the `fundingSource` prop.
  *
  * ```jsx
  *     <PayPalMarks fundingSource="paypal"/>
