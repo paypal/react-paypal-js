@@ -22,12 +22,12 @@ export default function Marks({ fundingSource }) {
 
     useEffect(() => {
         if (isLoaded && !mark.current) {
-            const fundingSourceValue =
-                window.paypal.FUNDING[fundingSource] || fundingSource;
+            // support either key or value for funding source
+            if (window.paypal.FUNDING[fundingSource]) {
+                fundingSource = window.paypal.FUNDING[fundingSource];
+            }
 
-            mark.current = window.paypal.Marks({
-                fundingSource: fundingSourceValue,
-            });
+            mark.current = window.paypal.Marks({ fundingSource });
 
             if (mark.current.isEligible()) {
                 mark.current.render(markContainerRef.current);
