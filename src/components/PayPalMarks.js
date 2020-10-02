@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useScriptReducer } from "../ScriptContext";
+import { standardizeFundingSource } from "./utils";
 /**
  * The `<PayPalMarks />` component is used for conditionally rendering different payment options using radio buttons. The [Using Radio Buttons](https://developer.paypal.com/docs/checkout/integration-features/mark-flow/) guide describes this style of integration in detail.
  * It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
@@ -12,7 +13,7 @@ import { useScriptReducer } from "../ScriptContext";
  * It can also be configured to use a single funding source similar to the [standalone buttons](https://developer.paypal.com/docs/checkout/integration-features/standalone-buttons/) approach using the `fundingSource` prop.
  *
  * ```jsx
- *     <PayPalMarks fundingSource="paypal"/>
+ *     <PayPalMarks fundingSource="PAYPAL"/>
  * ```
  */
 export default function Marks({ fundingSource }) {
@@ -22,12 +23,10 @@ export default function Marks({ fundingSource }) {
 
     useEffect(() => {
         if (isLoaded && !mark.current) {
-            // support either key or value for funding source
-            if (window.paypal.FUNDING[fundingSource]) {
-                fundingSource = window.paypal.FUNDING[fundingSource];
-            }
+            fundingSource = standardizeFundingSource(fundingSource);
 
-            mark.current = window.paypal.Marks({ fundingSource });
+            const options = fundingSource ? { fundingSource } : {};
+            mark.current = window.paypal.Marks(options);
 
             if (mark.current.isEligible()) {
                 mark.current.render(markContainerRef.current);

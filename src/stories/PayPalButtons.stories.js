@@ -73,3 +73,14 @@ CustomStyle.parameters = {
         },
     },
 };
+
+export const StandAlone = Template.bind({});
+StandAlone.args = { fundingSource: "PAYLATER" };
+
+StandAlone.parameters = {
+    docs: {
+        source: {
+            code: `<PayPalButtons fundingSource="${StandAlone.args.fundingSource}" />`,
+        },
+    },
+};

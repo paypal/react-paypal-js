@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useScriptReducer } from "../ScriptContext";
+import { standardizeFundingSource } from "./utils";
 /**
  * This `<PayPalButtons />` component renders the [Smart Payment Buttons](https://developer.paypal.com/docs/checkout/).
  * It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
@@ -19,7 +20,14 @@ export default function PayPalButtons(props) {
 
     useEffect(() => {
         if (isLoaded) {
-            buttons.current = window.paypal.Buttons({ ...props });
+            const fundingSource = standardizeFundingSource(props.fundingSource);
+            const options = { ...props };
+
+            if (fundingSource) {
+                options.fundingSource = fundingSource;
+            }
+
+            buttons.current = window.paypal.Buttons(options);
 
             if (buttons.current.isEligible()) {
                 buttons.current.render(buttonsContainerRef.current);
@@ -54,6 +62,11 @@ PayPalButtons.propTypes = {
      * Sets up a subscription. Called when the buyer clicks the PayPal button.
      */
     createSubscription: PropTypes.func,
+    /**
+     * The individual button to render. The full list can be found [here](https://developer.paypal.com/docs/checkout/integration-features/standalone-buttons/#complete-your-integration).
+     */
+    fundingSource: PropTypes.string,
+
     /**
      * Approved styling options for customizing layout, color, shape, and labels.
      */
