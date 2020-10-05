@@ -31,9 +31,6 @@ Default.args = {
         });
     },
     style: {
-        shape: "rect",
-        color: "gold",
-        layout: "vertical",
         label: "subscribe",
     },
 };
