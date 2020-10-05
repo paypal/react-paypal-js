@@ -1,5 +1,5 @@
 import React from "react";
-import { PayPalScriptProvider, PayPalButtons } from "../index";
+import { FUNDING, PayPalScriptProvider, PayPalButtons } from "../index";
 
 export default {
     title: "Example/PayPalButtons",
@@ -75,12 +75,12 @@ CustomStyle.parameters = {
 };
 
 export const StandAlone = Template.bind({});
-StandAlone.args = { fundingSource: "PAYLATER" };
+StandAlone.args = { fundingSource: FUNDING.PAYLATER };
 
 StandAlone.parameters = {
     docs: {
         source: {
-            code: `<PayPalButtons fundingSource="${StandAlone.args.fundingSource}" />`,
+            code: "<PayPalButtons fundingSource={FUNDING.PAYLATER} />",
         },
     },
 };

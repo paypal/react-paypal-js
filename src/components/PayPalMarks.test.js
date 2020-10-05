@@ -3,6 +3,7 @@ import { render, waitFor } from "@testing-library/react";
 
 import { ScriptProvider } from "../ScriptContext";
 import PayPalMarks from "./PayPalMarks";
+import { FUNDING } from "@paypal/sdk-constants";
 
 describe("<PayPalMarks />", () => {
     beforeEach(() => {
@@ -13,35 +14,22 @@ describe("<PayPalMarks />", () => {
                     render: jest.fn(),
                 };
             },
-            FUNDING: {
-                CREDIT: "credit",
-            },
         };
     });
 
-    test("should use CREDIT fundingSource", async () => {
+    test("should pass props to window.paypal.Marks()", async () => {
         const spyOnMarks = jest.spyOn(window.paypal, "Marks");
 
         render(
             <ScriptProvider options={{ "client-id": "sb" }}>
-                <PayPalMarks fundingSource="CREDIT" />
+                <PayPalMarks fundingSource={FUNDING.CREDIT} />
             </ScriptProvider>
         );
 
         await waitFor(() =>
-            expect(spyOnMarks).toHaveBeenCalledWith({ fundingSource: "credit" })
+            expect(spyOnMarks).toHaveBeenCalledWith({
+                fundingSource: FUNDING.CREDIT,
+            })
         );
-    });
-
-    test("should pass an empty object by default", async () => {
-        const spyOnMarks = jest.spyOn(window.paypal, "Marks");
-
-        render(
-            <ScriptProvider options={{ "client-id": "sb" }}>
-                <PayPalMarks />
-            </ScriptProvider>
-        );
-
-        await waitFor(() => expect(spyOnMarks).toHaveBeenCalledWith({}));
     });
 });

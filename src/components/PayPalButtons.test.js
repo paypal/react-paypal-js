@@ -3,11 +3,7 @@ import { render, waitFor } from "@testing-library/react";
 
 import { ScriptProvider } from "../ScriptContext";
 import PayPalButtons from "./PayPalButtons";
-
-const defaultOptions = {
-    shippingPreference: "GET_FROM_FILE",
-    style: {},
-};
+import { FUNDING } from "@paypal/sdk-constants";
 
 describe("<PayPalButtons />", () => {
     beforeEach(() => {
@@ -19,40 +15,28 @@ describe("<PayPalButtons />", () => {
                     render: jest.fn(),
                 };
             },
-            FUNDING: {
-                CREDIT: "credit",
-            },
         };
     });
 
-    test("should use CREDIT fundingSource", async () => {
+    test("should pass props to window.paypal.Buttons()", async () => {
         const spyOnButtons = jest.spyOn(window.paypal, "Buttons");
 
         render(
             <ScriptProvider options={{ "client-id": "sb" }}>
-                <PayPalButtons fundingSource="CREDIT" />
+                <PayPalButtons
+                    fundingSource={FUNDING.CREDIT}
+                    style={{ layout: "horizontal" }}
+                    shippingPreference="GET_FROM_FILE"
+                />
             </ScriptProvider>
         );
 
         await waitFor(() =>
             expect(spyOnButtons).toHaveBeenCalledWith({
-                ...defaultOptions,
-                fundingSource: "credit",
+                shippingPreference: "GET_FROM_FILE",
+                style: { layout: "horizontal" },
+                fundingSource: FUNDING.CREDIT,
             })
-        );
-    });
-
-    test("should pass an empty object by default", async () => {
-        const spyOnButtons = jest.spyOn(window.paypal, "Buttons");
-
-        render(
-            <ScriptProvider options={{ "client-id": "sb" }}>
-                <PayPalButtons />
-            </ScriptProvider>
-        );
-
-        await waitFor(() =>
-            expect(spyOnButtons).toHaveBeenCalledWith(defaultOptions)
         );
     });
 });
