@@ -26,9 +26,6 @@ Default.args = {};
 function LoadingSpinner() {
     const [{ isLoaded }] = usePayPalScriptReducer();
 
-    if (!isLoaded) {
-        return <div>Loading....</div>;
-    } else {
-        return <div></div>;
-    }
+    if (isLoaded) return null;
+    if (!isLoaded) return <div>Loading...</div>;
 }
