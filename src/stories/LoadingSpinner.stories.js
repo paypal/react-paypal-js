@@ -27,5 +27,5 @@ function LoadingSpinner() {
     const [{ isLoaded }] = usePayPalScriptReducer();
 
     if (isLoaded) return null;
-    if (!isLoaded) return <div>Loading...</div>;
+    if (!isLoaded) return <div className="spinner" />;
 }
