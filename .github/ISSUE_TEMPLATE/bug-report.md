@@ -26,9 +26,11 @@ A clear and concise description of what you expected to happen.
 
 ### 🌍 Environment
 
--   Node.js/npm: -
--   OS: -
--   Browser: -
+| Software         | Version(s) |
+| ---------------- | ---------- |
+| react-paypal-js  |
+| Browser          |
+| Operating System |
 
 ### ➕ Additional Context
 
