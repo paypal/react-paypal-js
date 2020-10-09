@@ -13,7 +13,9 @@ https://paypal.github.io/react-paypal-js/
 
 ### The Problem
 
-The JS SDK `<script>` is designed to be loaded once and shared across all the PayPal components on the page. This script is dynamically created for your use case based on the parameters you pass to it. Adding this script is a common point of confusion for developers building single page web apps. We've seen it lead to sub-optimal implementations that lazy load the script and delay rendering of the PayPal buttons.
+Developers integrating with PayPal are expected to add the JS SDK `<script>` to a website and then render components like the PayPal Buttons after the script loads. This architecture works great for simple websites but can be challenging when building single page apps.
+
+React developers think in terms of components and not about loading external scripts from an index.html file. It's easy to end up with a React PayPal integration that's sub-optimal and hurts the buyer's user experience. For example, abstracting away all the implementation details of the PayPal Buttons into a single React component is an anti-pattern because it tightly couples script loading with rendering. It's also problematic when you need to render multiple different PayPal components that share the same global script parameters.
 
 ### The Solution
 
