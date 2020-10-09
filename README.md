@@ -8,6 +8,7 @@ React components for the [PayPal JS SDK](https://developer.paypal.com/docs/busin
 <a href="https://david-dm.org/paypal/react-paypal-js?type=dev"><img src="https://img.shields.io/david/dev/paypal/react-paypal-js?style=flat-square" alt="dev dependencies"></a>
 
 https://paypal.github.io/react-paypal-js/
+
 ## Why use react-paypal-js?
 
 ### The Problem
@@ -20,7 +21,7 @@ Provide a solution to developers that abstracts away complexities around loading
 
 -   Enforce async loading the JS SDK up front so when it's time to render the buttons to your buyer, they render immediately.
     Abstract away the complexity around loading the JS SDK with the global `<PayPalScriptProvider>` component.
--   Support dispatching actions to reload the JS SDK and rerender components when global parameters like `currency` change.
+-   Support dispatching actions to reload the JS SDK and re-render components when global parameters like `currency` change.
 -   Easy to use components for all the different PayPal product offerings:
     -   `<PayPalButtons />`
     -   `<PayPalMarks />`
