@@ -44,10 +44,31 @@ StandAlone.parameters = {
     },
 };
 
+const FormWithRadioButtons = (args) => {
+    const { fundingSources, onChange } = args;
+
+    return (
+        <form>
+            {fundingSources.map((source, index) => (
+                <label className="mark" key={index}>
+                    <input
+                        defaultChecked={index === 0 ? true : false}
+                        onChange={onChange}
+                        type="radio"
+                        name="fundingSource"
+                        value={source}
+                    />
+                    <PayPalMarks fundingSource={source} />
+                </label>
+            ))}
+        </form>
+    );
+};
+
 function RadioButtonTemplate(args) {
     const [fundingSource, setFundingSource] = useState(FUNDING.PAYPAL);
 
-    function onClick(event) {
+    function onChange(event) {
         setFundingSource(event.target.value);
     }
 
@@ -58,42 +79,14 @@ function RadioButtonTemplate(args) {
                 components: "buttons,marks,funding-eligibility",
             }}
         >
-            <form>
-                <label className="mark">
-                    <input
-                        onClick={onClick}
-                        type="radio"
-                        name="fundingSource"
-                        value={FUNDING.PAYPAL}
-                        defaultChecked
-                    />
-                    <PayPalMarks {...args} />
-                </label>
-
-                <label className="mark">
-                    <input
-                        onClick={onClick}
-                        type="radio"
-                        name="fundingSource"
-                        value={FUNDING.CARD}
-                    />
-                    <PayPalMarks fundingSource={FUNDING.CARD} />
-                </label>
-
-                <label className="mark">
-                    <input
-                        onClick={onClick}
-                        type="radio"
-                        name="fundingSource"
-                        value={FUNDING.PAYLATER}
-                    />
-                    <PayPalMarks fundingSource={FUNDING.PAYLATER} />
-                </label>
-            </form>
+            <FormWithRadioButtons {...args} onChange={onChange} />
+            <br />
             <PayPalButtons fundingSource={fundingSource} />
         </PayPalScriptProvider>
     );
 }
 
 export const RadioButtons = RadioButtonTemplate.bind({});
-RadioButtons.args = { fundingSource: FUNDING.PAYPAL };
+RadioButtons.args = {
+    fundingSources: [FUNDING.PAYPAL, FUNDING.CARD, FUNDING.PAYLATER],
+};
