@@ -7,7 +7,8 @@
         "component",
         "paypal",
         "checkout",
-        "payment"
+        "payment",
+        "test"
     ],
     "main": "dist/react-paypal.node.js",
     "module": "dist/react-paypal.esm.js",
