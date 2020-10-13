@@ -44,27 +44,6 @@ StandAlone.parameters = {
     },
 };
 
-const FormWithRadioButtons = (args) => {
-    const { fundingSources, onChange } = args;
-
-    return (
-        <form>
-            {fundingSources.map((source, index) => (
-                <label className="mark" key={index}>
-                    <input
-                        defaultChecked={index === 0 ? true : false}
-                        onChange={onChange}
-                        type="radio"
-                        name="fundingSource"
-                        value={source}
-                    />
-                    <PayPalMarks fundingSource={source} />
-                </label>
-            ))}
-        </form>
-    );
-};
-
 function RadioButtonTemplate(args) {
     const [fundingSource, setFundingSource] = useState(FUNDING.PAYPAL);
 
@@ -79,7 +58,20 @@ function RadioButtonTemplate(args) {
                 components: "buttons,marks,funding-eligibility",
             }}
         >
-            <FormWithRadioButtons {...args} onChange={onChange} />
+            <form>
+                {args.fundingSources.map((source, index) => (
+                    <label className="mark" key={index}>
+                        <input
+                            defaultChecked={index === 0 ? true : false}
+                            onChange={onChange}
+                            type="radio"
+                            name="fundingSource"
+                            value={source}
+                        />
+                        <PayPalMarks fundingSource={source} />
+                    </label>
+                ))}
+            </form>
             <br />
             <PayPalButtons fundingSource={fundingSource} />
         </PayPalScriptProvider>
