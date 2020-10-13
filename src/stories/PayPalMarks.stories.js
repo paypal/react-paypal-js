@@ -62,7 +62,7 @@ function RadioButtonTemplate(args) {
                 {args.fundingSources.map((source, index) => (
                     <label className="mark" key={index}>
                         <input
-                            defaultChecked={index === 0 ? true : false}
+                            defaultChecked={index === 0}
                             onChange={onChange}
                             type="radio"
                             name="fundingSource"
