@@ -3,7 +3,7 @@ import { render, waitFor } from "@testing-library/react";
 
 import { PayPalScriptProvider, usePayPalScriptReducer } from "../ScriptContext";
 import PayPalButtons from "./PayPalButtons";
-import { FUNDING } from "@paypal/sdk-constants";
+import { FUNDING2 as FUNDING } from "@paypal/sdk-constants";
 
 describe("<PayPalButtons />", () => {
     beforeEach(() => {
