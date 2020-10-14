@@ -26,6 +26,3 @@ rl.question("Enter OTP for public npm:", (otp) => {
 
     rl.close();
 });
-
-// deploy storybook to github pages
-exec("npm run deploy-storybook");
