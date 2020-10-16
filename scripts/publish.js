@@ -21,7 +21,7 @@ const rl = readline.createInterface({
 });
 
 // prompt for otp and publish to public npm
-rl.question("Enter OTP for public npm:", (otp) => {
+rl.question("Enter OTP for public npm: ", (otp) => {
     exec(`npm publish --otp=${otp}`);
 
     rl.close();
