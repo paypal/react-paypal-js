@@ -23,9 +23,14 @@ function Currency() {
     const [value, setValue] = useState(currency);
 
     function onChange(event) {
-        const value = event.target.value;
-        setValue(value);
-        dispatch({ type: "changeCurrency", value });
+        const selectedCurrency = event.target.value;
+        setValue(selectedCurrency);
+        dispatch({
+            type: "updateOptions",
+            value: {
+                currency: selectedCurrency,
+            },
+        });
     }
 
     return (
