@@ -14,13 +14,8 @@ function scriptReducer(state, action) {
                 },
                 isLoaded: action.value,
             };
-        case "updateOptions":
-            return {
-                options: {
-                    ...state.options,
-                    ...action.value,
-                },
-            };
+        case "resetOptions":
+            return { options: action.value };
 
         // deprecated - remove for the v2 release
         case "changeCurrency":

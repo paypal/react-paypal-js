@@ -12,16 +12,20 @@ export default {
     },
 };
 
+const scriptOptions = {
+    "client-id": "sb",
+    components: "buttons",
+};
+
 function Template(args) {
+    const options = {
+        ...scriptOptions,
+        intent: "subscription",
+        vault: true,
+    };
+
     return (
-        <PayPalScriptProvider
-            options={{
-                "client-id": "sb",
-                intent: "subscription",
-                vault: true,
-                components: "buttons",
-            }}
-        >
+        <PayPalScriptProvider options={options}>
             <PayPalButtons {...args} />
         </PayPalScriptProvider>
     );
@@ -41,12 +45,7 @@ Default.args = {
 
 function OrdersAndSubscriptionsTemplate(args) {
     return (
-        <PayPalScriptProvider
-            options={{
-                "client-id": "sb",
-                components: "buttons",
-            }}
-        >
+        <PayPalScriptProvider options={scriptOptions}>
             <TransactionTypeForm />
             <br />
             <CustomPayPalButtons {...args} />
@@ -60,16 +59,18 @@ function TransactionTypeForm() {
     function onChange(event) {
         if (event.target.value === "subscription") {
             dispatch({
-                type: "updateOptions",
+                type: "resetOptions",
                 value: {
+                    ...scriptOptions,
                     intent: "subscription",
                     vault: true,
                 },
             });
         } else {
             dispatch({
-                type: "updateOptions",
+                type: "resetOptions",
                 value: {
+                    ...scriptOptions,
                     intent: "order",
                     vault: false,
                 },

@@ -10,7 +10,7 @@ export default {
     component: usePayPalScriptReducer,
 };
 
-const defaultOptions = {
+const scriptOptions = {
     "client-id": "sb",
     components: "buttons",
 };
@@ -26,8 +26,9 @@ function Currency() {
         const selectedCurrency = event.target.value;
         setValue(selectedCurrency);
         dispatch({
-            type: "updateOptions",
+            type: "resetOptions",
             value: {
+                ...scriptOptions,
                 currency: selectedCurrency,
             },
         });
@@ -54,7 +55,7 @@ function Template(args) {
 export const currencyUSD = Template.bind({});
 currencyUSD.args = {
     options: {
-        ...defaultOptions,
+        ...scriptOptions,
         currency: "USD",
     },
 };
@@ -62,7 +63,7 @@ currencyUSD.args = {
 export const currencyEUR = Template.bind({});
 currencyEUR.args = {
     options: {
-        ...defaultOptions,
+        ...scriptOptions,
         currency: "EUR",
     },
 };
