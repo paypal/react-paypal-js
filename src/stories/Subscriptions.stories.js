@@ -15,17 +15,13 @@ export default {
 const scriptOptions = {
     "client-id": "sb",
     components: "buttons",
+    intent: "subscription",
+    vault: true,
 };
 
 function Template(args) {
-    const options = {
-        ...scriptOptions,
-        intent: "subscription",
-        vault: true,
-    };
-
     return (
-        <PayPalScriptProvider options={options}>
+        <PayPalScriptProvider options={scriptOptions}>
             <PayPalButtons {...args} />
         </PayPalScriptProvider>
     );
@@ -60,11 +56,7 @@ function TransactionTypeForm() {
         if (event.target.value === "subscription") {
             dispatch({
                 type: "resetOptions",
-                value: {
-                    ...scriptOptions,
-                    intent: "subscription",
-                    vault: true,
-                },
+                value: scriptOptions,
             });
         } else {
             dispatch({
@@ -86,18 +78,18 @@ function TransactionTypeForm() {
                     onChange={onChange}
                     type="radio"
                     name="type"
-                    value="order"
+                    value="subscription"
                 />
-                Order
+                Subscription
             </label>
             <label>
                 <input
                     onChange={onChange}
                     type="radio"
                     name="type"
-                    value="subscription"
+                    value="order"
                 />
-                Subscription
+                Order
             </label>
         </form>
     );
