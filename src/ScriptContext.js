@@ -59,11 +59,17 @@ function PayPalScriptProvider({ options, children }) {
         if (state.loadingStatus !== "pending") return;
 
         let isSubscribed = true;
-        loadScript(state.options).then(() => {
-            if (isSubscribed) {
-                dispatch({ type: "setLoadingStatus", value: "resolved" });
-            }
-        });
+        loadScript(state.options)
+            .then(() => {
+                if (isSubscribed) {
+                    dispatch({ type: "setLoadingStatus", value: "resolved" });
+                }
+            })
+            .catch(() => {
+                if (isSubscribed) {
+                    dispatch({ type: "setLoadingStatus", value: "rejected" });
+                }
+            });
         return () => {
             isSubscribed = false;
         };

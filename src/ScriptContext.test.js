@@ -19,11 +19,26 @@ describe("<PayPalScriptProvider />", () => {
                 <TestComponent />
             </PayPalScriptProvider>
         );
+        expect(loadScript).toHaveBeenCalledWith({ "client-id": "sb" });
 
         // verify initial loading state
         expect(state.loadingStatus).toBe("pending");
         await waitFor(() => expect(state.loadingStatus).toBe("resolved"));
+    });
+
+    test('should set "loadingStatus" state to "rejected" after failing to load the script', async () => {
+        loadScript.mockRejectedValue(new Error());
+        const { state, TestComponent } = setupTestComponent();
+        render(
+            <PayPalScriptProvider options={{ "client-id": "sb" }}>
+                <TestComponent />
+            </PayPalScriptProvider>
+        );
         expect(loadScript).toHaveBeenCalledWith({ "client-id": "sb" });
+
+        // verify initial loading state
+        expect(state.loadingStatus).toBe("pending");
+        await waitFor(() => expect(state.loadingStatus).toBe("rejected"));
     });
 });
 
