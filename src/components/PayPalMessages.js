@@ -2,12 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { usePayPalScriptReducer } from "../ScriptContext";
 
 export default function PayPalMessages(props) {
-    const [{ isLoaded }] = usePayPalScriptReducer();
+    const [{ loadingStatus }] = usePayPalScriptReducer();
     const messagesContainerRef = useRef(null);
     const messages = useRef(null);
 
     useEffect(() => {
-        if (isLoaded) {
+        if (loadingStatus === "resolved") {
             messages.current = window.paypal.Messages({ ...props });
 
             messages.current

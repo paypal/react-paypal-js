@@ -7,15 +7,18 @@ const ScriptDispatchContext = createContext();
 
 function scriptReducer(state, action) {
     switch (action.type) {
-        case "setIsLoaded":
+        case "setLoadingStatus":
             return {
                 options: {
                     ...state.options,
                 },
-                isLoaded: action.value,
+                loadingStatus: action.value,
             };
         case "resetOptions":
-            return { options: action.value };
+            return {
+                loadingStatus: "pending",
+                options: action.value,
+            };
 
         // deprecated - remove for the v2 release
         case "changeCurrency":
@@ -24,7 +27,7 @@ function scriptReducer(state, action) {
                     ...state.options,
                     currency: action.value,
                 },
-                isLoaded: false,
+                loadingStatus: "pending",
             };
 
         default: {
@@ -47,18 +50,18 @@ function usePayPalScriptReducer() {
 function PayPalScriptProvider({ options, children }) {
     const initialState = {
         options,
-        isLoaded: false,
+        loadingStatus: "pending",
     };
 
     const [state, dispatch] = useReducer(scriptReducer, initialState);
 
     useEffect(() => {
-        if (state.isLoaded) return;
+        if (state.loadingStatus !== "pending") return;
 
         let isSubscribed = true;
         loadScript(state.options).then(() => {
             if (isSubscribed) {
-                dispatch({ type: "setIsLoaded", value: true });
+                dispatch({ type: "setLoadingStatus", value: "resolved" });
             }
         });
         return () => {

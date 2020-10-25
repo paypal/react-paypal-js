@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePayPalScriptReducer } from "../ScriptContext";
 /**
@@ -12,25 +12,28 @@ import { usePayPalScriptReducer } from "../ScriptContext";
  * ```
  */
 export default function PayPalButtons(props) {
-    const [{ isLoaded, options }] = usePayPalScriptReducer();
+    const [{ loadingStatus, options }] = usePayPalScriptReducer();
     const buttonsContainerRef = useRef(null);
     const buttons = useRef(null);
+    const [, setErrorState] = useState(null);
 
     useEffect(() => {
-        if (isLoaded) {
-            verifyGlobalStateForButtons(options);
+        if (loadingStatus === "resolved") {
+            if (verifyGlobalStateForButtons(options, setErrorState)) {
+                buttons.current = window.paypal.Buttons({ ...props });
 
-            buttons.current = window.paypal.Buttons({ ...props });
+                if (!buttons.current.isEligible()) {
+                    return;
+                }
 
-            if (!buttons.current.isEligible()) {
-                return;
+                buttons.current
+                    .render(buttonsContainerRef.current)
+                    .catch((err) => {
+                        console.error(
+                            `Failed to render <PayPalButtons /> component. ${err}`
+                        );
+                    });
             }
-
-            buttons.current.render(buttonsContainerRef.current).catch((err) => {
-                console.error(
-                    `Failed to render <PayPalButtons /> component. ${err}`
-                );
-            });
         } else {
             // close the buttons when the script is reloaded
             if (buttons.current) {
@@ -48,9 +51,9 @@ export default function PayPalButtons(props) {
     return <div ref={buttonsContainerRef} />;
 }
 
-function verifyGlobalStateForButtons({ components = "" }) {
+function verifyGlobalStateForButtons({ components = "" }, setErrorState) {
     if (typeof window.paypal.Buttons !== "undefined") {
-        return;
+        return true;
     }
 
     let errorMessage =
@@ -65,7 +68,10 @@ function verifyGlobalStateForButtons({ components = "" }) {
             "\nTo fix the issue, add 'buttons' to the list of components passed to the parent PayPalScriptProvider:" +
             `\n\`<PayPalScriptProvider options={{ components: '${expectedComponents}'}}>\`.`;
     }
-    throw new Error(errorMessage);
+    setErrorState(() => {
+        throw new Error(errorMessage);
+    });
+    return false;
 }
 
 PayPalButtons.propTypes = {
