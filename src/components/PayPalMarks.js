@@ -30,27 +30,29 @@ export default function PayPalMarks(props) {
     const [, setErrorState] = useState(null);
 
     useEffect(() => {
-        if (loadingStatus === "resolved" && !mark.current) {
-            if (verifyGlobalStateForMarks(options, setErrorState)) {
-                mark.current = window.paypal.Marks({ ...props });
-
-                if (!mark.current.isEligible()) {
-                    return;
-                }
-
-                mark.current.render(markContainerRef.current).catch((err) => {
-                    console.error(
-                        `Failed to render <PayPalMarks /> component. ${err}`
-                    );
-                });
-            }
+        if (loadingStatus !== "resolved" || mark.current) {
+            return;
         }
+
+        if (!hasValidStateForMarks(options, setErrorState)) {
+            return;
+        }
+
+        mark.current = window.paypal.Marks({ ...props });
+
+        if (!mark.current.isEligible()) {
+            return;
+        }
+
+        mark.current.render(markContainerRef.current).catch((err) => {
+            console.error(`Failed to render <PayPalMarks /> component. ${err}`);
+        });
     });
 
     return <div ref={markContainerRef} />;
 }
 
-function verifyGlobalStateForMarks({ components = "" }, setErrorState) {
+function hasValidStateForMarks({ components = "" }, setErrorState) {
     if (typeof window.paypal.Marks !== "undefined") {
         return true;
     }

@@ -18,40 +18,39 @@ export default function PayPalButtons(props) {
     const [, setErrorState] = useState(null);
 
     useEffect(() => {
-        if (loadingStatus === "resolved") {
-            if (verifyGlobalStateForButtons(options, setErrorState)) {
-                buttons.current = window.paypal.Buttons({ ...props });
-
-                if (!buttons.current.isEligible()) {
-                    return;
-                }
-
-                buttons.current
-                    .render(buttonsContainerRef.current)
-                    .catch((err) => {
-                        console.error(
-                            `Failed to render <PayPalButtons /> component. ${err}`
-                        );
-                    });
-            }
-        } else {
-            // close the buttons when the script is reloaded
-            if (buttons.current) {
-                buttons.current.close();
-            }
-        }
-        return () => {
-            // close the buttons when the component unmounts
+        const cleanup = () => {
             if (buttons.current) {
                 buttons.current.close();
             }
         };
+
+        if (loadingStatus !== "resolved") {
+            return cleanup;
+        }
+
+        if (!hasValidGlobalStateForButtons(options, setErrorState)) {
+            return cleanup;
+        }
+
+        buttons.current = window.paypal.Buttons({ ...props });
+
+        if (!buttons.current.isEligible()) {
+            return cleanup;
+        }
+
+        buttons.current.render(buttonsContainerRef.current).catch((err) => {
+            console.error(
+                `Failed to render <PayPalButtons /> component. ${err}`
+            );
+        });
+
+        return cleanup;
     });
 
     return <div ref={buttonsContainerRef} />;
 }
 
-function verifyGlobalStateForButtons({ components = "" }, setErrorState) {
+function hasValidGlobalStateForButtons({ components = "" }, setErrorState) {
     if (typeof window.paypal.Buttons !== "undefined") {
         return true;
     }
