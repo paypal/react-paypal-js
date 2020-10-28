@@ -12,7 +12,7 @@ import { usePayPalScriptReducer } from "../ScriptContext";
  * ```
  */
 export default function PayPalButtons(props) {
-    const [{ loadingStatus, options }] = usePayPalScriptReducer();
+    const [{ isResolved, options }] = usePayPalScriptReducer();
     const buttonsContainerRef = useRef(null);
     const buttons = useRef(null);
     const [, setErrorState] = useState(null);
@@ -24,7 +24,7 @@ export default function PayPalButtons(props) {
             }
         };
 
-        if (loadingStatus !== "resolved") {
+        if (!isResolved) {
             return cleanup;
         }
 

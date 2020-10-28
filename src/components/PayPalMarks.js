@@ -24,13 +24,13 @@ import { usePayPalScriptReducer } from "../ScriptContext";
  * ```
  */
 export default function PayPalMarks(props) {
-    const [{ loadingStatus, options }] = usePayPalScriptReducer();
+    const [{ isResolved, options }] = usePayPalScriptReducer();
     const markContainerRef = useRef(null);
     const mark = useRef(null);
     const [, setErrorState] = useState(null);
 
     useEffect(() => {
-        if (loadingStatus !== "resolved" || mark.current) {
+        if (!isResolved || mark.current) {
             return;
         }
 

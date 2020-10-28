@@ -89,7 +89,7 @@ export const LoadingSpinner = LoadingSpinnerTemplate.bind({});
 LoadingSpinner.args = {};
 
 function LoadingIndicator() {
-    const [{ loadingStatus }] = usePayPalScriptReducer();
+    const [{ isPending }] = usePayPalScriptReducer();
 
-    return loadingStatus === "pending" ? <div className="spinner" /> : null;
+    return isPending ? <div className="spinner" /> : null;
 }

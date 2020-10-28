@@ -12,7 +12,7 @@ describe("<PayPalScriptProvider />", () => {
         loadScript.mockResolvedValue({});
     });
 
-    test('should set "loadingStatus" state to "resolved" after loading the script', async () => {
+    test('should set "isResolved" state to "true" after loading the script', async () => {
         const { state, TestComponent } = setupTestComponent();
         render(
             <PayPalScriptProvider options={{ "client-id": "sb" }}>
@@ -22,11 +22,13 @@ describe("<PayPalScriptProvider />", () => {
         expect(loadScript).toHaveBeenCalledWith({ "client-id": "sb" });
 
         // verify initial loading state
-        expect(state.loadingStatus).toBe("pending");
-        await waitFor(() => expect(state.loadingStatus).toBe("resolved"));
+        expect(state.isPending).toBeTruthy();
+        await waitFor(() => expect(state.isResolved).toBeTruthy());
+        expect(state.isPending).toBeFalsy();
+        expect(state.isRejected).toBeFalsy();
     });
 
-    test('should set "loadingStatus" state to "rejected" after failing to load the script', async () => {
+    test('should set "isRejected" state to "true" after failing to load the script', async () => {
         loadScript.mockRejectedValue(new Error());
         const { state, TestComponent } = setupTestComponent();
         render(
@@ -37,8 +39,10 @@ describe("<PayPalScriptProvider />", () => {
         expect(loadScript).toHaveBeenCalledWith({ "client-id": "sb" });
 
         // verify initial loading state
-        expect(state.loadingStatus).toBe("pending");
-        await waitFor(() => expect(state.loadingStatus).toBe("rejected"));
+        expect(state.isPending).toBeTruthy();
+        await waitFor(() => expect(state.isRejected).toBeTruthy());
+        expect(state.isPending).toBeFalsy();
+        expect(state.isResolved).toBeFalsy();
     });
 });
 
@@ -56,8 +60,8 @@ describe("usePayPalScriptReducer", () => {
         );
 
         expect(state.options).toHaveProperty("client-id", "sb");
-        expect(state.loadingStatus).toBe("pending");
-        await waitFor(() => expect(state.loadingStatus).toBe("resolved"));
+        expect(state.isPending).toBeTruthy();
+        await waitFor(() => expect(state.isResolved).toBeTruthy());
     });
 
     test("should throw an error when used without <PayPalScriptProvider>", () => {
@@ -86,11 +90,11 @@ describe("usePayPalScriptReducer", () => {
         expect(state.options).toMatchObject({ "client-id": "abc" });
         expect(loadScript).toHaveBeenCalledWith(state.options);
 
-        await waitFor(() => expect(state.loadingStatus).toBe("resolved"));
+        await waitFor(() => expect(state.isResolved).toBeTruthy());
 
         // this click dispatches the action "resetOptions" causing the script to reload
         fireEvent.click(screen.getByText("Reload button"));
-        await waitFor(() => expect(state.loadingStatus).toBe("resolved"));
+        await waitFor(() => expect(state.isResolved).toBeTruthy());
 
         expect(state.options).toMatchObject({
             "client-id": "xyz",
