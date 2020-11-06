@@ -93,17 +93,23 @@ StandAlone.parameters = {
 
 function DynamicAmountTemplate(args) {
     const [amount, setAmount] = useState(2);
+    const [orderID, setOrderID] = useState();
 
     function createOrder(data, actions) {
-        return actions.order.create({
-            purchase_units: [
-                {
-                    amount: {
-                        value: amount,
+        return actions.order
+            .create({
+                purchase_units: [
+                    {
+                        amount: {
+                            value: amount,
+                        },
                     },
-                },
-            ],
-        });
+                ],
+            })
+            .then((orderId) => {
+                setOrderID(orderId);
+                return orderId;
+            });
     }
 
     function onChange(event) {
@@ -113,18 +119,24 @@ function DynamicAmountTemplate(args) {
 
     return (
         <PayPalScriptProvider options={defaultOptions}>
-            <select
-                onChange={onChange}
-                name="amount"
-                id="amount"
-                style={{ marginBottom: "20px" }}
-            >
-                <option value="2">$2.00</option>
-                <option value="4">$4.00</option>
-                <option value="6">$6.00</option>
-            </select>
-
-            <PayPalButtons {...args} createOrder={createOrder} />
+            <div>
+                <select
+                    onChange={onChange}
+                    name="amount"
+                    id="amount"
+                    style={{ marginBottom: "20px" }}
+                >
+                    <option value="2">$2.00</option>
+                    <option value="4">$4.00</option>
+                    <option value="6">$6.00</option>
+                </select>
+                &nbsp;Order ID: {orderID}
+            </div>
+            <PayPalButtons
+                {...args}
+                createOrder={createOrder}
+                forceReRender={amount}
+            />
         </PayPalScriptProvider>
     );
 }

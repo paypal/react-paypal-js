@@ -45,7 +45,7 @@ export default function PayPalButtons(props) {
         });
 
         return cleanup;
-    });
+    }, [isResolved, props.forceReRender]);
 
     return <div ref={buttonsContainerRef} />;
 }
@@ -141,6 +141,10 @@ PayPalButtons.propTypes = {
      * Called when the buyer changes their shipping address on PayPal.
      */
     onShippingChange: PropTypes.func,
+    /**
+     * Called when the button need to be re-rendered.
+     */
+    forceReRender: PropTypes.string,
 };
 
 PayPalButtons.defaultProps = {
