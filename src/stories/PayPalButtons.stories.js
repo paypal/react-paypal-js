@@ -93,7 +93,7 @@ StandAlone.parameters = {
 
 function DynamicAmountTemplate(args) {
     const [amount, setAmount] = useState(2);
-    const [orderID, setOrderID] = useState();
+    const [orderID, setOrderID] = useState(false);
 
     function createOrder(data, actions) {
         return actions.order
@@ -106,31 +106,27 @@ function DynamicAmountTemplate(args) {
                     },
                 ],
             })
-            .then((orderId) => {
-                setOrderID(orderId);
-                return orderId;
+            .then((orderID) => {
+                setOrderID(orderID);
+                return orderID;
             });
     }
 
     function onChange(event) {
         const selectedAmount = event.target.value;
         setAmount(selectedAmount);
+        setOrderID(false);
     }
 
     return (
         <PayPalScriptProvider options={defaultOptions}>
             <div>
-                <select
-                    onChange={onChange}
-                    name="amount"
-                    id="amount"
-                    style={{ marginBottom: "20px" }}
-                >
+                <select onChange={onChange} name="amount" id="amount">
                     <option value="2">$2.00</option>
                     <option value="4">$4.00</option>
                     <option value="6">$6.00</option>
                 </select>
-                &nbsp;Order ID: {orderID}
+                <p>Order ID: {orderID ? orderID : "unknown"}</p>
             </div>
             <PayPalButtons
                 {...args}
