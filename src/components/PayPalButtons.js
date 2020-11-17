@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, memo } from "react";
 import PropTypes from "prop-types";
 import { usePayPalScriptReducer } from "../ScriptContext";
 /**
@@ -11,7 +11,7 @@ import { usePayPalScriptReducer } from "../ScriptContext";
  *     <PayPalButtons style={{ layout: "vertical" }} createOrder={(data, actions) => {}} />
  * ```
  */
-export default function PayPalButtons(props) {
+function PayPalButtons(props) {
     const [{ isResolved, options }] = usePayPalScriptReducer();
     const buttonsContainerRef = useRef(null);
     const buttons = useRef(null);
@@ -49,6 +49,8 @@ export default function PayPalButtons(props) {
 
     return <div ref={buttonsContainerRef} />;
 }
+
+export default memo(PayPalButtons);
 
 function hasValidGlobalStateForButtons({ components = "" }, setErrorState) {
     if (typeof window.paypal.Buttons !== "undefined") {
