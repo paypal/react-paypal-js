@@ -97,10 +97,10 @@ The `usePayPalScriptReducer` hook can be used to reload the JS SDK script when p
 
 ```js
 const [{ scriptOptions }, dispatch] = usePayPalScriptReducer();
-const [value, setValue] = useState(scriptOptions.currency);
+const [currency, setCurrency] = useState(scriptOptions.currency);
 
-function onChange({ target: { value } }) {
-    setValue(value);
+function onCurrencyChange({ target: { value } }) {
+    setCurrency(value);
     dispatch({
         type: "resetOptions",
         value: {
@@ -112,7 +112,7 @@ function onChange({ target: { value } }) {
 
 return (
     <>
-        <select value={value} onChange={onChange}>
+        <select value={currency} onChange={onCurrencyChange}>
             <option value="USD">United States dollar</option>
             <option value="EUR">Euro</option>
         </select>
