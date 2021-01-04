@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePayPalScriptReducer } from "../ScriptContext";
+import type { PayPalMarksComponentProps } from "@paypal/paypal-js/types/components/marks";
+
 /**
  * The `<PayPalMarks />` component is used for conditionally rendering different payment options using radio buttons.
  * The [Display PayPal Buttons with other Payment Methods guide](https://developer.paypal.com/docs/business/checkout/add-capabilities/buyer-experience/#display-paypal-buttons-with-other-payment-methods) describes this style of integration in detail.
@@ -23,7 +25,7 @@ import { usePayPalScriptReducer } from "../ScriptContext";
  *     <PayPalMarks fundingSource={FUNDING.PAYPAL}/>
  * ```
  */
-export default function PayPalMarks(props) {
+export default function PayPalMarks(props: PayPalMarksComponentProps) {
     const [{ isResolved, options }] = usePayPalScriptReducer();
     const markContainerRef = useRef(null);
     const mark = useRef(null);
@@ -38,12 +40,15 @@ export default function PayPalMarks(props) {
             return;
         }
 
+        // @ts-expect-error - null checks
         mark.current = window.paypal.Marks({ ...props });
 
+        // @ts-expect-error - null checks
         if (!mark.current.isEligible()) {
             return;
         }
 
+        // @ts-expect-error - null checks
         mark.current.render(markContainerRef.current).catch((err) => {
             console.error(`Failed to render <PayPalMarks /> component. ${err}`);
         });
@@ -52,7 +57,9 @@ export default function PayPalMarks(props) {
     return <div ref={markContainerRef} />;
 }
 
+// @ts-expect-error - figure out setErrorState
 function hasValidStateForMarks({ components = "" }, setErrorState) {
+    // @ts-expect-error - needs null checks
     if (typeof window.paypal.Marks !== "undefined") {
         return true;
     }

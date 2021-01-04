@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePayPalScriptReducer } from "../ScriptContext";
+import type { PayPalButtonsComponentProps } from "@paypal/paypal-js/types/components/buttons";
+
+interface PayPalButtonsReactProps extends PayPalButtonsComponentProps {
+    forceReRender?: unknown
+}
 /**
  * This `<PayPalButtons />` component renders the [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).
  * It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
@@ -11,7 +16,7 @@ import { usePayPalScriptReducer } from "../ScriptContext";
  *     <PayPalButtons style={{ layout: "vertical" }} createOrder={(data, actions) => {}} />
  * ```
  */
-export default function PayPalButtons(props) {
+export default function PayPalButtons(props: PayPalButtonsReactProps) {
     const [{ isResolved, options }] = usePayPalScriptReducer();
     const buttonsContainerRef = useRef(null);
     const buttons = useRef(null);
@@ -20,6 +25,7 @@ export default function PayPalButtons(props) {
     useEffect(() => {
         const cleanup = () => {
             if (buttons.current) {
+                // @ts-expect-error - figure out types with useRef
                 buttons.current.close();
             }
         };
@@ -32,12 +38,15 @@ export default function PayPalButtons(props) {
             return cleanup;
         }
 
+        // @ts-expect-error - null checks
         buttons.current = window.paypal.Buttons({ ...props });
 
+        // @ts-expect-error - null checks
         if (!buttons.current.isEligible()) {
             return cleanup;
         }
 
+        // @ts-expect-error - null checks
         buttons.current.render(buttonsContainerRef.current).catch((err) => {
             console.error(
                 `Failed to render <PayPalButtons /> component. ${err}`
@@ -50,7 +59,9 @@ export default function PayPalButtons(props) {
     return <div ref={buttonsContainerRef} />;
 }
 
+// @ts-expect-error - figure out setErrorState
 function hasValidGlobalStateForButtons({ components = "" }, setErrorState) {
+    // @ts-expect-error - needs null checks
     if (typeof window.paypal.Buttons !== "undefined") {
         return true;
     }
