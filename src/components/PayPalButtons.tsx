@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePayPalScriptReducer } from "../ScriptContext";
-import type { PayPalButtonsComponentProps } from "@paypal/paypal-js/types/components/buttons";
+import type { PayPalButtonsComponentProps, PayPalButtonsComponent } from "@paypal/paypal-js/types/components/buttons";
 
 interface PayPalButtonsReactProps extends PayPalButtonsComponentProps {
     forceReRender?: unknown
@@ -18,35 +18,39 @@ interface PayPalButtonsReactProps extends PayPalButtonsComponentProps {
  */
 export default function PayPalButtons(props: PayPalButtonsReactProps) {
     const [{ isResolved, options }] = usePayPalScriptReducer();
-    const buttonsContainerRef = useRef(null);
-    const buttons = useRef(null);
+    const buttonsContainerRef = useRef<HTMLDivElement>(null);
+    const buttons = useRef<PayPalButtonsComponent | null>(null);
     const [, setErrorState] = useState(null);
 
     useEffect(() => {
         const cleanup = () => {
-            if (buttons.current) {
-                // @ts-expect-error - figure out types with useRef
-                buttons.current.close();
-            }
+            buttons?.current?.close();
         };
 
-        if (!isResolved) {
+        // verify the sdk script has successfully loaded
+        if (isResolved === false) {
             return cleanup;
         }
 
-        if (!hasValidGlobalStateForButtons(options, setErrorState)) {
+        // verify global state on window object
+        if (window.paypal === undefined || window.paypal.Buttons === undefined) {
+            setErrorState(() => {
+                throw new Error(getErrorMessage(options));
+            });
             return cleanup;
         }
 
-        // @ts-expect-error - null checks
         buttons.current = window.paypal.Buttons({ ...props });
 
-        // @ts-expect-error - null checks
-        if (!buttons.current.isEligible()) {
+        // only render the button when it's eligible
+        if (buttons.current.isEligible() === false) {
             return cleanup;
         }
 
-        // @ts-expect-error - null checks
+        if (buttonsContainerRef.current === null) {
+            return cleanup;
+        }
+
         buttons.current.render(buttonsContainerRef.current).catch((err) => {
             console.error(
                 `Failed to render <PayPalButtons /> component. ${err}`
@@ -57,6 +61,23 @@ export default function PayPalButtons(props: PayPalButtonsReactProps) {
     }, [isResolved, props.forceReRender, props.fundingSource]);
 
     return <div ref={buttonsContainerRef} />;
+}
+
+function getErrorMessage({ components = "" }) {
+    let errorMessage =
+    "Unable to render <PayPalButtons /> because window.paypal.Buttons is undefined.";
+
+    // the JS SDK includes the Buttons component by default when no 'components' are specified.
+    // The 'buttons' component must be included in the 'components' list when using it with other components.
+    if (components.length && !components.includes("buttons")) {
+        const expectedComponents = `${components},buttons`;
+
+        errorMessage +=
+            "\nTo fix the issue, add 'buttons' to the list of components passed to the parent PayPalScriptProvider:" +
+            `\n\`<PayPalScriptProvider options={{ components: '${expectedComponents}'}}>\`.`;
+    }
+
+    return errorMessage;
 }
 
 // @ts-expect-error - figure out setErrorState
