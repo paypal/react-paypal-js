@@ -32,7 +32,7 @@ export default function PayPalButtons(props: PayPalButtonsReactProps) {
             return cleanup;
         }
 
-        // verify global state on window object
+        // verify dependency on global state
         if (window.paypal === undefined || window.paypal.Buttons === undefined) {
             setErrorState(() => {
                 throw new Error(getErrorMessage(options));
@@ -42,7 +42,7 @@ export default function PayPalButtons(props: PayPalButtonsReactProps) {
 
         buttons.current = window.paypal.Buttons({ ...props });
 
-        // only render the button when it's eligible
+        // only render the button when eligible
         if (buttons.current.isEligible() === false) {
             return cleanup;
         }
@@ -78,31 +78,6 @@ function getErrorMessage({ components = "" }) {
     }
 
     return errorMessage;
-}
-
-// @ts-expect-error - figure out setErrorState
-function hasValidGlobalStateForButtons({ components = "" }, setErrorState) {
-    // @ts-expect-error - needs null checks
-    if (typeof window.paypal.Buttons !== "undefined") {
-        return true;
-    }
-
-    let errorMessage =
-        "Unable to render <PayPalButtons /> because window.paypal.Buttons is undefined.";
-
-    // the JS SDK includes the Buttons component by default when no 'components' are specified.
-    // The 'buttons' component must be included in the 'components' list when using it with other components.
-    if (components.length && !components.includes("buttons")) {
-        const expectedComponents = `${components},buttons`;
-
-        errorMessage +=
-            "\nTo fix the issue, add 'buttons' to the list of components passed to the parent PayPalScriptProvider:" +
-            `\n\`<PayPalScriptProvider options={{ components: '${expectedComponents}'}}>\`.`;
-    }
-    setErrorState(() => {
-        throw new Error(errorMessage);
-    });
-    return false;
 }
 
 PayPalButtons.propTypes = {
