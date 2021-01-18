@@ -46,8 +46,7 @@ function scriptReducer(state: ScriptContextState, action: ScriptReducerAction) {
             };
 
         default: {
-            // @ts-expect-error - allow access to action.type
-            throw new Error(`Unhandled action type: ${action.type}`);
+            return state;
         }
     }
 }
