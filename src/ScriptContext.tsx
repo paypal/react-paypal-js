@@ -14,58 +14,54 @@ interface ScriptContextState {
     loadingStatus: SCRIPT_LOADING_STATE;
 }
 
-interface ScriptDispatchState {
+interface ScriptContextDerivedState {
     options: PayPalScriptOptions;
     isPending: boolean;
     isRejected: boolean;
     isResolved: boolean;
 }
 
+type ScriptReducerAction =
+    | { type: "setLoadingStatus"; value: SCRIPT_LOADING_STATE }
+    | { type: "resetOptions"; value: PayPalScriptOptions };
+
+type ScriptReducerDispatch = (action: ScriptReducerAction) => void;
+
 const ScriptContext = createContext<ScriptContextState | null>(null);
-const ScriptDispatchContext = createContext<ScriptDispatchState | null>(null);
+const ScriptDispatchContext = createContext<ScriptReducerDispatch | null>(null);
 
-// const ScriptContext = createContext({ options: {}, loadingStatus: SCRIPT_LOADING_STATE.PENDING });
-// const ScriptDispatchContext = createContext({
-//     options: {},
-//     isPending: true,
-//     isRejected: false,
-//     isResolved: false,
-// });
-
-interface ScriptReducerActions {
-    type: "setLoadingStatus" | "resetOptions";
-    value: SCRIPT_LOADING_STATE | PayPalScriptOptions;
-}
-
-function scriptReducer(state: ScriptContextState, action: ScriptReducerActions): ScriptContextState {
+function scriptReducer(state: ScriptContextState, action: ScriptReducerAction) {
     switch (action.type) {
         case "setLoadingStatus":
-            const loadingStatus = action.value as SCRIPT_LOADING_STATE;
             return {
                 options: {
                     ...state.options,
                 },
-                loadingStatus
+                loadingStatus: action.value,
             };
         case "resetOptions":
-            const options = action.value as PayPalScriptOptions;
             return {
                 loadingStatus: SCRIPT_LOADING_STATE.PENDING,
-                options
+                options: action.value,
             };
 
         default: {
+            // @ts-expect-error - allow access to action.type
             throw new Error(`Unhandled action type: ${action.type}`);
         }
     }
 }
 
-function usePayPalScriptReducer() {
+function usePayPalScriptReducer(): [
+    ScriptContextDerivedState,
+    ScriptReducerDispatch
+] {
     const scriptContext = useContext(ScriptContext);
     const dispatchContext = useContext(ScriptDispatchContext);
+
     if (scriptContext === null || dispatchContext === null) {
         throw new Error(
-            "useScriptReducer must be used within a ScriptProvider"
+            "usePayPalScriptReducer must be used within a PayPalScriptProvider"
         );
     }
 
@@ -122,7 +118,6 @@ function PayPalScriptProvider({ options, children }: ScriptProviderProps) {
 
     return (
         <ScriptContext.Provider value={state}>
-            {/* @ts-expect-error - still need to create types for context */}
             <ScriptDispatchContext.Provider value={dispatch}>
                 {children}
             </ScriptDispatchContext.Provider>
