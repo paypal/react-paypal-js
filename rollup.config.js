@@ -51,6 +51,6 @@ export default [
             ],
         },
         plugins: [typescript({ ...tsconfigOverride }), nodeResolve()],
-        external: ["react", "prop-types", "@paypal/sdk-constants/dist/module"],
+        external: ["react", "prop-types"],
     },
 ];
