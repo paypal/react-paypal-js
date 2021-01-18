@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePayPalScriptReducer } from "../ScriptContext";
-import type { PayPalMarksComponentProps, PayPalMarksComponent } from "@paypal/paypal-js/types/components/marks";
+import type {
+    PayPalMarksComponentProps,
+    PayPalMarksComponent,
+} from "@paypal/paypal-js/types/components/marks";
 
 /**
  * The `<PayPalMarks />` component is used for conditionally rendering different payment options using radio buttons.
@@ -42,7 +45,7 @@ export default function PayPalMarks(props: PayPalMarksComponentProps) {
             return;
         }
 
-        // verify dependency on global state
+        // verify dependency on window.paypal object
         if (window.paypal === undefined || window.paypal.Marks === undefined) {
             setErrorState(() => {
                 throw new Error(getErrorMessage(options));

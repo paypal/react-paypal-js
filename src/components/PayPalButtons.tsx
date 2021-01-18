@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePayPalScriptReducer } from "../ScriptContext";
-import type { PayPalButtonsComponentProps, PayPalButtonsComponent } from "@paypal/paypal-js/types/components/buttons";
+import type {
+    PayPalButtonsComponentProps,
+    PayPalButtonsComponent,
+} from "@paypal/paypal-js/types/components/buttons";
 
 interface PayPalButtonsReactProps extends PayPalButtonsComponentProps {
-    forceReRender?: unknown
+    forceReRender?: unknown;
 }
 /**
  * This `<PayPalButtons />` component renders the [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).
@@ -32,8 +35,11 @@ export default function PayPalButtons(props: PayPalButtonsReactProps) {
             return cleanup;
         }
 
-        // verify dependency on global state
-        if (window.paypal === undefined || window.paypal.Buttons === undefined) {
+        // verify dependency on window.paypal object
+        if (
+            window.paypal === undefined ||
+            window.paypal.Buttons === undefined
+        ) {
             setErrorState(() => {
                 throw new Error(getErrorMessage(options));
             });
@@ -65,7 +71,7 @@ export default function PayPalButtons(props: PayPalButtonsReactProps) {
 
 function getErrorMessage({ components = "" }) {
     let errorMessage =
-    "Unable to render <PayPalButtons /> because window.paypal.Buttons is undefined.";
+        "Unable to render <PayPalButtons /> because window.paypal.Buttons is undefined.";
 
     // the JS SDK includes the Buttons component by default when no 'components' are specified.
     // The 'buttons' component must be included in the 'components' list when using it with other components.
