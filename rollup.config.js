@@ -27,7 +27,10 @@ export default [
                 ...tsconfigOverride,
             }),
             nodeResolve(),
-            babel({ presets: ["@babel/preset-react"] }),
+            babel({
+                babelHelpers: "bundled",
+                presets: ["@babel/preset-react"],
+            }),
         ],
         external: ["react", "prop-types"],
     },
@@ -47,6 +50,7 @@ export default [
                 }),
             ],
         },
-        plugins: [typescript({ ...tsconfigOverride })],
+        plugins: [typescript({ ...tsconfigOverride }), nodeResolve()],
+        external: ["react", "prop-types", "@paypal/sdk-constants/dist/module"],
     },
 ];
