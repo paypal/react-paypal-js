@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     PayPalScriptProvider,
     usePayPalScriptReducer,
@@ -36,6 +36,44 @@ export const Currency = () => {
             },
         });
     }
+
+    return (
+        <>
+            <select
+                value={currency}
+                onChange={onCurrencyChange}
+                name="currency"
+                id="currency"
+                style={{ marginBottom: "20px" }}
+            >
+                <option value="USD">United States dollar</option>
+                <option value="EUR">Euro</option>
+                <option value="CAD">Canadian dollar</option>
+            </select>
+            <PayPalButtons />
+        </>
+    );
+};
+
+export const CurrencyWithUseEffect = () => {
+    const [{ options, isResolved }, dispatch] = usePayPalScriptReducer();
+    const [currency, setCurrency] = useState(options.currency);
+
+    function onCurrencyChange({ target: { value } }) {
+        setCurrency(value);
+    }
+
+    useEffect(() => {
+        if (isResolved) {
+            dispatch({
+                type: "resetOptions",
+                value: {
+                    ...scriptProviderOptions,
+                    currency,
+                },
+            });
+        }
+    }, [currency]);
 
     return (
         <>
