@@ -108,7 +108,7 @@ describe("<PayPalButtons />", () => {
                     <button onClick={() => setAmount(amount + 1)}>
                         Update Amount
                     </button>
-                    <PayPalButtons forceReRender={amount} />
+                    <PayPalButtons forceReRender={[amount]} />
                 </>
             );
         }
