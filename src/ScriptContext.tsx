@@ -19,9 +19,11 @@ enum SCRIPT_LOADING_STATE {
     RESOLVED = "resolved",
 }
 
+type ScriptLoadingState = `${SCRIPT_LOADING_STATE}`;
+
 interface ScriptContextState {
     options: ReactPayPalScriptOptions;
-    loadingStatus: SCRIPT_LOADING_STATE;
+    loadingStatus: SCRIPT_LOADING_STATE | ScriptLoadingState;
 }
 
 interface ScriptContextDerivedState {
@@ -33,7 +35,10 @@ interface ScriptContextDerivedState {
 }
 
 type ScriptReducerAction =
-    | { type: "setLoadingStatus"; value: SCRIPT_LOADING_STATE }
+    | {
+          type: "setLoadingStatus";
+          value: SCRIPT_LOADING_STATE | ScriptLoadingState;
+      }
     | { type: "resetOptions"; value: ReactPayPalScriptOptions };
 
 type ScriptReducerDispatch = (action: ScriptReducerAction) => void;
