@@ -12,18 +12,18 @@ export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
     "data-react-paypal-script-id": string;
 }
 
-enum SCRIPT_LOADING_STATE {
-    INITIAL = "initial",
-    PENDING = "pending",
-    REJECTED = "rejected",
-    RESOLVED = "resolved",
-}
+const SCRIPT_LOADING_STATE = {
+    INITIAL: "initial",
+    PENDING: "pending",
+    REJECTED: "rejected",
+    RESOLVED: "resolved",
+} as const;
 
-type ScriptLoadingState = `${SCRIPT_LOADING_STATE}`;
+type ScriptLoadingState = typeof SCRIPT_LOADING_STATE[keyof typeof SCRIPT_LOADING_STATE];
 
 interface ScriptContextState {
     options: ReactPayPalScriptOptions;
-    loadingStatus: SCRIPT_LOADING_STATE | ScriptLoadingState;
+    loadingStatus: ScriptLoadingState;
 }
 
 interface ScriptContextDerivedState {
@@ -37,7 +37,7 @@ interface ScriptContextDerivedState {
 type ScriptReducerAction =
     | {
           type: "setLoadingStatus";
-          value: SCRIPT_LOADING_STATE | ScriptLoadingState;
+          value: ScriptLoadingState;
       }
     | { type: "resetOptions"; value: ReactPayPalScriptOptions };
 
