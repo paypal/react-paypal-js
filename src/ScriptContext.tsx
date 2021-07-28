@@ -8,6 +8,8 @@ import React, {
 import { loadScript } from "@paypal/paypal-js";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
+import { hashStr } from "./utils";
+
 export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
     "data-react-paypal-script-id": string;
 }
@@ -82,25 +84,8 @@ function scriptReducer(state: ScriptContextState, action: ScriptReducerAction) {
     }
 }
 
-function getHashFromString(str: string): string {
-    let hash = "";
-
-    for (let i = 0; i < str.length; i++) {
-        let total = str[i].charCodeAt(0) * i;
-
-        if (str[i + 1]) {
-            total += str[i + 1].charCodeAt(0) * (i - 1);
-        }
-
-        hash += String.fromCharCode(97 + (Math.abs(total) % 26));
-    }
-
-    return hash;
-}
-
 function getScriptID(options: PayPalScriptOptions) {
-    const hashedString = getHashFromString(JSON.stringify(options));
-    return `react-paypal-js-${hashedString}`;
+    return `react-paypal-js-${hashStr(JSON.stringify(options))}`;
 }
 
 function destroySDKScript(reactPayPalScriptID: string) {
