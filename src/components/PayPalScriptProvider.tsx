@@ -25,7 +25,7 @@ export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
         loadingStatus: deferLoading
             ? SCRIPT_LOADING_STATE.INITIAL
             : SCRIPT_LOADING_STATE.PENDING,
-        dispatch: undefined,
+        dispatch: null,
     });
 
     React.useEffect(() => {

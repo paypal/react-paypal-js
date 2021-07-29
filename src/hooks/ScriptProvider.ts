@@ -4,8 +4,9 @@ import {
     SCRIPT_LOADING_STATE,
     ScriptContextDerivedState,
     ScriptReducerAction,
+    ScriptContextState,
 } from "../types/ScriptProvider";
-import { ScriptContext, scriptReducer } from "../context/ScriptProvider";
+import { ScriptContext } from "../context/ScriptProvider";
 
 /**
  * Custom hook to get access to the Script context and
@@ -18,10 +19,9 @@ export function usePayPalScriptReducer(): [
     React.Dispatch<ScriptReducerAction>
 ] {
     const scriptContext = React.useContext(ScriptContext);
-
-    if (scriptContext == null || scriptContext?.dispatch == null) {
+    if (scriptContext == undefined || scriptContext?.dispatch == undefined) {
         throw new Error(
-            "usePayPalScriptReducer must be used within a PayPalScriptProvider"
+            `${arguments.callee.name} must be used within a PayPalScriptProvider`
         );
     }
 

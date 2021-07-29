@@ -37,7 +37,7 @@ export type InitialState = {
 export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
-    dispatch: React.Dispatch<ScriptReducerAction> | undefined;
+    dispatch: React.Dispatch<ScriptReducerAction> | null;
 }
 
 export interface ScriptContextDerivedState {
