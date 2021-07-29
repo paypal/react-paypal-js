@@ -78,7 +78,7 @@ export function scriptReducer(
     }
 }
 
-// Create the React context for component tree
+// Create the React context to use in the script provider component
 export const ScriptContext = createContext<ScriptContextState | undefined>(
     undefined
 );
