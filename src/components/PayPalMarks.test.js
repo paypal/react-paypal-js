@@ -1,7 +1,7 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
 
-import { PayPalScriptProvider } from "../ScriptContext";
+import { PayPalScriptProvider } from "../components/PayPalScriptProvider.tsx";
 import { PayPalMarks } from "./PayPalMarks";
 import { FUNDING } from "@paypal/sdk-constants";
 import { loadScript } from "@paypal/paypal-js";

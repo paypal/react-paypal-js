@@ -2,12 +2,11 @@ import React, { useState, FunctionComponent, ChangeEvent } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import type { CreateOrderActions } from "@paypal/paypal-js/types/components/buttons";
 
-import {
-    PayPalScriptProvider,
-    usePayPalScriptReducer,
-    PayPalButtons,
-} from "../index";
+import { PayPalButtons } from "../index";
 import { getOptionsFromQueryString } from "./utils";
+import { DISPATCH_ACTION } from "../types/ScriptProvider";
+import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
+import { usePayPalScriptReducer } from "../hooks/ScriptProvider";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -29,7 +28,7 @@ export const Currency: FunctionComponent = () => {
         function onCurrencyChange(event: ChangeEvent<HTMLSelectElement>) {
             setCurrency(event.target.value);
             dispatch({
-                type: "resetOptions",
+                type: DISPATCH_ACTION.RESET,
                 value: {
                     ...options,
                     currency: event.target.value,
@@ -93,7 +92,7 @@ export const LoadingSpinner: FunctionComponent = () => {
                 style={{ display: "block", marginBottom: "20px" }}
                 onClick={() => {
                     dispatch({
-                        type: "resetOptions",
+                        type: DISPATCH_ACTION.RESET,
                         value: {
                             ...options,
                             "data-order-id": Date.now().toString(),

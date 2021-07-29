@@ -7,10 +7,10 @@ import {
     act,
 } from "@testing-library/react";
 
-import { PayPalScriptProvider } from "../ScriptContext";
 import { PayPalButtons } from "./PayPalButtons";
 import { FUNDING } from "@paypal/sdk-constants";
 import { loadScript } from "@paypal/paypal-js";
+import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),

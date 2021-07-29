@@ -1,8 +1,9 @@
 import React, { FunctionComponent, ReactElement } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
-import { FUNDING, PayPalScriptProvider, PayPalButtons } from "../index";
+import { FUNDING, PayPalButtons } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
+import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id":

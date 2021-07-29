@@ -1,8 +1,11 @@
 import React, { FunctionComponent, ReactElement } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
-import { PayPalScriptProvider, usePayPalScriptReducer } from "../index";
+// import { usePayPalScriptReducer } from "../index";
 import { getOptionsFromQueryString } from "./utils";
+import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
+import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "../types/ScriptProvider";
+import { usePayPalScriptReducer } from "../hooks/ScriptProvider";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -34,8 +37,8 @@ export const DeferLoading: FunctionComponent = () => {
                 disabled={isResolved}
                 onClick={() => {
                     dispatch({
-                        type: "setLoadingStatus",
-                        value: "pending",
+                        type: DISPATCH_ACTION.LOADING,
+                        value: SCRIPT_LOADING_STATE.PENDING,
                     });
                 }}
             >

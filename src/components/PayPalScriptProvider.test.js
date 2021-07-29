@@ -1,7 +1,14 @@
 import React from "react";
-import { render, waitFor, fireEvent, screen } from "@testing-library/react";
-import { PayPalScriptProvider, usePayPalScriptReducer } from "./ScriptContext";
+import {
+    render,
+    waitFor,
+    fireEvent,
+    screen,
+    act,
+} from "@testing-library/react";
 import { loadScript } from "@paypal/paypal-js";
+import { PayPalScriptProvider } from "./PayPalScriptProvider";
+import { usePayPalScriptReducer } from "../hooks/ScriptProvider";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
@@ -183,11 +190,13 @@ describe("usePayPalScriptReducer", () => {
 
 function setupTestComponent() {
     const state = {};
-    function TestComponent({ children = null }) {
+    let TestComponent = null;
+
+    TestComponent = function TestComponent({ children = null }) {
         const [scriptState] = usePayPalScriptReducer();
         Object.assign(state, scriptState);
         return children;
-    }
+    };
 
     return {
         state,
