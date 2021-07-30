@@ -9,8 +9,8 @@ export enum SCRIPT_LOADING_STATE {
 }
 
 export enum DISPATCH_ACTION {
-    LOADING = "setLoadingStatus",
-    RESET = "resetOptions",
+    LOADING_STATUS = "setLoadingStatus",
+    RESET_OPTIONS = "resetOptions",
 }
 
 export interface ReactPayPalScriptOptions extends PayPalScriptOptions {

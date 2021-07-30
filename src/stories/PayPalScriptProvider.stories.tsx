@@ -37,7 +37,7 @@ export const DeferLoading: FunctionComponent = () => {
                 disabled={isResolved}
                 onClick={() => {
                     dispatch({
-                        type: DISPATCH_ACTION.LOADING,
+                        type: DISPATCH_ACTION.LOADING_STATUS,
                         value: SCRIPT_LOADING_STATE.PENDING,
                     });
                 }}

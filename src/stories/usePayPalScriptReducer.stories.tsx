@@ -27,7 +27,7 @@ export const Currency: FunctionComponent = () => {
         function onCurrencyChange(event: ChangeEvent<HTMLSelectElement>) {
             setCurrency(event.target.value);
             dispatch({
-                type: DISPATCH_ACTION.RESET,
+                type: DISPATCH_ACTION.RESET_OPTIONS,
                 value: {
                     ...options,
                     currency: event.target.value,
@@ -91,7 +91,7 @@ export const LoadingSpinner: FunctionComponent = () => {
                 style={{ display: "block", marginBottom: "20px" }}
                 onClick={() => {
                     dispatch({
-                        type: DISPATCH_ACTION.RESET,
+                        type: DISPATCH_ACTION.RESET_OPTIONS,
                         value: {
                             ...options,
                             "data-order-id": Date.now().toString(),

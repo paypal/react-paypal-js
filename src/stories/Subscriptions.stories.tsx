@@ -79,7 +79,7 @@ export const OrdersAndSubscriptions: FunctionComponent = () => {
 
     function onChange(event: ChangeEvent<HTMLInputElement>) {
         dispatch({
-            type: DISPATCH_ACTION.RESET,
+            type: DISPATCH_ACTION.RESET_OPTIONS,
             value:
                 event.target.value === "subscription"
                     ? subscriptionOptions

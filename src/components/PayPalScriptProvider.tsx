@@ -34,7 +34,7 @@ export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
             state.loadingStatus === SCRIPT_LOADING_STATE.INITIAL
         ) {
             return dispatch({
-                type: DISPATCH_ACTION.LOADING,
+                type: DISPATCH_ACTION.LOADING_STATUS,
                 value: SCRIPT_LOADING_STATE.PENDING,
             });
         }
@@ -46,7 +46,7 @@ export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
             .then(() => {
                 if (isSubscribed) {
                     dispatch({
-                        type: DISPATCH_ACTION.LOADING,
+                        type: DISPATCH_ACTION.LOADING_STATUS,
                         value: SCRIPT_LOADING_STATE.RESOLVED,
                     });
                 }
@@ -54,7 +54,7 @@ export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
             .catch(() => {
                 if (isSubscribed) {
                     dispatch({
-                        type: DISPATCH_ACTION.LOADING,
+                        type: DISPATCH_ACTION.LOADING_STATUS,
                         value: SCRIPT_LOADING_STATE.REJECTED,
                     });
                 }
