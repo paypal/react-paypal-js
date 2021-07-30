@@ -215,13 +215,11 @@ describe("usePayPalScriptReducer", () => {
 
 function setupTestComponent() {
     const state = {};
-    let TestComponent = null;
-
-    TestComponent = function TestComponent({ children = null }) {
+    function TestComponent({ children = null }) {
         const [scriptState] = usePayPalScriptReducer();
         Object.assign(state, scriptState);
         return children;
-    };
+    }
 
     return {
         state,
