@@ -63,7 +63,7 @@ export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
         return () => {
             isSubscribed = false;
         };
-    }, [options, deferLoading, state.loadingStatus]);
+    }, [state.options, deferLoading, state.loadingStatus]);
 
     return (
         <ScriptContext.Provider value={{ ...state, dispatch }}>
