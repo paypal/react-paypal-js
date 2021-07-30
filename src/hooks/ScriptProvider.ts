@@ -18,7 +18,7 @@ export function usePayPalScriptReducer(): [
     React.Dispatch<ScriptReducerAction>
 ] {
     const scriptContext = React.useContext(ScriptContext);
-    if (scriptContext == undefined || scriptContext?.dispatch == null) {
+    if (scriptContext == null || scriptContext?.dispatch == null) {
         throw new Error(
             "usePayPalScriptReducer must be used within a PayPalScriptProvider"
         );
