@@ -2,10 +2,13 @@ import React, { FunctionComponent, ReactElement, ChangeEvent } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import type { CreateSubscriptionActions } from "@paypal/paypal-js/types/components/buttons";
 
-import { PayPalScriptProvider, PayPalButtons } from "../index";
+import {
+    PayPalScriptProvider,
+    PayPalButtons,
+    usePayPalScriptReducer,
+    DISPATCH_ACTION,
+} from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
-import { DISPATCH_ACTION } from "../types/ScriptProvider";
-import { usePayPalScriptReducer } from "../hooks/ScriptProvider";
 
 const subscriptionOptions: PayPalScriptOptions = {
     "client-id": "test",

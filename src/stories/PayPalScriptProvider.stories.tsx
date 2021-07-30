@@ -3,8 +3,11 @@ import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options
 
 // import { usePayPalScriptReducer } from "../index";
 import { getOptionsFromQueryString } from "./utils";
-import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
-import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "../types/ScriptProvider";
+import {
+    PayPalScriptProvider,
+    DISPATCH_ACTION,
+    SCRIPT_LOADING_STATE,
+} from "../index";
 import { usePayPalScriptReducer } from "../hooks/ScriptProvider";
 
 const scriptProviderOptions: PayPalScriptOptions = {
