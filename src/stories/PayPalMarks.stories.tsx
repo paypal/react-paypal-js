@@ -6,9 +6,13 @@ import React, {
 } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
-import { PayPalMarks, PayPalButtons, FUNDING } from "../index";
+import {
+    PayPalScriptProvider,
+    PayPalMarks,
+    PayPalButtons,
+    FUNDING,
+} from "../index";
 import { getOptionsFromQueryString } from "./utils";
-import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",

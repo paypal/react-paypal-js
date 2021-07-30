@@ -2,10 +2,9 @@ import React, { useState, FunctionComponent, ChangeEvent } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import type { CreateOrderActions } from "@paypal/paypal-js/types/components/buttons";
 
-import { PayPalButtons } from "../index";
+import { PayPalScriptProvider, PayPalButtons } from "../index";
 import { getOptionsFromQueryString } from "./utils";
 import { DISPATCH_ACTION } from "../types/ScriptProvider";
-import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
 import { usePayPalScriptReducer } from "../hooks/ScriptProvider";
 
 const scriptProviderOptions: PayPalScriptOptions = {
