@@ -1,5 +1,6 @@
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import React from "react";
+import { SCRIPT_ID } from "../constants";
 
 export enum SCRIPT_LOADING_STATE {
     INITIAL = "initial",
@@ -14,11 +15,11 @@ export enum DISPATCH_ACTION {
 }
 
 export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
-    "data-react-paypal-script-id": string;
+    [SCRIPT_ID]: string;
 }
 
 export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
-    "data-react-paypal-script-id": string;
+    [SCRIPT_ID]: string;
 }
 
 export type ScriptReducerAction = {

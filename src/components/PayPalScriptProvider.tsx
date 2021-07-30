@@ -11,6 +11,7 @@ import {
     ScriptContext,
     scriptReducer,
 } from "../context/ScriptProvider";
+import { SCRIPT_ID } from "../constants";
 
 export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
     options,
@@ -20,7 +21,7 @@ export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
     const [state, dispatch] = React.useReducer(scriptReducer, {
         options: {
             ...options,
-            "data-react-paypal-script-id": `${getScriptID(options)}`,
+            [SCRIPT_ID]: `${getScriptID(options)}`,
         },
         loadingStatus: deferLoading
             ? SCRIPT_LOADING_STATE.INITIAL
