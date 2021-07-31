@@ -17,10 +17,6 @@ export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
     [SCRIPT_ID]: string;
 }
 
-export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
-    [SCRIPT_ID]: string;
-}
-
 export type ScriptReducerAction = {
     type: DISPATCH_ACTION;
     value:

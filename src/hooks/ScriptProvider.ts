@@ -25,16 +25,14 @@ export function usePayPalScriptReducer(): [
     }
 
     const derivedStatusContext = {
-        ...scriptContext!,
-        isInitial:
-            scriptContext!.loadingStatus === SCRIPT_LOADING_STATE.INITIAL,
-        isPending:
-            scriptContext!.loadingStatus === SCRIPT_LOADING_STATE.PENDING,
+        ...scriptContext,
+        isInitial: scriptContext.loadingStatus === SCRIPT_LOADING_STATE.INITIAL,
+        isPending: scriptContext.loadingStatus === SCRIPT_LOADING_STATE.PENDING,
         isResolved:
-            scriptContext!.loadingStatus === SCRIPT_LOADING_STATE.RESOLVED,
+            scriptContext.loadingStatus === SCRIPT_LOADING_STATE.RESOLVED,
         isRejected:
-            scriptContext!.loadingStatus === SCRIPT_LOADING_STATE.REJECTED,
+            scriptContext.loadingStatus === SCRIPT_LOADING_STATE.REJECTED,
     };
 
-    return [derivedStatusContext, scriptContext!.dispatch!];
+    return [derivedStatusContext, scriptContext.dispatch];
 }
