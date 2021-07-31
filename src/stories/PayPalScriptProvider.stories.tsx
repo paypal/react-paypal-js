@@ -1,7 +1,6 @@
 import { FunctionComponent, ReactElement } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
-// import { usePayPalScriptReducer } from "../index";
 import { getOptionsFromQueryString } from "./utils";
 import {
     PayPalScriptProvider,
