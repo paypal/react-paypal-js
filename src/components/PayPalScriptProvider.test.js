@@ -1,4 +1,3 @@
-import React from "react";
 import { render, waitFor, fireEvent, screen } from "@testing-library/react";
 import { loadScript } from "@paypal/paypal-js";
 import { PayPalScriptProvider } from "./PayPalScriptProvider";

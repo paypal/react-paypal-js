@@ -1,4 +1,4 @@
-import React from "react";
+import { FC, useEffect, useReducer } from "react";
 import { loadScript } from "@paypal/paypal-js";
 
 import {
@@ -13,12 +13,12 @@ import {
 } from "../context/ScriptProvider";
 import { SCRIPT_ID } from "../constants";
 
-export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
+export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
     options,
     children,
     deferLoading = false,
 }: ScriptProviderProps) => {
-    const [state, dispatch] = React.useReducer(scriptReducer, {
+    const [state, dispatch] = useReducer(scriptReducer, {
         options: {
             ...options,
             [SCRIPT_ID]: `${getScriptID(options)}`,
@@ -29,7 +29,7 @@ export const PayPalScriptProvider: React.FC<ScriptProviderProps> = ({
         dispatch: null,
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (
             deferLoading === false &&
             state.loadingStatus === SCRIPT_LOADING_STATE.INITIAL

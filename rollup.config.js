@@ -20,7 +20,7 @@ export default [
             typescript({
                 ...tsconfigOverride,
             }),
-            nodeResolve(),
+            nodeResolve({ extensions: ".jsx" }),
             babel({
                 babelHelpers: "bundled",
                 presets: ["@babel/preset-react"],
@@ -56,7 +56,7 @@ export default [
         input: "src/index.ts",
         plugins: [
             typescript({ ...tsconfigOverride }),
-            nodeResolve(),
+            nodeResolve({ extensions: ".jsx" }),
             cleanup({
                 comments: "none",
             }),

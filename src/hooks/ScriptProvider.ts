@@ -1,4 +1,4 @@
-import React from "react";
+import { useContext } from "react";
 
 import {
     SCRIPT_LOADING_STATE,
@@ -17,7 +17,7 @@ export function usePayPalScriptReducer(): [
     ScriptContextDerivedState,
     React.Dispatch<ScriptReducerAction>
 ] {
-    const scriptContext = React.useContext(ScriptContext);
+    const scriptContext = useContext(ScriptContext);
     if (scriptContext == null || scriptContext?.dispatch == null) {
         throw new Error(
             "usePayPalScriptReducer must be used within a PayPalScriptProvider"

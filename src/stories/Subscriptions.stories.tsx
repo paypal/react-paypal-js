@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement, ChangeEvent } from "react";
+import { FunctionComponent, ReactElement, ChangeEvent } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import type { CreateSubscriptionActions } from "@paypal/paypal-js/types/components/buttons";
 

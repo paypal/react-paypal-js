@@ -1,9 +1,4 @@
-import React, {
-    useState,
-    FunctionComponent,
-    ReactElement,
-    ChangeEvent,
-} from "react";
+import { useState, FunctionComponent, ReactElement, ChangeEvent } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import type {
     CreateOrderActions,

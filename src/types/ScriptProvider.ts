@@ -1,5 +1,4 @@
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
-import React from "react";
 import { SCRIPT_ID } from "../constants";
 
 export enum SCRIPT_LOADING_STATE {
