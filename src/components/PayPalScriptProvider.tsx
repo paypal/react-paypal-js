@@ -1,4 +1,4 @@
-import { FC, useEffect, useReducer } from "react";
+import React, { FC, useEffect, useReducer } from "react";
 import { loadScript } from "@paypal/paypal-js";
 
 import {

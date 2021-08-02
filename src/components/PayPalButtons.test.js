@@ -1,4 +1,4 @@
-import { Component, useState } from "react";
+import React, { Component, useState } from "react";
 import {
     render,
     waitFor,

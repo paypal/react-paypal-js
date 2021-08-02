@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, FunctionComponent } from "react";
+import React, { useEffect, useRef, useState, FunctionComponent } from "react";
 import { usePayPalScriptReducer } from "../hooks/ScriptProvider";
 import { getPayPalWindowNamespace, DEFAULT_PAYPAL_NAMESPACE } from "../utils";
 import type {

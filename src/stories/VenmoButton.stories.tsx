@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactElement } from "react";
+import React, { FunctionComponent, ReactElement } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
 import { PayPalScriptProvider, FUNDING, PayPalButtons } from "../index";
