@@ -1,17 +1,6 @@
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import { SCRIPT_ID } from "../constants";
-
-export enum SCRIPT_LOADING_STATE {
-    INITIAL = "initial",
-    PENDING = "pending",
-    REJECTED = "rejected",
-    RESOLVED = "resolved",
-}
-
-export enum DISPATCH_ACTION {
-    LOADING_STATUS = "setLoadingStatus",
-    RESET_OPTIONS = "resetOptions",
-}
+import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "./enums";
 
 export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
     [SCRIPT_ID]: string;
@@ -34,6 +23,10 @@ export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
     dispatch: React.Dispatch<ScriptReducerAction> | null;
+}
+
+export interface StrictScriptContextState extends ScriptContextState {
+    dispatch: React.Dispatch<ScriptReducerAction>;
 }
 
 export interface ScriptContextDerivedState {

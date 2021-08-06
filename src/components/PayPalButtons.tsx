@@ -1,38 +1,12 @@
-import React, {
-    useEffect,
-    useRef,
-    useState,
-    FunctionComponent,
-    ReactElement,
-} from "react";
-import { usePayPalScriptReducer } from "../hooks/ScriptProvider";
+import React, { useEffect, useRef, useState, FunctionComponent } from "react";
+import { usePayPalScriptReducer } from "../hooks/scriptProviderHooks";
 import { getPayPalWindowNamespace, DEFAULT_PAYPAL_NAMESPACE } from "../utils";
 import type {
-    PayPalButtonsComponentOptions,
     PayPalButtonsComponent,
     OnInitActions,
 } from "@paypal/paypal-js/types/components/buttons";
 
-export interface PayPalButtonsComponentProps
-    extends PayPalButtonsComponentOptions {
-    /**
-     * Used to re-render the component.
-     * Changes to this prop will destroy the existing Buttons and render them again using the current props.
-     */
-    forceReRender?: unknown[];
-    /**
-     * Pass a css class to the div container.
-     */
-    className?: string;
-    /**
-     * Disables the buttons.
-     */
-    disabled?: boolean;
-    /**
-     * Used to render custom content when ineligible.
-     */
-    children?: ReactElement | null;
-}
+import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
 
 /**
 This `<PayPalButtons />` component renders the [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).

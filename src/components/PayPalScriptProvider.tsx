@@ -1,16 +1,13 @@
 import React, { FC, useEffect, useReducer } from "react";
 import { loadScript } from "@paypal/paypal-js";
 
-import {
-    ScriptProviderProps,
-    SCRIPT_LOADING_STATE,
-    DISPATCH_ACTION,
-} from "../types/ScriptProvider";
+import type { ScriptProviderProps } from "../types/scriptProviderTypes";
+import { SCRIPT_LOADING_STATE, DISPATCH_ACTION } from "../types/enums";
 import {
     getScriptID,
     ScriptContext,
     scriptReducer,
-} from "../context/ScriptProvider";
+} from "../context/scriptProviderContext";
 import { SCRIPT_ID } from "../constants";
 
 export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
