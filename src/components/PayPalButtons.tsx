@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, FunctionComponent } from "react";
 import { usePayPalScriptReducer } from "../hooks/scriptProviderHooks";
-import { getPayPalWindowNamespace, DEFAULT_PAYPAL_NAMESPACE } from "../utils";
+import { getPayPalWindowNamespace } from "../utils";
+import { DEFAULT_PAYPAL_NAMESPACE } from "../constants";
 import type {
     PayPalButtonsComponent,
     OnInitActions,

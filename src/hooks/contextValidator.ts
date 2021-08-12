@@ -26,7 +26,7 @@ export function contextNotEmptyValidator(
 
 /**
  * Check if the data-client-token is set in the options of the context
- * Thi is required to create a Braintree client
+ * This is required to create a Braintree client
  *
  * @param scriptContext the result of connecting to the context provider
  * @returns strict context avoiding null values in the type and client token

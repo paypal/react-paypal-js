@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
-import type { ScriptContextState } from "../types/scriptProviderTypes";
 import { ScriptContext } from "../context/scriptProviderContext";
+import type { ScriptContextState } from "../types/scriptProviderTypes";
 import {
     contextNotEmptyValidator,
     contextOptionClientTokenNotEmptyValidator,
@@ -10,7 +10,7 @@ import {
 /**
  * Custom hook to get access to the ScriptProvider context
  *
- * @returns the state of the context
+ * @returns the state of the con text
  */
 export function useBraintreeProviderContext(): ScriptContextState {
     return contextOptionClientTokenNotEmptyValidator(

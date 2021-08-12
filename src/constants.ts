@@ -14,3 +14,7 @@ export const BRAINTREE_PAYPAL_CHECKOUT_SCRIPT_ID =
 const braintreeVersion = "3.79.1";
 export const BRAINTREE_SOURCE = `https://js.braintreegateway.com/web/${braintreeVersion}/js/client.min.js`;
 export const BRAINTREE_PAYPAL_CHECKOUT_SOURCE = `https://js.braintreegateway.com/web/${braintreeVersion}/js/paypal-checkout.min.js`;
+
+// Namespaces
+export const DEFAULT_PAYPAL_NAMESPACE = "paypal";
+export const DEFAULT_BRAINTREE_NAMESPACE = "braintree";

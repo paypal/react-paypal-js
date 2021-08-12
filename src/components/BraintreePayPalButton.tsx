@@ -7,15 +7,20 @@ import {
     BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
     BRAINTREE_CLIENT_SCRIPT_ID,
     BRAINTREE_PAYPAL_CHECKOUT_SCRIPT_ID,
+    DEFAULT_BRAINTREE_NAMESPACE,
 } from "../constants";
 import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
 import type { BraintreePayPalButtonsComponentProps } from "../types/braintreePayPalButtonTypes";
 import type { PayPalCheckout } from "braintree-web";
+import type { PayPalCheckoutTokenizationOptions } from "braintree-web/modules/paypal-checkout";
 import { PayPalButtons } from "./PayPalButtons";
 import { useBraintreeProviderContext } from "../hooks/braintreeProviderHooks";
+import { getBraintreeWindowNamespace } from "../utils";
 
 /**
  * React functional component to create a PayPal button using the Braintree
+ * This component is a wrapper of the PayPalButtons and override the logic
+ * of the createOrder and onApprove callback function from the SDK
  *
  * @param param0 the props of the component
  * @returns an JSX code to translate to the DOM
@@ -43,22 +48,19 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
                     attributes: { id: BRAINTREE_PAYPAL_CHECKOUT_SCRIPT_ID },
                 }),
             ]).then(async () => {
-                const clientToken = providerContext?.options[DATA_CLIENT_TOKEN];
+                const clientToken = providerContext?.options[
+                    DATA_CLIENT_TOKEN
+                ] as string;
 
-                if (clientToken === undefined) {
-                    throw new Error(
-                        "A client token wasn't found in the provider parent component"
-                    );
-                }
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                const clientInstance = await braintree.client.create({
+                const braintreeNamespace = getBraintreeWindowNamespace(
+                    DEFAULT_BRAINTREE_NAMESPACE
+                );
+                const clientInstance = await braintreeNamespace.client.create({
                     authorization: clientToken,
                 });
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+
                 setPayPalCheckoutInstance(
-                    await braintree.paypalCheckout.create({
+                    await braintreeNamespace.paypalCheckout.create({
                         client: clientInstance,
                     })
                 );
@@ -99,15 +101,15 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
                 braintreeButtonProps.onApprove != undefined &&
                 payPalCheckoutInstance != undefined
             ) {
-                // Keep the createOrder function reference
+                // Store the createOrder function reference
                 const braintreeOnApprove = braintreeButtonProps.onApprove;
 
-                braintreeButtonProps.onApprove = async (data: any) => {
-                    const payload =
-                        await payPalCheckoutInstance.tokenizePayment(data);
-
-                    return braintreeOnApprove(payload);
-                };
+                braintreeButtonProps.onApprove = async (data: unknown) =>
+                    braintreeOnApprove(
+                        await payPalCheckoutInstance.tokenizePayment(
+                            data as PayPalCheckoutTokenizationOptions
+                        )
+                    );
             }
         };
 
