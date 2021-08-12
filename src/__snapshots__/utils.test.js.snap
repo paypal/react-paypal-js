@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`testing hashStr util function should match the hash from the argument string 1`] = `168750823086891`;
+
+exports[`testing hashStr util function should match the hash from the argument string 2`] = `3220944844160148000`;
+
+exports[`testing hashStr util function should match the hash from the argument string 3`] = `1967181011973832700`;

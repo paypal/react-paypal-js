@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState, FunctionComponent } from "react";
 import { usePayPalScriptReducer } from "../hooks/scriptProviderHooks";
-import { getPayPalWindowNamespace } from "../utils";
+import { getNamespace } from "../utils";
 import { DEFAULT_PAYPAL_NAMESPACE } from "../constants";
 import type {
     PayPalButtonsComponent,
     OnInitActions,
 } from "@paypal/paypal-js/types/components/buttons";
-
+import type { PayPalNamespace } from "@paypal/paypal-js";
 import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
 
 /**
@@ -66,7 +66,7 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             return closeButtonsComponent;
         }
 
-        const paypalWindowNamespace = getPayPalWindowNamespace(
+        const paypalWindowNamespace = getNamespace<PayPalNamespace>(
             options["data-namespace"]
         );
 

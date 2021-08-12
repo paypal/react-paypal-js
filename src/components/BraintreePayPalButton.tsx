@@ -10,12 +10,15 @@ import {
     DEFAULT_BRAINTREE_NAMESPACE,
 } from "../constants";
 import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
-import type { BraintreePayPalButtonsComponentProps } from "../types/braintreePayPalButtonTypes";
+import type {
+    BraintreePayPalButtonsComponentProps,
+    BraintreeNamespace,
+} from "../types/braintreePayPalButtonTypes";
 import type { PayPalCheckout } from "braintree-web";
 import type { PayPalCheckoutTokenizationOptions } from "braintree-web/modules/paypal-checkout";
 import { PayPalButtons } from "./PayPalButtons";
 import { useBraintreeProviderContext } from "../hooks/braintreeProviderHooks";
-import { getBraintreeWindowNamespace } from "../utils";
+import { getNamespace } from "../utils";
 
 /**
  * React functional component to create a PayPal button using the Braintree
@@ -52,7 +55,7 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
                     DATA_CLIENT_TOKEN
                 ] as string;
 
-                const braintreeNamespace = getBraintreeWindowNamespace(
+                const braintreeNamespace = getNamespace<BraintreeNamespace>(
                     DEFAULT_BRAINTREE_NAMESPACE
                 );
                 const clientInstance = await braintreeNamespace.client.create({
