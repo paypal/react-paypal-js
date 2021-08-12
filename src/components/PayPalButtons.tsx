@@ -124,6 +124,7 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
         });
 
         return closeButtonsComponent;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isResolved, ...forceReRender, buttonProps.fundingSource]);
 
     // useEffect hook for managing disabled state

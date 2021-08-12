@@ -97,6 +97,7 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
                 );
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isResolved, markProps.fundingSource]);
 
     return <div ref={markContainerRef} className={className} />;

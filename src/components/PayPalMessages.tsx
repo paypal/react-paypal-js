@@ -72,6 +72,7 @@ export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
                         );
                     });
                 });
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isResolved, ...forceReRender]);
 
         return <div ref={messagesContainerRef} className={className} />;
