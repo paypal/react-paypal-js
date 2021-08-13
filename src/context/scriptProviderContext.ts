@@ -7,7 +7,7 @@ import type {
 } from "../types/scriptProviderTypes";
 import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "../types/enums";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
-import { isUndefined, hashStr, undefinedArgumentErrorMessage } from "../utils";
+import { hashStr } from "../utils";
 import { SCRIPT_ID } from "../constants";
 
 /**
@@ -16,8 +16,6 @@ import { SCRIPT_ID } from "../constants";
  * @returns the {@code string} containing the random library name
  */
 export function getScriptID(options: PayPalScriptOptions): string {
-    if (isUndefined(options))
-        throw new Error(undefinedArgumentErrorMessage("getScriptID"));
     return `react-paypal-js-${hashStr(JSON.stringify(options))}`;
 }
 

@@ -7,18 +7,13 @@ import {
     BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
     BRAINTREE_CLIENT_SCRIPT_ID,
     BRAINTREE_PAYPAL_CHECKOUT_SCRIPT_ID,
-    DEFAULT_BRAINTREE_NAMESPACE,
 } from "../constants";
 import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
-import type {
-    BraintreePayPalButtonsComponentProps,
-    BraintreeNamespace,
-} from "../types/braintreePayPalButtonTypes";
+import type { BraintreePayPalButtonsComponentProps } from "../types/braintreePayPalButtonTypes";
 import type { PayPalCheckout } from "braintree-web";
-import type { PayPalCheckoutTokenizationOptions } from "braintree-web/modules/paypal-checkout";
 import { PayPalButtons } from "./PayPalButtons";
 import { useBraintreeProviderContext } from "../hooks/braintreeProviderHooks";
-import { getNamespace } from "../utils";
+import { getBraintreeWindowNamespace } from "../utils";
 
 /**
  * React functional component to create a PayPal button using the Braintree
@@ -55,9 +50,7 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
                     DATA_CLIENT_TOKEN
                 ] as string;
 
-                const braintreeNamespace = getNamespace<BraintreeNamespace>(
-                    DEFAULT_BRAINTREE_NAMESPACE
-                );
+                const braintreeNamespace = getBraintreeWindowNamespace();
                 const clientInstance = await braintreeNamespace.client.create({
                     authorization: clientToken,
                 });
@@ -76,7 +69,7 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
          *
          * @param braintreeButtonProps the component button options
          */
-        const overrideCreateOrder = (
+        const decorateCreateOrder = (
             braintreeButtonProps: BraintreePayPalButtonsComponentProps
         ) => {
             if (
@@ -86,8 +79,11 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
                 // Keep the createOrder function reference
                 const functionReference = braintreeButtonProps.createOrder;
 
-                braintreeButtonProps.createOrder = () =>
-                    functionReference(payPalCheckoutInstance);
+                braintreeButtonProps.createOrder = (data, actions) =>
+                    functionReference(data, {
+                        ...actions,
+                        braintree: payPalCheckoutInstance,
+                    });
             }
         };
 
@@ -97,7 +93,7 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
          *
          * @param braintreeButtonProps the component button options
          */
-        const overrideOnApprove = (
+        const decorateOnApprove = (
             braintreeButtonProps: BraintreePayPalButtonsComponentProps
         ) => {
             if (
@@ -107,12 +103,11 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
                 // Store the createOrder function reference
                 const braintreeOnApprove = braintreeButtonProps.onApprove;
 
-                braintreeButtonProps.onApprove = async (data: unknown) =>
-                    braintreeOnApprove(
-                        await payPalCheckoutInstance.tokenizePayment(
-                            data as PayPalCheckoutTokenizationOptions
-                        )
-                    );
+                braintreeButtonProps.onApprove = async (data, actions) =>
+                    braintreeOnApprove(data, {
+                        ...actions,
+                        braintree: payPalCheckoutInstance,
+                    });
             }
         };
 
@@ -122,11 +117,11 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
          * @param braintreeButtonProps the component button options
          * @returns a new copy of the component button options casted as {@link PayPalButtonsComponentProps}
          */
-        const overrideActions = (
+        const decorateActions = (
             braintreeButtonProps: BraintreePayPalButtonsComponentProps
         ) => {
-            overrideCreateOrder(braintreeButtonProps);
-            overrideOnApprove(braintreeButtonProps);
+            decorateCreateOrder(braintreeButtonProps);
+            decorateOnApprove(braintreeButtonProps);
 
             return { ...buttonProps } as PayPalButtonsComponentProps;
         };
@@ -138,7 +133,7 @@ export const BraintreePayPalButton: FC<BraintreePayPalButtonsComponentProps> =
                         className={className}
                         disabled={disabled}
                         forceReRender={forceReRender}
-                        {...overrideActions(buttonProps)}
+                        {...decorateActions(buttonProps)}
                     >
                         {children}
                     </PayPalButtons>

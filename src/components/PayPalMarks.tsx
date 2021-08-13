@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState, FunctionComponent } from "react";
 import { usePayPalScriptReducer } from "../hooks/scriptProviderHooks";
-import { getNamespace } from "../utils";
+import { getPayPalWindowNamespace } from "../utils";
 import { DEFAULT_PAYPAL_NAMESPACE } from "../constants";
 import type {
     PayPalMarksComponentOptions,
     PayPalMarksComponent,
 } from "@paypal/paypal-js/types/components/marks";
-import type { PayPalNamespace } from "@paypal/paypal-js";
 
 export interface PayPalMarksComponentProps extends PayPalMarksComponentOptions {
     /**
@@ -55,7 +54,7 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
             return;
         }
 
-        const paypalWindowNamespace = getNamespace<PayPalNamespace>(
+        const paypalWindowNamespace = getPayPalWindowNamespace(
             options["data-namespace"]
         );
 
