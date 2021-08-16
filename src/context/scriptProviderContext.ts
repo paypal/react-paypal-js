@@ -7,6 +7,7 @@ import type {
 } from "../types/scriptProviderTypes";
 import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "../types/enums";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
+import type { PayPalCheckout } from "../types/braintree/paypalCheckout";
 import { hashStr } from "../utils";
 import { SCRIPT_ID } from "../constants";
 
@@ -69,7 +70,7 @@ export function scriptReducer(
         case DISPATCH_ACTION.SET_BRAINTREE_INSTANCE:
             return {
                 ...state,
-                braintreePayPalCheckoutInstance: action.value,
+                braintreePayPalCheckoutInstance: action.value as PayPalCheckout,
             };
 
         default: {

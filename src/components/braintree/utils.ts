@@ -1,3 +1,4 @@
+import type { PayPalCheckout } from "../../types/braintree/paypalCheckout";
 import type { BraintreePayPalButtonsComponentProps } from "../../types/braintreePayPalButtonTypes";
 import type { PayPalButtonsComponentProps } from "../../types/paypalButtonTypes";
 
@@ -9,7 +10,7 @@ import type { PayPalButtonsComponentProps } from "../../types/paypalButtonTypes"
  */
 const decorateCreateOrder = (
     braintreeButtonProps: BraintreePayPalButtonsComponentProps,
-    payPalCheckoutInstance: unknown
+    payPalCheckoutInstance: PayPalCheckout
 ) => {
     if (
         braintreeButtonProps.createOrder != undefined &&
@@ -34,7 +35,7 @@ const decorateCreateOrder = (
  */
 const decorateOnApprove = (
     braintreeButtonProps: BraintreePayPalButtonsComponentProps,
-    payPalCheckoutInstance: unknown
+    payPalCheckoutInstance: PayPalCheckout
 ) => {
     if (
         braintreeButtonProps.onApprove != undefined &&
@@ -60,7 +61,7 @@ const decorateOnApprove = (
  */
 export const decorateActions = (
     buttonProps: BraintreePayPalButtonsComponentProps,
-    payPalCheckoutInstance: unknown
+    payPalCheckoutInstance: PayPalCheckout
 ): PayPalButtonsComponentProps => {
     decorateCreateOrder(buttonProps, payPalCheckoutInstance);
     decorateOnApprove(buttonProps, payPalCheckoutInstance);
