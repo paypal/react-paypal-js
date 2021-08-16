@@ -1,7 +1,8 @@
 import { useContext } from "react";
 
-import { ScriptContext } from "../context/scriptProviderContext";
 import type { ScriptContextState } from "../types/scriptProviderTypes";
+import type { ScriptReducerAction } from "../types/scriptProviderTypes";
+import { ScriptContext } from "../context/scriptProviderContext";
 import {
     contextNotEmptyValidator,
     contextOptionClientTokenNotEmptyValidator,
@@ -12,8 +13,13 @@ import {
  *
  * @returns the state of the con text
  */
-export function useBraintreeProviderContext(): ScriptContextState {
-    return contextOptionClientTokenNotEmptyValidator(
+export function useBraintreeProviderContext(): [
+    ScriptContextState,
+    React.Dispatch<ScriptReducerAction>
+] {
+    const scriptContext = contextOptionClientTokenNotEmptyValidator(
         contextNotEmptyValidator(useContext(ScriptContext))
     );
+
+    return [scriptContext, scriptContext.dispatch];
 }

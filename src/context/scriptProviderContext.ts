@@ -66,6 +66,11 @@ export function scriptReducer(
                     )}`,
                 },
             };
+        case DISPATCH_ACTION.SET_BRAINTREE_INSTANCE:
+            return {
+                ...state,
+                braintreePayPalCheckoutInstance: action.value,
+            };
 
         default: {
             return state;

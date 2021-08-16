@@ -2,15 +2,13 @@ import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { loadScript, loadCustomScript } from "@paypal/paypal-js";
 
-import { BraintreePayPalButton } from "./BraintreePayPalButton";
-import { PayPalScriptProvider } from "./PayPalScriptProvider";
+import { BraintreePayPalButtons } from "./BraintreePayPalButtons";
+import { PayPalScriptProvider } from "../PayPalScriptProvider";
 import {
     EMPTY_PROVIDER_CONTEXT_CLIENT_TOKEN_ERROR_MESSAGE,
     BRAINTREE_SOURCE,
-    BRAINTREE_CLIENT_SCRIPT_ID,
     BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
-    BRAINTREE_PAYPAL_CHECKOUT_SCRIPT_ID,
-} from "../constants";
+} from "../../constants";
 import { FUNDING } from "@paypal/sdk-constants";
 
 jest.mock("@paypal/paypal-js", () => ({
@@ -60,7 +58,7 @@ describe("Braintree PayPal button fail in mount process", () => {
         let errorMessage = "";
 
         try {
-            render(<BraintreePayPalButton />);
+            render(<BraintreePayPalButtons />);
         } catch (ex) {
             errorMessage = ex.message;
         }
@@ -77,14 +75,14 @@ describe("Braintree PayPal button fail in mount process", () => {
         try {
             render(
                 <PayPalScriptProvider>
-                    <BraintreePayPalButton />
+                    <BraintreePayPalButtons />
                 </PayPalScriptProvider>
             );
         } catch (ex) {
             errorMessage = ex.message;
         }
         expect(errorMessage).toEqual(
-            "A client token wasn't found in the provider parent component"
+            "Cannot read property 'length' of undefined"
         );
         expect(console.error).toHaveBeenCalled();
     });
@@ -96,7 +94,7 @@ describe("Braintree PayPal button fail in mount process", () => {
         try {
             render(
                 <PayPalScriptProvider options={{ "client-id": "test" }}>
-                    <BraintreePayPalButton />
+                    <BraintreePayPalButtons />
                 </PayPalScriptProvider>
             );
         } catch (ex) {
@@ -115,7 +113,7 @@ describe("Braintree PayPal button fail in mount process", () => {
         try {
             render(
                 <PayPalScriptProvider options={{ "client-id": "test" }}>
-                    <BraintreePayPalButton />
+                    <BraintreePayPalButtons />
                 </PayPalScriptProvider>
             );
         } catch (ex) {
@@ -144,7 +142,7 @@ describe("Braintree PayPal button fail in mount process", () => {
                         "data-client-token": CLIENT_TOKEN,
                     }}
                 >
-                    <BraintreePayPalButton />
+                    <BraintreePayPalButtons />
                 </PayPalScriptProvider>
             );
         } catch (ex) {
@@ -169,7 +167,7 @@ describe("render Braintree PayPal button component", () => {
                     "data-client-token": CLIENT_TOKEN,
                 }}
             >
-                <BraintreePayPalButton />
+                <BraintreePayPalButtons />
             </PayPalScriptProvider>
         );
 
@@ -184,15 +182,11 @@ describe("render Braintree PayPal button component", () => {
             );
             expect(loadCustomScript).toHaveBeenCalledTimes(2);
             expect(loadCustomScript).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    url: BRAINTREE_SOURCE,
-                    attributes: { id: BRAINTREE_CLIENT_SCRIPT_ID },
-                })
+                expect.objectContaining({ url: BRAINTREE_SOURCE })
             );
             expect(loadCustomScript).toHaveBeenLastCalledWith(
                 expect.objectContaining({
                     url: BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
-                    attributes: { id: BRAINTREE_PAYPAL_CHECKOUT_SCRIPT_ID },
                 })
             );
         });
@@ -206,7 +200,7 @@ describe("render Braintree PayPal button component", () => {
                     "data-client-token": CLIENT_TOKEN,
                 }}
             >
-                <BraintreePayPalButton
+                <BraintreePayPalButtons
                     style={{ layout: "horizontal" }}
                     fundingSource={FUNDING.CREDIT}
                     createOrder={() => null}

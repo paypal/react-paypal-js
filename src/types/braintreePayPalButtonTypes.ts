@@ -1,6 +1,4 @@
-import type { Client, PayPalCheckout } from "braintree-web";
 import type { PayPalButtonsComponentProps } from "./paypalButtonTypes";
-import { UnknownObject } from "@paypal/paypal-js/types/apis/subscriptions";
 import {
     CreateOrderActions,
     OnApproveData,
@@ -8,11 +6,11 @@ import {
 } from "@paypal/paypal-js/types/components/buttons";
 
 export type CreateBraintreeActions = CreateOrderActions & {
-    braintree: PayPalCheckout;
+    braintree: unknown;
 };
 
 export type OnApproveBraintreeActions = OnApproveActions & {
-    braintree: PayPalCheckout;
+    braintree: unknown;
 };
 
 export interface BraintreePayPalButtonsComponentProps
@@ -21,7 +19,7 @@ export interface BraintreePayPalButtonsComponentProps
      * Override the default createOrder function from paypal-js library
      */
     createOrder?: (
-        data: UnknownObject,
+        data: Record<string, unknown>,
         actions: CreateBraintreeActions
     ) => Promise<string>;
     /**
@@ -34,6 +32,10 @@ export interface BraintreePayPalButtonsComponentProps
 }
 
 export type BraintreeNamespace = {
-    client: Client;
-    paypalCheckout: PayPalCheckout;
+    client: {
+        create: (options: { authorization: string }) => Promise<unknown>;
+    };
+    paypalCheckout: {
+        create: (options: { client: unknown }) => Promise<unknown>;
+    };
 };

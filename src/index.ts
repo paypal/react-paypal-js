@@ -3,7 +3,7 @@ export * from "./types/enums";
 export * from "./context/scriptProviderContext";
 export * from "./hooks/scriptProviderHooks";
 export * from "./components/PayPalButtons";
-export * from "./components/BraintreePayPalButton";
+export * from "./components/braintree/BraintreePayPalButtons";
 export * from "./components/PayPalMarks";
 export * from "./components/PayPalMessages";
 export * from "./components/PayPalScriptProvider";

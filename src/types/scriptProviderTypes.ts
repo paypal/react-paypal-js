@@ -8,10 +8,7 @@ export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
 
 export type ScriptReducerAction = {
     type: DISPATCH_ACTION;
-    value:
-        | SCRIPT_LOADING_STATE
-        | ReactPayPalScriptOptions
-        | PayPalScriptOptions;
+    value: unknown;
 };
 
 export type InitialState = {
@@ -22,6 +19,7 @@ export type InitialState = {
 export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
+    braintreePayPalCheckoutInstance?: unknown;
     dispatch: React.Dispatch<ScriptReducerAction> | null;
 }
 
