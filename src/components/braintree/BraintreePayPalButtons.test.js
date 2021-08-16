@@ -47,7 +47,7 @@ const setup = () => {
 };
 
 describe("Braintree PayPal button fail in mount process", () => {
-    beforeAll(setup);
+    beforeEach(setup);
 
     afterEach(() => {
         jest.clearAllMocks();
@@ -157,7 +157,7 @@ describe("Braintree PayPal button fail in mount process", () => {
 });
 
 describe("render Braintree PayPal button component", () => {
-    beforeAll(setup);
+    beforeEach(setup);
 
     test("should call loadCustomScripts from BraintreePayPalButton and loadScript from PayPalButtons", async () => {
         render(
