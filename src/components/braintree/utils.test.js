@@ -1,6 +1,6 @@
 import { decorateActions } from "./utils";
 
-describe("decorateCreateOrder", () => {
+describe("decorateActions", () => {
     test("shouldn't modify the button props", () => {
         const buttonProps = {
             disabled: false,
