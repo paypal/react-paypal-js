@@ -13,7 +13,7 @@ const decorateCreateOrder = (
     payPalCheckoutInstance: PayPalCheckout
 ) => {
     if (
-        braintreeButtonProps.createOrder != undefined &&
+        braintreeButtonProps?.createOrder != undefined &&
         payPalCheckoutInstance != undefined
     ) {
         // Keep the createOrder function reference
@@ -38,13 +38,13 @@ const decorateOnApprove = (
     payPalCheckoutInstance: PayPalCheckout
 ) => {
     if (
-        braintreeButtonProps.onApprove != undefined &&
+        braintreeButtonProps?.onApprove != undefined &&
         payPalCheckoutInstance != undefined
     ) {
         // Store the createOrder function reference
         const braintreeOnApprove = braintreeButtonProps.onApprove;
 
-        braintreeButtonProps.onApprove = async (data, actions) =>
+        braintreeButtonProps.onApprove = (data, actions) =>
             braintreeOnApprove(data, {
                 ...actions,
                 braintree: payPalCheckoutInstance,
