@@ -31,7 +31,7 @@ export default {
     },
     decorators: [
         (Story: FC): ReactElement => {
-            // Work around to render the story after got the client token,
+            // Workaround to render the story after got the client token,
             // The new experimental loaders doesn't work in Docs views
             const [clientToken, setClientToken] = useState<string | null>(null);
 
