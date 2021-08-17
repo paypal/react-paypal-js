@@ -2,10 +2,14 @@ import { hashStr } from "./utils";
 
 describe("hashStr", () => {
     test("should match the hash from the argument string", () => {
-        expect(hashStr("react")).toMatchSnapshot();
-        expect(hashStr("react-js.braintree")).toMatchSnapshot();
-        expect(hashStr("react-js.paypal")).toMatchSnapshot();
-        expect(hashStr("")).toMatchSnapshot();
+        expect(hashStr("react")).toMatchInlineSnapshot(`"xxhjw"`);
+        expect(hashStr("react-js.braintree")).toMatchInlineSnapshot(
+            `"xxhjbzppoallaomelb"`
+        );
+        expect(hashStr("react-js.paypal")).toMatchInlineSnapshot(
+            `"xxhjbzppiqfhtje"`
+        );
+        expect(hashStr("")).toMatchInlineSnapshot(`""`);
         expect(
             hashStr(
                 JSON.stringify({
@@ -19,6 +23,8 @@ describe("hashStr", () => {
                     "data-namespace": "braintree",
                 })
             )
-        ).toMatchSnapshot();
+        ).toMatchInlineSnapshot(
+            `"iiuovjsqddgseaaouopvvtcqciewjblfycugmepzoirvygvhquvfthtdttqasyqcdzbzaepjvxhbwsrjhhcurjzroipxqyishjiubldxsiumrlgiscmehhggkwzxusrrdpdxisuuektdeudjrtosskdpcksyhttbqsqsvdsoaugkffisgkusjvhthnqmlzgqccmutvqaztoqu"`
+        );
     });
 });
