@@ -14,9 +14,9 @@ import { DISPATCH_ACTION } from "../../types/enums";
 import { decorateActions } from "./utils";
 
 /**
- * React functional component to create a PayPal button using the Braintree
+ * React functional component to create a PayPal button using the Braintree.
  * This component is a wrapper of the PayPalButtons and override the logic
- * of the createOrder and onApprove callback function from the SDK
+ * of the createOrder and onApprove callback function from the SDK.
  *
  * @param param0 the props of the component
  * @returns an JSX code to translate to the DOM
