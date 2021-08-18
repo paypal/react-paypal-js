@@ -172,7 +172,6 @@ describe("render Braintree PayPal button component", () => {
         );
 
         await waitFor(() => {
-            expect(loadScript).toHaveBeenCalledTimes(1);
             expect(loadScript).toHaveBeenCalledWith(
                 expect.objectContaining({
                     "client-id": "test",
@@ -180,16 +179,15 @@ describe("render Braintree PayPal button component", () => {
                     "data-react-paypal-script-id": expect.any(String),
                 })
             );
-            expect(loadCustomScript).toHaveBeenCalledTimes(2);
-            expect(loadCustomScript).toHaveBeenCalledWith(
-                expect.objectContaining({ url: BRAINTREE_SOURCE })
-            );
-            expect(loadCustomScript).toHaveBeenLastCalledWith(
-                expect.objectContaining({
-                    url: BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
-                })
-            );
         });
+        expect(loadCustomScript).toHaveBeenCalledWith(
+            expect.objectContaining({ url: BRAINTREE_SOURCE })
+        );
+        expect(loadCustomScript).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+                url: BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
+            })
+        );
     });
 
     test("should call PayPalButtons with props", async () => {
