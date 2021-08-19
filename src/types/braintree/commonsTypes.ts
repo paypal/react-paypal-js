@@ -1,5 +1,7 @@
-import { BraintreeErrorTypes, LineItemKind } from "../enums";
-
+export type BraintreeCallback<T = unknown> = (
+    err?: BraintreeError,
+    data?: T
+) => void;
 export interface BraintreeError {
     /**
      * @description A code that corresponds to specific errors.
@@ -14,7 +16,7 @@ export interface BraintreeError {
     /**
      * @description The type of error.
      */
-    type: BraintreeErrorTypes;
+    type: "CUSTOMER" | "MERCHANT" | "NETWORK" | "INTERNAL" | "UNKNOWN";
 
     /**
      * @description Additional information about the error, such as an underlying network error response.
@@ -22,15 +24,13 @@ export interface BraintreeError {
     details: unknown;
 }
 
-export type Callback<T = unknown> = (err?: BraintreeError, data?: T) => void;
-
-export interface ClientAnalyticsMetadata {
+export interface BraintreeClientAnalyticsMetadata {
     sessionId: string;
     sdkVersion: string;
     merchantAppId: string;
 }
 
-export interface CurrencyAmount {
+export interface BraintreeCurrencyAmount {
     /**
      * The three-character ISO-4217 currency code. PayPal does not support all currencies.
      */
@@ -43,7 +43,7 @@ export interface CurrencyAmount {
     value: string;
 }
 
-export interface Address {
+export interface BraintreeAddress {
     /**
      * Street number and name.
      */
@@ -85,7 +85,7 @@ export interface Address {
     recipientName?: string | undefined;
 }
 
-export interface LineItem {
+export interface BraintreeLineItem {
     /**
      * Number of units of the item purchased. This value must be a whole number and can't be negative or zero.
      */
@@ -104,7 +104,7 @@ export interface LineItem {
     /**
      * Indicates whether the line item is a debit (sale) or credit (refund) to the customer. Accepted values: `debit` and `credit`.
      */
-    kind: LineItemKind;
+    kind: "debit" | "credit";
 
     /**
      * Per-unit tax price of the item. Can include up to 2 decimal places. This value can't be negative or zero.
@@ -127,11 +127,11 @@ export interface LineItem {
     url: string | undefined;
 }
 
-export interface CreditFinancingOptions {
+export interface BraintreeCreditFinancingOptions {
     /**
      * This is the estimated total payment amount including interest and fees the user will pay during the lifetime of the loan.
      */
-    totalCost: CurrencyAmount;
+    totalCost: BraintreeCurrencyAmount;
 
     /**
      * Length of financing terms in months.
@@ -141,12 +141,12 @@ export interface CreditFinancingOptions {
     /**
      * This is the estimated amount per month that the customer will need to pay including fees and interest.
      */
-    monthlyPayment: CurrencyAmount;
+    monthlyPayment: BraintreeCurrencyAmount;
 
     /**
      * Estimated interest or fees amount the payer will have to pay during the lifetime of the loan.
      */
-    totalInterest: CurrencyAmount;
+    totalInterest: BraintreeCurrencyAmount;
 
     /**
      * Status of whether the customer ultimately was approved for and chose to make the payment using the approved installment credit.
@@ -159,7 +159,7 @@ export interface CreditFinancingOptions {
     cartAmountImmutable: boolean;
 }
 
-export interface AuthorizationResponseDetails {
+export interface BraintreeAuthorizationResponseDetails {
     email: string;
     payerId: string;
     firstName: string;
@@ -170,20 +170,20 @@ export interface AuthorizationResponseDetails {
     /**
      * User's shipping address details, only available if shipping address is enabled.
      */
-    shippingAddress?: Address | undefined;
+    shippingAddress?: BraintreeAddress | undefined;
 
     /**
      * User's billing address details.
      */
-    billingAddress?: Address | undefined;
+    billingAddress?: BraintreeAddress | undefined;
 
     /**
      * This property will only be present when the customer pays with PayPal Credit.
      */
-    creditFinancingOffered?: CreditFinancingOptions | undefined;
+    creditFinancingOffered?: BraintreeCreditFinancingOptions | undefined;
 }
 
-export interface TokenizePayload {
+export interface BraintreeTokenizePayload {
     /**
      * The payment method nonce.
      */
@@ -197,5 +197,5 @@ export interface TokenizePayload {
     /**
      * Additional PayPal account details.
      */
-    details: AuthorizationResponseDetails;
+    details: BraintreeAuthorizationResponseDetails;
 }

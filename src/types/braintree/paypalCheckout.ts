@@ -1,15 +1,14 @@
 import type {
-    Callback,
-    CurrencyAmount,
-    Address,
-    LineItem,
-    TokenizePayload,
+    BraintreeCallback,
+    BraintreeCurrencyAmount,
+    BraintreeAddress,
+    BraintreeLineItem,
+    BraintreeTokenizePayload,
 } from "./commonsTypes";
-import type { Client } from "./clientTypes";
+import type { BraintreeClient } from "./clientTypes";
 import type { ReactPayPalScriptOptions } from "../scriptProviderTypes";
-import { FlowType, Intent, ShippingOptionType } from "../enums";
 
-export interface ShippingOption {
+export interface BraintreeShippingOption {
     /**
      * A unique ID that identifies a payer-selected shipping option.
      */
@@ -35,40 +34,40 @@ export interface ShippingOption {
     /**
      * The method by which the payer wants to get their items.
      */
-    type: ShippingOptionType;
+    type: "SHIPPING" | "PICKUP";
 
     /**
      * The shipping cost for the selected option.
      */
-    amount: CurrencyAmount;
+    amount: BraintreeCurrencyAmount;
 }
 
-export interface PayPalCheckoutCreatePaymentOptions {
-    flow: FlowType;
-    intent?: Intent | undefined;
+export interface BraintreePayPalCheckoutCreatePaymentOptions {
+    flow: "vault" | "checkout";
+    intent?: "authorize" | "order" | "capture" | undefined;
     offerCredit?: boolean | undefined;
     amount?: string | number | undefined;
     currency?: string | undefined;
     displayName?: string | undefined;
     locale?: string | undefined;
     vaultInitiatedCheckoutPaymentMethodToken?: string | undefined;
-    shippingOptions?: ShippingOption[] | undefined;
+    shippingOptions?: BraintreeShippingOption[] | undefined;
     enableShippingAddress?: boolean | undefined;
-    shippingAddressOverride?: Address | undefined;
+    shippingAddressOverride?: BraintreeAddress | undefined;
     shippingAddressEditable?: boolean | undefined;
     billingAgreementDescription?: string | undefined;
     landingPageType?: string | undefined;
-    lineItems?: LineItem[] | undefined;
+    lineItems?: BraintreeLineItem[] | undefined;
 }
 
-export interface PayPalCheckoutTokenizationOptions {
+export interface BraintreePayPalCheckoutTokenizationOptions {
     payerId: string;
     paymentId?: string | undefined;
     billingToken?: string | undefined;
     vault?: boolean | undefined;
 }
 
-export interface PayPalCheckout {
+export interface BraintreePayPalCheckout {
     /**
      * @description There are two ways to integrate the PayPal Checkout component.
      * See the [PayPal Checkout constructor documentation](PayPalCheckout.html#PayPalCheckout) for more information and examples.
@@ -86,10 +85,10 @@ export interface PayPalCheckout {
      * });
      */
     create(options: {
-        client?: Client | undefined;
+        client?: BraintreeClient | undefined;
         authorization?: string | undefined;
         merchantAccountId?: string | undefined;
-    }): Promise<PayPalCheckout>;
+    }): Promise<BraintreePayPalCheckout>;
 
     /**
      * Resolves when the PayPal SDK has been succesfully loaded onto the page.
@@ -219,14 +218,14 @@ export interface PayPalCheckout {
      *
      */
     createPayment(
-        options: PayPalCheckoutCreatePaymentOptions,
-        callback?: Callback
+        options: BraintreePayPalCheckoutCreatePaymentOptions,
+        callback?: BraintreeCallback
     ): Promise<string>;
 
     /**
      * Tokenizes the authorize data from PayPal's checkout.js library when completing a buyer approval flow.
-     * When a {@link callback} is defined, invokes the callback with {@link PayPalCheckout~tokenizePayload|tokenizePayload} and returns undefined.
-     * Otherwise, returns a Promise that resolves with a {@link PayPalCheckout~tokenizePayload|tokenizePayload}.
+     * When a {@link callback} is defined, invokes the callback with {@link BraintreePayPalCheckout~tokenizePayload|tokenizePayload} and returns undefined.
+     * Otherwise, returns a Promise that resolves with a {@link BraintreePayPalCheckout~tokenizePayload|tokenizePayload}.
      * @example <caption>Opt out of auto-vaulting behavior</caption>
      * // create the paypalCheckoutInstance with a client token generated with a customer id
      * paypal.Buttons({
@@ -246,8 +245,8 @@ export interface PayPalCheckout {
      *
      */
     tokenizePayment(
-        tokenizeOptions: PayPalCheckoutTokenizationOptions
-    ): Promise<TokenizePayload>;
+        tokenizeOptions: BraintreePayPalCheckoutTokenizationOptions
+    ): Promise<BraintreeTokenizePayload>;
 
     /**
      * Resolves with the PayPal client id to be used when loading the PayPal SDK.     * @example

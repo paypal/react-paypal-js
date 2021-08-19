@@ -1,6 +1,6 @@
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import { SCRIPT_ID } from "../constants";
-import { PayPalCheckout } from "./braintree/paypalCheckout";
+import { BraintreePayPalCheckout } from "./braintree/paypalCheckout";
 import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "./enums";
 
 export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
@@ -13,7 +13,7 @@ export type ScriptReducerAction = {
         | SCRIPT_LOADING_STATE
         | ReactPayPalScriptOptions
         | PayPalScriptOptions
-        | PayPalCheckout;
+        | BraintreePayPalCheckout;
 };
 
 export type InitialState = {
@@ -24,7 +24,7 @@ export type InitialState = {
 export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
-    braintreePayPalCheckoutInstance?: PayPalCheckout;
+    braintreePayPalCheckoutInstance?: BraintreePayPalCheckout;
     dispatch: React.Dispatch<ScriptReducerAction> | null;
 }
 

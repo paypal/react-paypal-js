@@ -14,13 +14,63 @@ import { DISPATCH_ACTION } from "../../types/enums";
 import { decorateActions } from "./utils";
 
 /**
- * React functional component to create a PayPal button using the Braintree.
- * This component is a wrapper of the PayPalButtons and override the logic
- * of the createOrder and onApprove callback function from the SDK.
- *
- * @param param0 the props of the component
- * @returns an JSX code to translate to the DOM
- */
+This `<BraintreePayPalButtons />` component renders the Braintree PayPal [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).
+It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
+
+Use props for customizing your buttons. For example, here's how you would use the `style` and `createOrder` options:
+
+```jsx
+    import { PayPalScriptProvider, BraintreePayPalButtons } from "@paypal/react-paypal-js";
+
+    <PayPalScriptProvider options={{ "client-id": "test" }}>
+        <BraintreePayPalButtons
+            style={{ layout: "horizontal" }}
+            createOrder={(data, actions) => {
+                return actions.braintree.createPayment({
+                    flow: "checkout",
+                    amount: "10.0",
+                    currency: "USD",
+                    intent: "capture",
+                    enableShippingAddress: true,
+                    shippingAddressEditable: false,
+                    shippingAddressOverride: {
+                        recipientName: "Scruff McGruff",
+                        line1: "1234 Main St.",
+                        line2: "Unit 1",
+                        city: "Chicago",
+                        countryCode: "US",
+                        postalCode: "60652",
+                        state: "IL",
+                        phone: "123.456.7890",
+                    },
+                })
+            }}
+        />;
+    </PayPalScriptProvider>
+```
+
+Notice the main difference comparing with `<PayPalButtons />` component is the [braintree paypalCheckout](https://developer.paypal.com/braintree/docs/guides/paypal/checkout-with-paypal)
+instance in the callbacks (createOrder and onApprove) under actions argument:
+
+```jsx
+import { PayPalScriptProvider, BraintreePayPalButtons } from "@paypal/react-paypal-js";
+
+    <PayPalScriptProvider options={{ "client-id": "test" }}>
+        <BraintreePayPalButtons
+            style={{ layout: "horizontal" }}
+            createOrder={(data, actions) => {
+                // braintree paypalCheckout instance
+                actions.braintree
+            }}
+            onApprove={(data, actions) => {
+                // braintree paypalCheckout instance
+                actions.braintree
+            }}
+        />;
+    </PayPalScriptProvider>
+```
+
+*/
 export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
     ({
         className = "",

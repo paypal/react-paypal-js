@@ -1,18 +1,27 @@
 import type { PayPalButtonsComponentProps } from "./paypalButtonTypes";
 import {
     CreateOrderActions,
-    OnApproveData,
     OnApproveActions,
 } from "@paypal/paypal-js/types/components/buttons";
-import type { Client } from "./braintree/clientTypes";
-import type { PayPalCheckout } from "./braintree/paypalCheckout";
+import type { BraintreeClient } from "./braintree/clientTypes";
+import type { BraintreePayPalCheckout } from "./braintree/paypalCheckout";
 
 export type CreateBraintreeActions = CreateOrderActions & {
-    braintree: PayPalCheckout;
+    braintree: BraintreePayPalCheckout;
 };
 
 export type OnApproveBraintreeActions = OnApproveActions & {
-    braintree: PayPalCheckout;
+    braintree: BraintreePayPalCheckout;
+};
+
+export type OnApproveData = {
+    billingToken?: string | null;
+    facilitatorAccessToken: string;
+    orderId: string;
+    payerId?: string | null;
+    paymentId?: string | null;
+    subscriptionId?: string | null;
+    authCode?: string | null;
 };
 
 export interface BraintreePayPalButtonsComponentProps
@@ -34,6 +43,6 @@ export interface BraintreePayPalButtonsComponentProps
 }
 
 export type BraintreeNamespace = {
-    client: Client;
-    paypalCheckout: PayPalCheckout;
+    client: BraintreeClient;
+    paypalCheckout: BraintreePayPalCheckout;
 };

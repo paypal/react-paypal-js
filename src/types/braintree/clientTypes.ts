@@ -1,17 +1,20 @@
-import { ClientAnalyticsMetadata, Callback } from "./commonsTypes";
+import {
+    BraintreeClientAnalyticsMetadata,
+    BraintreeCallback,
+} from "./commonsTypes";
 
-export interface Configuration {
-    client: Client;
+export interface BraintreeConfiguration {
+    client: BraintreeClient;
     gatewayConfiguration: unknown;
-    analyticsMetadata: ClientAnalyticsMetadata;
+    analyticsMetadata: BraintreeClientAnalyticsMetadata;
 }
 
-export interface Client {
+export interface BraintreeClient {
     authorization: string;
 
     /**
      * @description This function is the entry point for the <code>braintree.client</code> module.
-     * It is used for creating {@link Client} instances that service communication to Braintree servers.
+     * It is used for creating {@link BraintreeClient} instances that service communication to Braintree servers.
      *
      * @example
      * var createClient = require('braintree-web/client').create;
@@ -22,7 +25,7 @@ export interface Client {
      *   ...
      * });
      */
-    create(options: { authorization: string }): Promise<Client>;
+    create(options: { authorization: string }): Promise<BraintreeClient>;
 
     /**
      * @description The current version of the SDK, i.e. `3.0.2`.
@@ -32,7 +35,7 @@ export interface Client {
     /**
      * Returns a copy of the configuration values.
      */
-    getConfiguration(): Configuration;
+    getConfiguration(): BraintreeConfiguration;
 
     /**
      * Used by other modules to formulate all network requests to the Braintree gateway.
@@ -83,11 +86,11 @@ export interface Client {
             data: unknown;
             timeout?: number | undefined;
         },
-        callback: Callback
+        callback: BraintreeCallback
     ): void;
 
     /**
-     * Cleanly tear down anything set up by {@link Client#getConfiguration|create}.
+     * Cleanly tear down anything set up by {@link BraintreeClient#getConfiguration|create}.
      * @param [callback] Called once teardown is complete. No data is returned if teardown completes successfully.
      * @example
      * clientInstance.teardown();
@@ -97,5 +100,5 @@ export interface Client {
      * });
      * @returns Returns a promise if no callback is provided.
      */
-    teardown(callback: Callback<void>): Promise<void>;
+    teardown(callback: BraintreeCallback<void>): Promise<void>;
 }
