@@ -32,17 +32,7 @@ Use props for customizing your buttons. For example, here's how you would use th
                     currency: "USD",
                     intent: "capture",
                     enableShippingAddress: true,
-                    shippingAddressEditable: false,
-                    shippingAddressOverride: {
-                        recipientName: "Scruff McGruff",
-                        line1: "1234 Main St.",
-                        line2: "Unit 1",
-                        city: "Chicago",
-                        countryCode: "US",
-                        postalCode: "60652",
-                        state: "IL",
-                        phone: "123.456.7890",
-                    },
+                    shippingAddressEditable: false
                 })
             }}
         />;

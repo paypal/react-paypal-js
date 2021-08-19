@@ -11,7 +11,7 @@ import {
 /**
  * Custom hook to get access to the ScriptProvider context
  *
- * @returns the state of the con text
+ * @returns the state of the context
  */
 export function useBraintreeProviderContext(): [
     ScriptContextState,
