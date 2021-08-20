@@ -13,7 +13,7 @@ const decorateCreateOrder = (
     payPalCheckoutInstance: BraintreePayPalCheckout
 ) => {
     if (
-        typeof braintreeButtonProps.createOrder === "function" &&
+        typeof braintreeButtonProps?.createOrder === "function" &&
         payPalCheckoutInstance != undefined
     ) {
         // Keep the createOrder function reference
