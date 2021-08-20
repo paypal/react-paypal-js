@@ -6,10 +6,7 @@ import type {
     CreateBraintreeActions,
     OnApproveBraintreeActions,
 } from "../types/braintreePayPalButtonTypes";
-import type {
-    BraintreePayPalCheckoutTokenizationOptions,
-    BraintreePayPalCheckoutCreatePaymentOptions,
-} from "../types/braintree/paypalCheckout";
+import type { BraintreePayPalCheckoutTokenizationOptions } from "../types/braintree/paypalCheckout";
 import { OnApproveData } from "../types/braintreePayPalButtonTypes";
 import { PayPalScriptProvider } from "../index";
 import { BraintreePayPalButtons } from "../components/braintree/BraintreePayPalButtons";
@@ -32,8 +29,6 @@ export default {
     component: BraintreePayPalButtons,
     argTypes: {
         style: { control: null },
-        createPayment: { action: "createPayment" },
-        onApprove: { action: "onApprove" },
     },
     args: {
         // Storybook passes empty functions by default for props like `onShippingChange`.
@@ -74,41 +69,32 @@ export default {
     ],
 };
 
-export const Default: FC<{
-    createPayment: (args: {
-        data: Record<string, unknown>;
-        actions: CreateBraintreeActions;
-    }) => void;
-    onApprove: (args: unknown) => void;
-}> = (arg) => {
+export const Default: FC = () => {
     return (
         <BraintreePayPalButtons
             createOrder={(
                 data: Record<string, unknown>,
                 actions: CreateBraintreeActions
-            ) => {
-                const paymentOptions: BraintreePayPalCheckoutCreatePaymentOptions =
-                    {
-                        flow: "checkout",
-                        amount: AMOUNT,
-                        currency: "USD",
-                        intent: "capture",
-                        enableShippingAddress: true,
-                        shippingAddressEditable: false,
-                        shippingAddressOverride: {
-                            recipientName: "Scruff McGruff",
-                            line1: "1234 Main St.",
-                            line2: "Unit 1",
-                            city: "Chicago",
-                            countryCode: "US",
-                            postalCode: "60652",
-                            state: "IL",
-                            phone: "123.456.7890",
-                        },
-                    };
-                arg.createPayment({ data, actions });
-                return actions.braintree.createPayment(paymentOptions);
-            }}
+            ) =>
+                actions.braintree.createPayment({
+                    flow: "checkout",
+                    amount: AMOUNT,
+                    currency: "USD",
+                    intent: "capture",
+                    enableShippingAddress: true,
+                    shippingAddressEditable: false,
+                    shippingAddressOverride: {
+                        recipientName: "Scruff McGruff",
+                        line1: "1234 Main St.",
+                        line2: "Unit 1",
+                        city: "Chicago",
+                        countryCode: "US",
+                        postalCode: "60652",
+                        state: "IL",
+                        phone: "123.456.7890",
+                    },
+                })
+            }
             onApprove={(
                 data: OnApproveData,
                 actions: OnApproveBraintreeActions
@@ -119,7 +105,8 @@ export const Default: FC<{
                     )
                     .then((payload) => {
                         approveSale(payload.nonce, AMOUNT).then((data) => {
-                            arg.onApprove(data);
+                            // Call server-side endpoint to finish the sale
+                            return;
                         });
                     })
             }

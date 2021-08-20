@@ -184,7 +184,22 @@ export default function App() {
                 "data-client-token": "abc123xyz==",
             }}
         >
-            <BraintreePayPalButtons style={{ layout: "horizontal" }} />
+            <BraintreePayPalButtons
+                createOrder={(data, actions) => {
+                    return actions.braintree.createPayment({
+                        flow: "checkout",
+                        amount: "10.0",
+                        currency: "USD",
+                        intent: "capture"
+                    });
+                }}
+                onApprove={(data, actions) => {
+                    return actions.braintree.tokenizePayment(data)
+                        .then((payload) => {
+                            // call server-side endpoint to finish the sale
+                        })
+                }
+            />
         </PayPalScriptProvider>
     );
 }

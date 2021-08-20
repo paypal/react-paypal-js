@@ -13,7 +13,7 @@ const decorateCreateOrder = (
     payPalCheckoutInstance: BraintreePayPalCheckout
 ) => {
     if (
-        braintreeButtonProps?.createOrder != undefined &&
+        typeof braintreeButtonProps.createOrder === "function" &&
         payPalCheckoutInstance != undefined
     ) {
         // Keep the createOrder function reference
@@ -53,8 +53,8 @@ const decorateOnApprove = (
 };
 
 /**
- * Massage needed functions to adapt to PayPal SDK types
- * Currently only modify the createOrder and onApprove callbacks
+ * Use `actions.braintree` to provide an interface for the paypalCheckoutInstance
+ * through the createOrder and onApprove callbacks
  *
  * @param braintreeButtonProps the component button options
  * @returns a new copy of the component button options casted as {@link PayPalButtonsComponentProps}

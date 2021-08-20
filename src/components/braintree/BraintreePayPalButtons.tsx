@@ -76,7 +76,7 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                 loadCustomScript({ url: BRAINTREE_SOURCE }),
                 loadCustomScript({ url: BRAINTREE_PAYPAL_CHECKOUT_SOURCE }),
             ]).then(async () => {
-                const clientToken = providerContext?.options[
+                const clientToken = providerContext.options[
                     DATA_CLIENT_TOKEN
                 ] as string;
 
@@ -91,7 +91,7 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                     }),
                 });
             });
-        }, [providerContext?.options, dispatch]);
+        }, [providerContext.options, dispatch]);
 
         return (
             <>
