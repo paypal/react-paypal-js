@@ -27,14 +27,14 @@ export type OnApproveData = {
 export interface BraintreePayPalButtonsComponentProps
     extends Omit<PayPalButtonsComponentProps, "createOrder" | "onApprove"> {
     /**
-     * Override the default createOrder function from paypal-js library
+     * The createOrder actions include the braintree sdk paypalCheckoutInstance as `actions.braintree`
      */
     createOrder?: (
         data: Record<string, unknown>,
         actions: CreateBraintreeActions
     ) => Promise<string>;
     /**
-     * Override the default onApprove function from paypal-js library
+     * The onApprove actions include the braintree sdk paypalCheckoutInstance as `actions.braintree`
      */
     onApprove?: (
         data: OnApproveData,

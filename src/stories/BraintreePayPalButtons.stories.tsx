@@ -107,7 +107,6 @@ export const Default: FC = () => {
                         approveSale(payload.nonce, AMOUNT).then((data) => {
                             alert(JSON.stringify(data));
                             // Call server-side endpoint to finish the sale
-                            return;
                         });
                     })
             }

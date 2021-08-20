@@ -9,9 +9,7 @@ describe("decorateActions", () => {
             onInit: () => null,
         };
 
-        decorateActions();
         decorateActions(buttonProps);
-        decorateActions(buttonProps, null);
         decorateActions(buttonProps, {});
         expect(buttonProps).toMatchInlineSnapshot(
             buttonProps,

@@ -11,7 +11,7 @@ import {
 import { SCRIPT_ID } from "../constants";
 
 export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
-    options,
+    options = { "client-id": "test" },
     children,
     deferLoading = false,
 }: ScriptProviderProps) => {
