@@ -105,6 +105,7 @@ export const Default: FC = () => {
                     )
                     .then((payload) => {
                         approveSale(payload.nonce, AMOUNT).then((data) => {
+                            alert(data);
                             // Call server-side endpoint to finish the sale
                             return;
                         });
