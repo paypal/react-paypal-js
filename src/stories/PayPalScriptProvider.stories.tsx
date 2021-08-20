@@ -15,7 +15,7 @@ const scriptProviderOptions: PayPalScriptOptions = {
 };
 
 export default {
-    title: "Example/PayPalScriptProvider",
+    title: "PayPal/PayPalScriptProvider",
     component: PayPalScriptProvider,
 };
 

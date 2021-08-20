@@ -25,7 +25,7 @@ const orderOptions: PayPalScriptOptions = {
 };
 
 export default {
-    title: "Example/Subscriptions",
+    title: "PayPal/Subscriptions",
     decorators: [
         (Story: FunctionComponent): ReactElement => (
             <PayPalScriptProvider

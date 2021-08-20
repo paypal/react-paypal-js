@@ -28,7 +28,7 @@ const scriptProviderOptions: PayPalScriptOptions = {
 };
 
 export default {
-    title: "Example/BraintreePayPalButtons",
+    title: "Braintree/BraintreePayPalButtons",
     component: BraintreePayPalButtons,
     argTypes: {
         style: { control: null },

@@ -14,7 +14,7 @@ const scriptProviderOptions: PayPalScriptOptions = {
 };
 
 export default {
-    title: "Example/VenmoButton",
+    title: "PayPal/VenmoButton",
     argTypes: {
         style: { control: null },
     },

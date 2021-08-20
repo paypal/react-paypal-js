@@ -17,7 +17,7 @@ const scriptProviderOptions: PayPalScriptOptions = {
 };
 
 export default {
-    title: "Example/usePayPalScriptReducer",
+    title: "PayPal/usePayPalScriptReducer",
     component: usePayPalScriptReducer,
 };
 

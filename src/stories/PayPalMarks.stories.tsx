@@ -21,7 +21,7 @@ const scriptProviderOptions: PayPalScriptOptions = {
 };
 
 export default {
-    title: "Example/PayPalMarks",
+    title: "PayPal/PayPalMarks",
     component: PayPalMarks,
     decorators: [
         (Story: FunctionComponent): ReactElement => (

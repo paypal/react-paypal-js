@@ -21,10 +21,49 @@ const scriptProviderOptions: PayPalScriptOptions = {
 };
 
 export default {
-    title: "Example/PayPalButtons",
+    title: "PayPal/PayPalButtons",
     component: PayPalButtons,
+    parameters: {
+        controls: { expanded: true },
+    },
     argTypes: {
-        style: { control: null },
+        style: {
+            control: { type: "object", expanded: true },
+            defaultValue: {
+                color: "gold",
+                label: "paypal",
+                layout: "vertical",
+            },
+        },
+        disabled: {
+            options: [true, false],
+            control: { type: "select" },
+            defaultValue: false,
+        },
+        forceReRender: { control: false },
+        className: { control: false },
+        children: { control: false },
+        fundingSource: {
+            options: [
+                FUNDING.PAYPAL,
+                FUNDING.CARD,
+                FUNDING.CREDIT,
+                FUNDING.PAYLATER,
+                FUNDING.VENMO,
+                undefined,
+            ],
+            control: {
+                type: "select",
+                labels: {
+                    [FUNDING.PAYPAL]: "paypal",
+                    [FUNDING.CARD]: "card",
+                    [FUNDING.CREDIT]: "credit",
+                    [FUNDING.PAYLATER]: "paylater",
+                    [FUNDING.VENMO]: "venmo",
+                    undefined: "all",
+                },
+            },
+        },
     },
     args: {
         // Storybook passes empty functions by default for props like `onShippingChange`.
@@ -48,23 +87,34 @@ export default {
     ],
 };
 
-export const Default: FunctionComponent = () => {
-    return <PayPalButtons />;
+export const Default: FunctionComponent<{
+    style: {
+        color?: "gold" | "blue" | "silver" | "white" | "black";
+        height?: number;
+        label?:
+            | "paypal"
+            | "checkout"
+            | "buynow"
+            | "pay"
+            | "installment"
+            | "subscribe"
+            | "donate";
+        layout?: "vertical" | "horizontal";
+        shape?: "rect" | "pill";
+        tagline?: boolean;
+    };
+    fundingSource: string;
+    disabled: boolean;
+}> = (args) => {
+    return (
+        <PayPalButtons
+            style={args.style}
+            disabled={args.disabled}
+            fundingSource={args.fundingSource}
+            forceReRender={[args.style]}
+        />
+    );
 };
-
-export const Horizontal: FunctionComponent = () => (
-    <PayPalButtons style={{ layout: "horizontal" }} />
-);
-
-export const CustomStyle: FunctionComponent = () => (
-    <PayPalButtons
-        style={{ color: "blue", shape: "pill", label: "pay", height: 40 }}
-    />
-);
-
-export const Standalone: FunctionComponent = () => (
-    <PayPalButtons fundingSource={FUNDING.PAYPAL} />
-);
 
 export const Donate: FunctionComponent = () => (
     <PayPalButtons
@@ -194,30 +244,5 @@ export const DynamicAmount: FunctionComponent = () => {
                 forceReRender={[amount]}
             />
         </div>
-    );
-};
-
-export const Disabled: FunctionComponent = () => {
-    const [isDisabled, setIsDisabled] = useState(true);
-
-    function onCheckboxChange(event: ChangeEvent<HTMLInputElement>) {
-        setIsDisabled(!event.target.checked);
-    }
-
-    return (
-        <>
-            <label htmlFor="check">Check here to continue</label>
-            <input
-                id="check"
-                name="check"
-                type="checkbox"
-                onChange={onCheckboxChange}
-            />
-
-            <PayPalButtons
-                fundingSource={FUNDING.PAYPAL}
-                disabled={isDisabled}
-            />
-        </>
     );
 };
