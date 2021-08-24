@@ -14,10 +14,10 @@ import { DISPATCH_ACTION } from "../../types/enums";
 import { decorateActions } from "./utils";
 
 /**
-This `<BraintreePayPalButtons />` component renders the Braintree PayPal [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).
+This `<BraintreePayPalButtons />` component renders the [Braintree PayPal Buttons](https://developer.paypal.com/braintree/docs/guides/paypal/overview) for Braintree Merchants.
 It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
 
-Use props for customizing your buttons. For example, here's how you would use the `style` and `createOrder` options:
+Use props for customizing your buttons. For example, here's how you would use the `style`, `createOrder`, and `onApprove` options:
 
 ```jsx
     import { PayPalScriptProvider, BraintreePayPalButtons } from "@paypal/react-paypal-js";
@@ -26,36 +26,20 @@ Use props for customizing your buttons. For example, here's how you would use th
         <BraintreePayPalButtons
             style={{ layout: "horizontal" }}
             createOrder={(data, actions) => {
+                // the paypalCheckoutInstance from the braintree sdk integration is added to `actions.braintree`
                 return actions.braintree.createPayment({
                     flow: "checkout",
                     amount: "10.0",
                     currency: "USD",
-                    intent: "capture",
-                    enableShippingAddress: true,
-                    shippingAddressEditable: false
+                    intent: "capture"
                 })
             }}
-        />;
-    </PayPalScriptProvider>
-```
-
-Notice the main difference comparing with `<PayPalButtons />` component is the [braintree paypalCheckout](https://developer.paypal.com/braintree/docs/guides/paypal/checkout-with-paypal)
-instance in the callbacks (createOrder and onApprove) under actions argument:
-
-```jsx
-import { PayPalScriptProvider, BraintreePayPalButtons } from "@paypal/react-paypal-js";
-
-    <PayPalScriptProvider options={{ "client-id": "test" }}>
-        <BraintreePayPalButtons
-            style={{ layout: "horizontal" }}
-            createOrder={(data, actions) => {
-                // braintree paypalCheckout instance
-                actions.braintree
-            }}
             onApprove={(data, actions) => {
-                // braintree paypalCheckout instance
-                actions.braintree
-            }}
+                return actions.braintree.tokenizePayment(data)
+                    .then((payload) => {
+                        // call server-side endpoint to finish the sale
+                    })
+            }
         />;
     </PayPalScriptProvider>
 ```
@@ -76,7 +60,7 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                 loadCustomScript({ url: BRAINTREE_SOURCE }),
                 loadCustomScript({ url: BRAINTREE_PAYPAL_CHECKOUT_SOURCE }),
             ]).then(async () => {
-                const clientToken = providerContext?.options[
+                const clientToken = providerContext.options[
                     DATA_CLIENT_TOKEN
                 ] as string;
 
@@ -91,7 +75,7 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                     }),
                 });
             });
-        }, [providerContext?.options, dispatch]);
+        }, [providerContext.options, dispatch]);
 
         return (
             <>

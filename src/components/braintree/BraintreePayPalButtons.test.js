@@ -82,7 +82,7 @@ describe("Braintree PayPal button fail in mount process", () => {
             errorMessage = ex.message;
         }
         expect(errorMessage).toEqual(
-            "Cannot read property 'length' of undefined"
+            "A client token wasn't found in the provider parent component"
         );
         expect(console.error).toHaveBeenCalled();
     });

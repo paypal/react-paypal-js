@@ -12,7 +12,7 @@ import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
 This `<PayPalButtons />` component renders the [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).
 It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
 
-Use props for customizing your buttons. For example, here's how you would use the `style` and `createOrder` options:
+Use props for customizing your buttons. For example, here's how you would use the `style`, `createOrder`, and `onApprove` options:
 
 ```jsx
     import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
