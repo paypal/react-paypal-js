@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement } from "react";
+import React, { FC } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
 import { PayPalScriptProvider, FUNDING, PayPalButtons } from "../index";
@@ -15,8 +15,42 @@ const scriptProviderOptions: PayPalScriptOptions = {
 
 export default {
     title: "PayPal/VenmoButton",
+    parameters: {
+        controls: { expanded: true },
+        docs: { source: { type: "dynamic" } },
+    },
     argTypes: {
-        style: { control: null },
+        style: {
+            description:
+                "Styling options for customizing the button appearance.",
+            control: { type: "object", expanded: true },
+            table: {
+                category: "Props",
+                type: {
+                    summary: `{
+                    color?: "blue" | "silver" | "white" | "black";
+                    label?:
+                        | "paypal"
+                        | "checkout"
+                        | "buynow"
+                        | "pay"
+                        | "installment"
+                        | "subscribe"
+                        | "donate";
+                    shape?: "rect" | "pill";
+                }`,
+                },
+            },
+            defaultValue: {
+                color: "blue",
+            },
+        },
+        onShippingChange: {
+            description:
+                "Called when the buyer changes their shipping address on PayPal.",
+            control: null,
+            table: { category: "Events", type: { summary: "() => void" } },
+        },
     },
     args: {
         // Storybook passes empty functions by default for props like `onShippingChange`.
@@ -24,36 +58,34 @@ export default {
         // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
         onShippingChange: null,
     },
-    decorators: [
-        (Story: FunctionComponent): ReactElement => (
-            <PayPalScriptProvider
-                options={{
-                    ...scriptProviderOptions,
-                    "data-namespace": generateRandomString(),
-                }}
-            >
-                <div style={{ minHeight: "200px" }}>
-                    <Story />
-                </div>
-            </PayPalScriptProvider>
-        ),
-    ],
 };
 
-export const Standalone: FunctionComponent = () => (
-    <PayPalButtons fundingSource={FUNDING.VENMO} style={{ color: "blue" }}>
-        <p>You are not eligible to pay with Venmo.</p>
-    </PayPalButtons>
-);
-
-export const Default: FunctionComponent = () => <PayPalButtons />;
-
-export const Horizontal: FunctionComponent = () => (
-    <PayPalButtons style={{ layout: "horizontal" }} />
-);
-
-export const CustomStyle: FunctionComponent = () => (
-    <PayPalButtons
-        style={{ color: "blue", shape: "pill", label: "pay", height: 40 }}
-    />
+export const Default: FC<{
+    style: {
+        color?: "blue" | "silver" | "white" | "black";
+        label?:
+            | "paypal"
+            | "checkout"
+            | "buynow"
+            | "pay"
+            | "installment"
+            | "subscribe"
+            | "donate";
+        shape?: "rect" | "pill";
+    };
+}> = ({ style }) => (
+    <PayPalScriptProvider
+        options={{
+            ...scriptProviderOptions,
+            "data-namespace": generateRandomString(),
+        }}
+    >
+        <PayPalButtons
+            fundingSource={FUNDING.VENMO}
+            style={style}
+            forceReRender={[style]}
+        >
+            <p>You are not eligible to pay with Venmo.</p>
+        </PayPalButtons>
+    </PayPalScriptProvider>
 );

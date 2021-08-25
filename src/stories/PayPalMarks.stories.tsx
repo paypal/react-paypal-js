@@ -1,10 +1,11 @@
-import React, {
-    useState,
-    FunctionComponent,
-    ReactElement,
-    ChangeEvent,
-} from "react";
+import React, { useState, FC, ChangeEvent } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
+import type {
+    CreateOrderActions,
+    OnApproveData,
+    OnApproveActions,
+} from "@paypal/paypal-js/types/components/buttons";
+import { action } from "@storybook/addon-actions";
 
 import {
     PayPalScriptProvider,
@@ -13,34 +14,71 @@ import {
     FUNDING,
 } from "../index";
 import { getOptionsFromQueryString } from "./utils";
+import { COMPONENT_PROPS } from "./constants";
+import type { Story } from "@storybook/react/types-6-0";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
     components: "buttons,marks,funding-eligibility",
     ...getOptionsFromQueryString(),
 };
+const fundingSources = [FUNDING.PAYPAL, FUNDING.CARD, FUNDING.PAYLATER];
 
 export default {
     title: "PayPal/PayPalMarks",
     component: PayPalMarks,
-    decorators: [
-        (Story: FunctionComponent): ReactElement => (
-            <PayPalScriptProvider options={scriptProviderOptions}>
-                <Story />
-            </PayPalScriptProvider>
-        ),
-    ],
+    parameters: {
+        options: { showFunctions: true },
+        controls: { expanded: true },
+        docs: { source: { type: "code" } },
+    },
+    argTypes: {
+        amount: {
+            description:
+                "This is not a property from PayPalButtons. It is custom control for testing the amount sent in the createOrder process",
+            options: ["2.00", "30.00", "100.00"],
+            control: {
+                type: "select",
+            },
+            defaultValue: "2.00",
+            table: {
+                defaultValue: {
+                    summary: "2.00",
+                },
+                category: "Custom",
+                type: { summary: "number|string" },
+            },
+        },
+        className: { control: null, table: { category: "Props" } },
+        fundingSource: {
+            options: [
+                FUNDING.PAYPAL,
+                FUNDING.CARD,
+                FUNDING.PAYLATER,
+                undefined,
+            ],
+            control: {
+                type: "select",
+                labels: {
+                    [FUNDING.PAYPAL]: "paypal",
+                    [FUNDING.CARD]: "card",
+                    [FUNDING.PAYLATER]: "paylater",
+                    undefined: "all",
+                },
+            },
+            table: { category: COMPONENT_PROPS },
+        },
+    },
 };
 
-export const Default: FunctionComponent = () => <PayPalMarks />;
-
-export const StandAlone: FunctionComponent = () => (
-    <PayPalMarks fundingSource={FUNDING.PAYPAL} />
+export const Default: FC<{ fundingSource: string }> = ({ fundingSource }) => (
+    <PayPalScriptProvider options={scriptProviderOptions}>
+        <PayPalMarks fundingSource={fundingSource} />
+    </PayPalScriptProvider>
 );
 
-export const RadioButtons: FunctionComponent = () => {
-    const fundingSources = [FUNDING.PAYPAL, FUNDING.CARD, FUNDING.PAYLATER];
-
+export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
+    // Remember the amount props is received from the control panel
     const [selectedFundingSource, setSelectedFundingSource] = useState(
         fundingSources[0]
     );
@@ -50,7 +88,7 @@ export const RadioButtons: FunctionComponent = () => {
     }
 
     return (
-        <>
+        <PayPalScriptProvider options={scriptProviderOptions}>
             <form style={{ minHeight: "200px" }}>
                 {fundingSources.map((fundingSource) => (
                     <label className="mark" key={fundingSource}>
@@ -70,8 +108,48 @@ export const RadioButtons: FunctionComponent = () => {
             <br />
             <PayPalButtons
                 fundingSource={selectedFundingSource}
+                forceReRender={[selectedFundingSource, amount]}
                 style={{ color: "white" }}
+                createOrder={(
+                    data: Record<string, unknown>,
+                    actions: CreateOrderActions
+                ) => {
+                    return actions.order
+                        .create({
+                            purchase_units: [
+                                {
+                                    amount: {
+                                        value: amount,
+                                    },
+                                },
+                            ],
+                        })
+                        .then((orderId) => {
+                            action("orderId")(orderId);
+                            return orderId;
+                        });
+                }}
+                onApprove={(data: OnApproveData, actions: OnApproveActions) => {
+                    return actions.order.capture().then(function (details) {
+                        action("onApprove")(details);
+                    });
+                }}
+                onError={(err: Record<string, unknown>) => {
+                    action("onError")(err.toString());
+                }}
             />
-        </>
+        </PayPalScriptProvider>
     );
+};
+
+(Default as Story).parameters = {
+    docs: { source: { type: "dynamic" } },
+};
+
+(Default as Story).argTypes = {
+    amount: { control: false },
+};
+
+(RadioButtons as Story).argTypes = {
+    fundingSource: { control: false },
 };

@@ -1,18 +1,20 @@
-import React, {
-    useState,
-    FunctionComponent,
-    ReactElement,
-    ChangeEvent,
-} from "react";
+import React, { FC, ReactElement, useEffect } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import type {
     CreateOrderActions,
     OnApproveData,
     OnApproveActions,
 } from "@paypal/paypal-js/types/components/buttons";
+import { usePayPalScriptReducer, DISPATCH_ACTION } from "../index";
+import { action } from "@storybook/addon-actions";
 
 import { PayPalScriptProvider, PayPalButtons, FUNDING } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
+import {
+    COMPONENT_PROPS,
+    COMPONENT_EVENTS,
+    ARG_TYPE_AMOUNT,
+} from "./constants";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -20,29 +22,83 @@ const scriptProviderOptions: PayPalScriptOptions = {
     ...getOptionsFromQueryString(),
 };
 
+const LoadingSpinner: FC = () => {
+    const [{ isPending }] = usePayPalScriptReducer();
+
+    return isPending ? <div className="spinner" /> : null;
+};
+
 export default {
     title: "PayPal/PayPalButtons",
     component: PayPalButtons,
     parameters: {
-        controls: { expanded: true },
+        controls: { expanded: true, sort: "requiredFirst" },
+        docs: { source: { type: "code" } },
     },
     argTypes: {
+        currency: {
+            options: ["USD", "EUR", "CAD"],
+            description:
+                "This is not a property from PayPalButtons. It is custom control to change the currency create create a PayPal order.",
+            control: {
+                type: "select",
+                labels: {
+                    USD: "United State Dollar",
+                    EUR: "Euro",
+                    CAD: "Canadian Dollar",
+                },
+            },
+            table: {
+                category: "Custom",
+                type: { summary: "string" },
+                defaultValue: { summary: "USD" },
+            },
+            defaultValue: "USD",
+        },
+        amount: ARG_TYPE_AMOUNT,
+        size: {
+            name: "container size",
+            description:
+                "This is not a property from PayPalButtons. It is custom control to change the size of the PayPal buttons container in pixels.",
+            control: { type: "range", min: 200, max: 750, step: 5 },
+            defaultValue: 750,
+            table: {
+                defaultValue: {
+                    summary: "750px",
+                },
+                category: "Custom",
+                type: { summary: "number" },
+            },
+        },
+        showSpinner: {
+            description:
+                "This is not a property from PayPalButtons. It is custom control to show or not a spinner when PayPal SDK is loading.",
+            control: { type: "select", options: [true, false] },
+            defaultValue: false,
+            table: {
+                defaultValue: {
+                    summary: "false",
+                },
+                category: "Custom",
+                type: { summary: "boolean" },
+            },
+        },
         style: {
-            control: { type: "object", expanded: true },
+            control: { type: "object" },
             defaultValue: {
-                color: "gold",
-                label: "paypal",
                 layout: "vertical",
             },
+            table: { category: COMPONENT_PROPS },
         },
         disabled: {
             options: [true, false],
             control: { type: "select" },
             defaultValue: false,
+            table: { category: COMPONENT_PROPS },
         },
-        forceReRender: { control: false },
-        className: { control: false },
-        children: { control: false },
+        forceReRender: { control: false, table: { category: COMPONENT_PROPS } },
+        className: { control: false, table: { category: COMPONENT_PROPS } },
+        children: { table: { disable: true } },
         fundingSource: {
             options: [
                 FUNDING.PAYPAL,
@@ -63,7 +119,17 @@ export default {
                     undefined: "all",
                 },
             },
+            table: { category: COMPONENT_PROPS },
         },
+        createOrder: { table: { category: COMPONENT_EVENTS } },
+        createBillingAgreement: { table: { category: COMPONENT_EVENTS } },
+        createSubscription: { table: { category: COMPONENT_EVENTS } },
+        onShippingChange: { table: { category: COMPONENT_EVENTS } },
+        onApprove: { table: { category: COMPONENT_EVENTS } },
+        onCancel: { table: { category: COMPONENT_EVENTS } },
+        onClick: { table: { category: COMPONENT_EVENTS } },
+        onInit: { table: { category: COMPONENT_EVENTS } },
+        onError: { table: { category: COMPONENT_EVENTS } },
     },
     args: {
         // Storybook passes empty functions by default for props like `onShippingChange`.
@@ -72,22 +138,24 @@ export default {
         onShippingChange: null,
     },
     decorators: [
-        (Story: FunctionComponent): ReactElement => (
-            <PayPalScriptProvider
-                options={{
-                    ...scriptProviderOptions,
-                    "data-namespace": generateRandomString(),
-                }}
-            >
-                <div style={{ minHeight: "200px" }}>
-                    <Story />
-                </div>
-            </PayPalScriptProvider>
+        (Story: FC, storyArg: { args: { size: number } }): ReactElement => (
+            <div style={{ maxWidth: `${storyArg.args.size}px` }}>
+                <PayPalScriptProvider
+                    options={{
+                        ...scriptProviderOptions,
+                        "data-namespace": generateRandomString(),
+                    }}
+                >
+                    <div style={{ minHeight: "200px" }}>
+                        <Story />
+                    </div>
+                </PayPalScriptProvider>
+            </div>
         ),
     ],
 };
 
-export const Default: FunctionComponent<{
+export const Default: FC<{
     style: {
         color?: "gold" | "blue" | "silver" | "white" | "black";
         height?: number;
@@ -105,144 +173,112 @@ export const Default: FunctionComponent<{
     };
     fundingSource: string;
     disabled: boolean;
-}> = (args) => {
+    currency: string;
+    amount: string;
+    showSpinner: boolean;
+}> = ({ style, fundingSource, disabled, currency, amount, showSpinner }) => {
+    const [{ options }, dispatch] = usePayPalScriptReducer();
+
+    useEffect(() => {
+        dispatch({
+            type: DISPATCH_ACTION.RESET_OPTIONS,
+            value: {
+                ...options,
+                currency: currency,
+            },
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currency]);
+
+    useEffect(() => {
+        dispatch({
+            type: DISPATCH_ACTION.RESET_OPTIONS,
+            value: {
+                ...options,
+                "data-order-id": Date.now().toString(),
+            },
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showSpinner]);
+
     return (
-        <PayPalButtons
-            style={args.style}
-            disabled={args.disabled}
-            fundingSource={args.fundingSource}
-            forceReRender={[args.style]}
-        />
+        <>
+            {showSpinner && <LoadingSpinner />}
+            <PayPalButtons
+                style={style}
+                disabled={disabled}
+                fundingSource={fundingSource}
+                forceReRender={[style, currency, amount]}
+                createOrder={(
+                    data: Record<string, unknown>,
+                    actions: CreateOrderActions
+                ) => {
+                    return actions.order
+                        .create({
+                            purchase_units: [
+                                {
+                                    amount: {
+                                        currency_code: currency,
+                                        value: amount,
+                                    },
+                                },
+                            ],
+                        })
+                        .then((orderId) => {
+                            action("orderId")(orderId);
+                            return orderId;
+                        });
+                }}
+                onApprove={(data: OnApproveData, actions: OnApproveActions) => {
+                    return actions.order.capture().then(function (details) {
+                        action("onApprove")(details);
+                    });
+                }}
+                onError={(err: Record<string, unknown>) => {
+                    action("onError")(err.toString());
+                }}
+            />
+        </>
     );
 };
 
-export const Donate: FunctionComponent = () => (
+export const Donate: FC<{ amount: string }> = ({ amount }) => (
     <PayPalButtons
         fundingSource={FUNDING.PAYPAL}
+        forceReRender={[amount]}
         style={{ label: "donate" }}
         createOrder={(data, actions) => {
-            return actions.order.create({
-                purchase_units: [
-                    {
-                        amount: {
-                            value: "2.00",
-                            breakdown: {
-                                item_total: {
-                                    currency_code: "USD",
-                                    value: "2.00",
+            return actions.order
+                .create({
+                    purchase_units: [
+                        {
+                            amount: {
+                                value: amount,
+                                breakdown: {
+                                    item_total: {
+                                        currency_code: "USD",
+                                        value: amount,
+                                    },
                                 },
                             },
+                            items: [
+                                {
+                                    name: "donation-example",
+                                    quantity: "1",
+                                    unit_amount: {
+                                        currency_code: "USD",
+                                        value: amount,
+                                    },
+                                    category: "DONATION",
+                                },
+                            ],
                         },
-                        items: [
-                            {
-                                name: "donation-example",
-                                quantity: "1",
-                                unit_amount: {
-                                    currency_code: "USD",
-                                    value: "2.00",
-                                },
-                                category: "DONATION",
-                            },
-                        ],
-                    },
-                ],
-            });
+                    ],
+                })
+                .then((orderId) => {
+                    action("orderId")(orderId);
+                    return orderId;
+                });
         }}
     />
 );
-
-export const Tiny: FunctionComponent = () => (
-    <div style={{ maxWidth: "80px" }}>
-        <PayPalButtons fundingSource={FUNDING.PAYPAL} style={{ height: 25 }} />
-    </div>
-);
-
-export const DynamicAmount: FunctionComponent = () => {
-    const [amount, setAmount] = useState("2.00");
-    const [orderID, setOrderID] = useState("");
-    const [onApproveMessage, setOnApproveMessage] = useState("");
-    const [onErrorMessage, setOnErrorMessage] = useState("");
-
-    function createOrder(
-        data: Record<string, unknown>,
-        actions: CreateOrderActions
-    ) {
-        return actions.order
-            .create({
-                purchase_units: [
-                    {
-                        amount: {
-                            value: amount,
-                        },
-                    },
-                ],
-            })
-            .then((orderID) => {
-                setOrderID(orderID);
-                return orderID;
-            });
-    }
-
-    function onApprove(data: OnApproveData, actions: OnApproveActions) {
-        return actions.order.capture().then(function (details) {
-            setOnApproveMessage(
-                `Transaction completed by ${details.payer.name.given_name}!`
-            );
-        });
-    }
-
-    function onError(err: Record<string, unknown>) {
-        setOnErrorMessage(err.toString());
-    }
-
-    function onChange(event: ChangeEvent<HTMLSelectElement>) {
-        setAmount(event.target.value);
-        setOrderID("");
-        setOnApproveMessage("");
-        setOnErrorMessage("");
-    }
-
-    return (
-        <div style={{ minHeight: "300px" }}>
-            <table className="table" style={{ maxWidth: "400px" }}>
-                <tbody>
-                    <tr>
-                        <th>
-                            <label htmlFor="amount">Order Amount: </label>
-                        </th>
-                        <td>
-                            <select
-                                onChange={onChange}
-                                name="amount"
-                                id="amount"
-                            >
-                                <option value="2.00">$2.00</option>
-                                <option value="4.00">$4.00</option>
-                                <option value="6.00">$6.00</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Order ID:</th>
-                        <td>{orderID ? orderID : "unknown"}</td>
-                    </tr>
-                    <tr>
-                        <th>On Approve Message: </th>
-                        <td data-testid="message">{onApproveMessage}</td>
-                    </tr>
-                    <tr>
-                        <th>On Error Message: </th>
-                        <td data-testid="error">{onErrorMessage}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <PayPalButtons
-                createOrder={createOrder}
-                onApprove={onApprove}
-                onError={onError}
-                forceReRender={[amount]}
-            />
-        </div>
-    );
-};

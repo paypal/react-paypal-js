@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement } from "react";
+import React, { FC } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
 import { PayPalScriptProvider, PayPalMessages } from "../index";
@@ -13,19 +13,45 @@ const scriptProviderOptions: PayPalScriptOptions = {
 export default {
     title: "PayPal/PayPalMessages",
     component: PayPalMessages,
-    decorators: [
-        (Story: FunctionComponent): ReactElement => (
-            <PayPalScriptProvider options={scriptProviderOptions}>
-                <div style={{ minHeight: "250px" }}>
-                    <Story />
-                </div>
-            </PayPalScriptProvider>
-        ),
-    ],
+    parameters: {
+        controls: { expanded: true },
+        actions: { disable: true },
+        docs: { source: { type: "dynamic" } },
+    },
+    argTypes: {
+        style: {
+            defaultValue: { layout: "text" },
+            description:
+                "Make inline change in the way the component will be render.",
+        },
+        forceReRender: {
+            control: null,
+            description:
+                "List of dependencies to re-render the PayPal messages component. This is similar to the useEffect hook dependencies list.",
+        },
+        className: {
+            control: null,
+            description: "Pass a CSS class to the div container.",
+        },
+        account: {
+            control: null,
+            description: "Set the account identifier.",
+        },
+        amount: {
+            control: null,
+            description:
+                "This represent the amount of money to charge. Can be a numeric value `10` or a string value `'10.00'`",
+        },
+    },
 };
 
-export const Default: FunctionComponent = () => <PayPalMessages />;
-
-export const Flex: FunctionComponent = () => (
-    <PayPalMessages style={{ layout: "flex" }} />
+export const Default: FC<{
+    style: {
+        layout?: "text" | "flex" | "custom";
+        color: string;
+    };
+}> = ({ style }) => (
+    <PayPalScriptProvider options={scriptProviderOptions}>
+        <PayPalMessages style={style} forceReRender={[style]} />
+    </PayPalScriptProvider>
 );

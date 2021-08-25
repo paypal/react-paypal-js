@@ -1,5 +1,6 @@
-import React, { FunctionComponent, ReactElement } from "react";
+import React, { FC, ReactElement } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
+import { action } from "@storybook/addon-actions";
 
 import { getOptionsFromQueryString } from "./utils";
 import {
@@ -7,6 +8,10 @@ import {
     DISPATCH_ACTION,
     SCRIPT_LOADING_STATE,
 } from "../index";
+import {
+    getScriptID,
+    destroySDKScript,
+} from "../context/scriptProviderContext";
 import { usePayPalScriptReducer } from "../hooks/scriptProviderHooks";
 
 const scriptProviderOptions: PayPalScriptOptions = {
@@ -14,25 +19,11 @@ const scriptProviderOptions: PayPalScriptOptions = {
     ...getOptionsFromQueryString(),
 };
 
-export default {
-    title: "PayPal/PayPalScriptProvider",
-    component: PayPalScriptProvider,
-};
+const LoadScriptButton: FC = () => {
+    const [{ isResolved }, dispatch] = usePayPalScriptReducer();
 
-export const Default: FunctionComponent = () => {
     return (
-        <PayPalScriptProvider options={scriptProviderOptions}>
-            <PrintLoadingState />
-            {/* add your paypal components here (ex: <PayPalButtons />) */}
-        </PayPalScriptProvider>
-    );
-};
-
-export const DeferLoading: FunctionComponent = () => {
-    function LoadScriptButton() {
-        const [{ isResolved }, dispatch] = usePayPalScriptReducer();
-
-        return (
+        <div style={{ display: "inline-flex" }}>
             <button
                 type="button"
                 style={{ display: "block", marginBottom: "20px" }}
@@ -44,22 +35,26 @@ export const DeferLoading: FunctionComponent = () => {
                     });
                 }}
             >
-                LoadScript
+                Load PayPal script
             </button>
-        );
-    }
-
-    return (
-        <PayPalScriptProvider
-            deferLoading={true}
-            options={{
-                ...scriptProviderOptions,
-                "data-namespace": "defer_loading_example",
-            }}
-        >
-            <PrintLoadingState />
-            <LoadScriptButton />
-        </PayPalScriptProvider>
+            <button
+                type="button"
+                style={{
+                    display: "block",
+                    marginBottom: "20px",
+                    marginLeft: "1em",
+                }}
+                onClick={() => {
+                    destroySDKScript(getScriptID(scriptProviderOptions));
+                    dispatch({
+                        type: DISPATCH_ACTION.LOADING_STATUS,
+                        value: SCRIPT_LOADING_STATE.INITIAL,
+                    });
+                }}
+            >
+                Reset
+            </button>
+        </div>
     );
 };
 
@@ -68,33 +63,55 @@ function PrintLoadingState(): ReactElement | null {
         usePayPalScriptReducer();
 
     if (isInitial) {
-        return (
-            <p>
-                <strong>isInitial</strong> - the sdk script has not been loaded
-                yet. It has been deferred.{" "}
-            </p>
+        action("isInitial")(
+            "The sdk script has not been loaded  yet. It has been deferred."
         );
     } else if (isPending) {
-        return (
-            <p>
-                <strong>isPending</strong> - the sdk script is loading.
-            </p>
-        );
+        action("isPending")("The sdk script is loading.");
     } else if (isResolved) {
-        return (
-            <p>
-                <strong>isResolved</strong> - the sdk script has successfully
-                loaded.
-            </p>
-        );
+        action("isResolved")("The sdk script has successfully loaded.");
     } else if (isRejected) {
-        return (
-            <p>
-                <strong>isRejected</strong> - something went wrong. The sdk
-                script failed to load.
-            </p>
+        action("isResolved")(
+            "Soomething went wrong. The sdk script failed to load."
         );
     }
 
     return null;
 }
+
+export default {
+    title: "PayPal/PayPalScriptProvider",
+    component: PayPalScriptProvider,
+    parameters: {
+        controls: { expanded: true },
+    },
+    argTypes: {
+        deferLoading: {
+            control: {
+                type: "select",
+                options: [true, false],
+            },
+            defaultValue: false,
+            description:
+                "Allow to defer the loading of the PayPal script. If the value is `true` you'll need to load manually.",
+            table: { category: "Props" },
+        },
+        options: {
+            control: { disable: true },
+            table: { category: "Props" },
+        },
+    },
+};
+
+export const Default: FC<{ deferLoading: boolean }> = ({ deferLoading }) => {
+    return (
+        <PayPalScriptProvider
+            options={scriptProviderOptions}
+            deferLoading={deferLoading}
+        >
+            <LoadScriptButton />
+            <PrintLoadingState />
+            {/* add your paypal components here (ex: <PayPalButtons />) */}
+        </PayPalScriptProvider>
+    );
+};

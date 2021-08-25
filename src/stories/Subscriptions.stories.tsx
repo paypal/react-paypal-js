@@ -1,6 +1,13 @@
-import React, { FunctionComponent, ReactElement, ChangeEvent } from "react";
+import React, { FC, ReactElement, useEffect } from "react";
+import { action } from "@storybook/addon-actions";
+
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import type { CreateSubscriptionActions } from "@paypal/paypal-js/types/components/buttons";
+import type {
+    CreateOrderActions,
+    OnApproveData,
+    OnApproveActions,
+} from "@paypal/paypal-js/types/components/buttons";
 
 import {
     PayPalScriptProvider,
@@ -9,6 +16,8 @@ import {
     DISPATCH_ACTION,
 } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
+import { ARG_TYPE_AMOUNT } from "./constants";
+import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
 
 const subscriptionOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -16,6 +25,25 @@ const subscriptionOptions: PayPalScriptOptions = {
     intent: "subscription",
     vault: true,
     ...getOptionsFromQueryString(),
+};
+
+const buttonSubscriptionOptions = {
+    createSubscription(
+        data: Record<string, unknown>,
+        actions: CreateSubscriptionActions
+    ) {
+        return actions.subscription
+            .create({
+                plan_id: PLAN_ID,
+            })
+            .then((orderId) => {
+                action("subscriptionOrder")(orderId);
+                return orderId;
+            });
+    },
+    style: {
+        label: "subscribe",
+    },
 };
 
 const orderOptions: PayPalScriptOptions = {
@@ -26,8 +54,28 @@ const orderOptions: PayPalScriptOptions = {
 
 export default {
     title: "PayPal/Subscriptions",
+    parameters: {
+        controls: { expanded: true },
+        docs: { source: { type: "code" } },
+    },
+    argTypes: {
+        type: {
+            control: "select",
+            options: ["subscription", "order"],
+            table: {
+                category: "Custom",
+                type: { summary: "string" },
+                defaultValue: {
+                    summary: "subscription",
+                },
+            },
+            defaultValue: "subscription",
+            description: "Change the PayPal checkout intent.",
+        },
+        amount: ARG_TYPE_AMOUNT,
+    },
     decorators: [
-        (Story: FunctionComponent): ReactElement => (
+        (Story: FC): ReactElement => (
             <PayPalScriptProvider
                 options={{
                     ...subscriptionOptions,
@@ -44,77 +92,56 @@ export default {
 
 const PLAN_ID = "P-3RX065706M3469222L5IFM4I";
 
-export const Default: FunctionComponent = () => (
-    <PayPalButtons
-        createSubscription={(
-            data: Record<string, unknown>,
-            actions: CreateSubscriptionActions
-        ) =>
-            actions.subscription.create({
-                plan_id: PLAN_ID,
-            })
-        }
-        style={{
-            label: "subscribe",
-        }}
-    />
-);
-
-export const OrdersAndSubscriptions: FunctionComponent = () => {
+export const Default: FC<{ type: string; amount: string }> = ({
+    type,
+    amount,
+}) => {
+    // Remember the type and amount props are received from the control panel
     const [{ options }, dispatch] = usePayPalScriptReducer();
-
-    const buttonSubscriptionOptions = {
-        createSubscription(
-            data: Record<string, unknown>,
-            actions: CreateSubscriptionActions
-        ) {
-            return actions.subscription.create({
-                plan_id: PLAN_ID,
-            });
-        },
-        style: {
-            label: "subscribe",
-        },
-    };
-
     const buttonOptions =
-        options.intent === "subscription" ? buttonSubscriptionOptions : {};
+        options.intent === "subscription"
+            ? buttonSubscriptionOptions
+            : {
+                  createOrder(
+                      data: Record<string, unknown>,
+                      actions: CreateOrderActions
+                  ) {
+                      return actions.order
+                          .create({
+                              purchase_units: [
+                                  {
+                                      amount: {
+                                          value: amount,
+                                      },
+                                  },
+                              ],
+                          })
+                          .then((orderId) => {
+                              action("orderId")(orderId);
+                              return orderId;
+                          });
+                  },
+                  onApprove(data: OnApproveData, actions: OnApproveActions) {
+                      return actions.order.capture().then(function (details) {
+                          action("onApprove")(details);
+                      });
+                  },
+                  onError(err: Record<string, unknown>) {
+                      action("onError")(err.toString());
+                  },
+              };
 
-    function onChange(event: ChangeEvent<HTMLInputElement>) {
+    useEffect(() => {
         dispatch({
             type: DISPATCH_ACTION.RESET_OPTIONS,
-            value:
-                event.target.value === "subscription"
-                    ? subscriptionOptions
-                    : orderOptions,
+            value: type === "subscription" ? subscriptionOptions : orderOptions,
         });
-    }
+    }, [type, dispatch]);
 
     return (
-        <>
-            <form>
-                <label>
-                    <input
-                        defaultChecked
-                        onChange={onChange}
-                        type="radio"
-                        name="type"
-                        value="subscription"
-                    />
-                    Subscription
-                </label>
-                <label>
-                    <input
-                        onChange={onChange}
-                        type="radio"
-                        name="type"
-                        value="order"
-                    />
-                    Order
-                </label>
-            </form>
-            <br />
-            <PayPalButtons {...buttonOptions} />
-        </>
+        <PayPalButtons
+            forceReRender={[type, amount]}
+            {...(buttonOptions as PayPalButtonsComponentProps)}
+        />
     );
 };
