@@ -333,10 +333,9 @@ describe("<PayPalButtons />", () => {
 
         await waitFor(() => expect(onError).toBeCalledTimes(1));
         expect(onError).toBeCalledWith(
-            expect.objectContaining({
-                message:
-                    "Failed to render <PayPalButtons /> component. Problem found initializing paypal Buttons:  Error: Unexpected style.color for venmo button: gold, expected blue, silver, black, white",
-            })
+            new Error(
+                "Failed to render <PayPalButtons /> component. Failed to initialize:  Error: Unexpected style.color for venmo button: gold, expected blue, silver, black, white"
+            )
         );
         expect(console.error).toBeCalled();
     });
