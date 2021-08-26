@@ -97,11 +97,9 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             });
         } catch (err) {
             return setErrorState(() => {
-                const ex = new Error(
+                throw new Error(
                     `Failed to render <PayPalButtons /> component. Problem found initializing paypal Buttons:  ${err}`
                 );
-                ex.name = "PayPalButtonsInitializerError";
-                throw ex;
             });
         }
 
@@ -126,11 +124,9 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             }
             // paypal buttons container is still in the DOM
             setErrorState(() => {
-                const ex = new Error(
+                throw new Error(
                     `Failed to render <PayPalButtons /> component. ${err}`
                 );
-                ex.name = "ButtonExistsError";
-                throw ex;
             });
         });
 
