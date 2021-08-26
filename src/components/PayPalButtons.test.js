@@ -299,7 +299,7 @@ describe("<PayPalButtons />", () => {
         expect(onError.mock.calls[0][0].message).toMatchSnapshot();
     });
 
-    test("should throw an error when the configuration props are no eligible", async () => {
+    test("should throw an error during initialization when style prop is invalid", async () => {
         window.paypal.Buttons = (options) => {
             if (
                 options.style.color === "gold" &&
