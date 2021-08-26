@@ -4,11 +4,11 @@ import type { FC } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import { action } from "@storybook/addon-actions";
 import type {
-    CreateBraintreeActions,
+    CreateOrderBraintreeActions,
     OnApproveBraintreeActions,
-} from "../types/braintreePayPalButtonTypes";
-import type { BraintreePayPalCheckoutTokenizationOptions } from "../types/braintree/paypalCheckout";
-import { OnApproveData } from "../types/braintreePayPalButtonTypes";
+    OnApproveBraintreeData,
+} from "../types";
+
 import { PayPalScriptProvider, FUNDING } from "../index";
 import { BraintreePayPalButtons } from "../components/braintree/BraintreePayPalButtons";
 import {
@@ -179,7 +179,7 @@ export const Default: FC<{
             forceReRender={[style, amount]}
             createOrder={(
                 data: Record<string, unknown>,
-                actions: CreateBraintreeActions
+                actions: CreateOrderBraintreeActions
             ) =>
                 actions.braintree
                     .createPayment({
@@ -206,19 +206,15 @@ export const Default: FC<{
                     })
             }
             onApprove={(
-                data: OnApproveData,
+                data: OnApproveBraintreeData,
                 actions: OnApproveBraintreeActions
             ) =>
-                actions.braintree
-                    .tokenizePayment(
-                        data as BraintreePayPalCheckoutTokenizationOptions
-                    )
-                    .then((payload) => {
-                        approveSale(payload.nonce, amount).then((data) => {
-                            action("onApprove")(data);
-                            // Call server-side endpoint to finish the sale
-                        });
-                    })
+                actions.braintree.tokenizePayment(data).then((payload) => {
+                    approveSale(payload.nonce, amount).then((data) => {
+                        action("onApprove")(data);
+                        // Call server-side endpoint to finish the sale
+                    });
+                })
             }
             onError={(err: Record<string, unknown>) => {
                 action("onError")(err.toString());

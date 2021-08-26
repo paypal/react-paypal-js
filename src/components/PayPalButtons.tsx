@@ -6,7 +6,7 @@ import type {
     PayPalButtonsComponent,
     OnInitActions,
 } from "@paypal/paypal-js/types/components/buttons";
-import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
+import type { PayPalButtonsComponentProps } from "../types";
 
 /**
 This `<PayPalButtons />` component renders the [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).
@@ -90,10 +90,18 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             }
         };
 
-        buttons.current = paypalWindowNamespace.Buttons({
-            ...buttonProps,
-            onInit: decoratedOnInit,
-        });
+        try {
+            buttons.current = paypalWindowNamespace.Buttons({
+                ...buttonProps,
+                onInit: decoratedOnInit,
+            });
+        } catch (err) {
+            return setErrorState(() => {
+                throw new Error(
+                    `Failed to render <PayPalButtons /> component. Failed to initialize:  ${err}`
+                );
+            });
+        }
 
         // only render the button when eligible
         if (buttons.current.isEligible() === false) {
