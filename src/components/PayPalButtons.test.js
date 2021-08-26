@@ -310,10 +310,9 @@ describe("<PayPalButtons />", () => {
                 );
         };
         console.error = jest.fn();
-        const onError = jest.fn();
 
         const wrapper = ({ children }) => (
-            <ErrorBoundary onError={onError}>{children}</ErrorBoundary>
+            <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
         );
 
         render(
@@ -331,13 +330,12 @@ describe("<PayPalButtons />", () => {
             { wrapper }
         );
 
-        await waitFor(() => expect(onError).toBeCalledTimes(1));
-        expect(onError).toBeCalledWith(
+        await waitFor(() => expect(console.error).toBeCalled());
+        expect(console.error).toBeCalledWith(
             new Error(
                 "Failed to render <PayPalButtons /> component. Failed to initialize:  Error: Unexpected style.color for venmo button: gold, expected blue, silver, black, white"
             )
         );
-        expect(console.error).toBeCalled();
     });
 });
 
