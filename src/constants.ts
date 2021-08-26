@@ -10,7 +10,9 @@ export const EMPTY_PROVIDER_CONTEXT_CLIENT_TOKEN_ERROR_MESSAGE =
 const braintreeVersion = "3.81.0";
 export const BRAINTREE_SOURCE = `https://js.braintreegateway.com/web/${braintreeVersion}/js/client.min.js`;
 export const BRAINTREE_PAYPAL_CHECKOUT_SOURCE = `https://js.braintreegateway.com/web/${braintreeVersion}/js/paypal-checkout.min.js`;
+export const DATA_SDK_INTEGRATION_SOURCE = "data-sdk-integration-source";
 
 // Namespaces
 export const DEFAULT_PAYPAL_NAMESPACE = "paypal";
 export const DEFAULT_BRAINTREE_NAMESPACE = "braintree";
+
