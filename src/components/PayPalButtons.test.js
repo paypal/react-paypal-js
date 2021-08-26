@@ -309,7 +309,9 @@ describe("<PayPalButtons />", () => {
                     "Unexpected style.color for venmo button: gold, expected blue, silver, black, white"
                 );
         };
-        console.error = jest.fn();
+        jest.spyOn(console, "error").mockImplementation(() => {
+            // do nothing
+        });
 
         const wrapper = ({ children }) => (
             <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
