@@ -90,10 +90,20 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             }
         };
 
-        buttons.current = paypalWindowNamespace.Buttons({
-            ...buttonProps,
-            onInit: decoratedOnInit,
-        });
+        try {
+            buttons.current = paypalWindowNamespace.Buttons({
+                ...buttonProps,
+                onInit: decoratedOnInit,
+            });
+        } catch (err) {
+            return setErrorState(() => {
+                const ex = new Error(
+                    `Failed to render <PayPalButtons /> component. Problem found initializing paypal Buttons:  ${err}`
+                );
+                ex.name = "PayPalButtonsInitializerError";
+                throw ex;
+            });
+        }
 
         // only render the button when eligible
         if (buttons.current.isEligible() === false) {
@@ -116,9 +126,11 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             }
             // paypal buttons container is still in the DOM
             setErrorState(() => {
-                throw new Error(
+                const ex = new Error(
                     `Failed to render <PayPalButtons /> component. ${err}`
                 );
+                ex.name = "ButtonExistsError";
+                throw ex;
             });
         });
 
