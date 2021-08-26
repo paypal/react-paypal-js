@@ -67,7 +67,6 @@ export function scriptReducer(
                         action.value as PayPalScriptOptions
                     )}`,
                     [DATA_SDK_INTEGRATION_SOURCE]: "react-paypal-js",
-
                 },
             };
         case DISPATCH_ACTION.SET_BRAINTREE_INSTANCE:

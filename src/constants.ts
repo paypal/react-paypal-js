@@ -15,4 +15,3 @@ export const DATA_SDK_INTEGRATION_SOURCE = "data-sdk-integration-source";
 // Namespaces
 export const DEFAULT_PAYPAL_NAMESPACE = "paypal";
 export const DEFAULT_BRAINTREE_NAMESPACE = "braintree";
-
