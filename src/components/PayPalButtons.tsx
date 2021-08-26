@@ -98,7 +98,7 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
         } catch (err) {
             return setErrorState(() => {
                 throw new Error(
-                    `Failed to render <PayPalButtons /> component. Problem found initializing paypal Buttons:  ${err}`
+                    `Failed to render <PayPalButtons /> component. Failed to initialize:  ${err}`
                 );
             });
         }
