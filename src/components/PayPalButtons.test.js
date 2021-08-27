@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import {
     render,
     waitFor,
@@ -11,6 +11,7 @@ import { PayPalButtons } from "./PayPalButtons";
 import { FUNDING } from "@paypal/sdk-constants";
 import { loadScript } from "@paypal/paypal-js";
 import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
+import { ErrorBoundary } from "../__utils__/commons";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
@@ -340,19 +341,3 @@ describe("<PayPalButtons />", () => {
         );
     });
 });
-
-class ErrorBoundary extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { hasError: false };
-    }
-
-    componentDidCatch(error) {
-        this.setState({ hasError: true });
-        this.props.onError(error);
-    }
-
-    render() {
-        return !this.state.hasError && this.props.children;
-    }
-}

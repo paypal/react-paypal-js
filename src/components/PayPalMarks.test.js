@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { render, waitFor } from "@testing-library/react";
 
 import { PayPalScriptProvider } from "../components/PayPalScriptProvider.tsx";
 import { PayPalMarks } from "./PayPalMarks";
 import { FUNDING } from "@paypal/sdk-constants";
 import { loadScript } from "@paypal/paypal-js";
+import { ErrorBoundary } from "../__utils__/commons";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
@@ -145,19 +146,3 @@ describe("<PayPalMarks />", () => {
         expect(onError.mock.calls[0][0].message).toMatchSnapshot();
     });
 });
-
-class ErrorBoundary extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { hasError: false };
-    }
-
-    componentDidCatch(error) {
-        this.setState({ hasError: true });
-        this.props.onError(error);
-    }
-
-    render() {
-        return !this.state.hasError && this.props.children;
-    }
-}
