@@ -31,7 +31,11 @@ export function contextNotEmptyValidator(
 export const contextOptionClientTokenNotEmptyValidator = (
     scriptContext: ScriptContextState | null
 ): StrictScriptContextState => {
-    if (scriptContext?.options[DATA_CLIENT_TOKEN] == null) {
+    if (
+        scriptContext != null &&
+        (scriptContext.options[DATA_CLIENT_TOKEN] == null ||
+            scriptContext.options[DATA_CLIENT_TOKEN] === "")
+    ) {
         throw new Error(EMPTY_PROVIDER_CONTEXT_CLIENT_TOKEN_ERROR_MESSAGE);
     }
 

@@ -112,7 +112,12 @@ describe("Braintree PayPal button fail in mount process", () => {
 
         try {
             render(
-                <PayPalScriptProvider options={{ "client-id": "test" }}>
+                <PayPalScriptProvider
+                    options={{
+                        "client-id": "test",
+                        "data-client-token": "",
+                    }}
+                >
                     <BraintreePayPalButtons />
                 </PayPalScriptProvider>
             );
