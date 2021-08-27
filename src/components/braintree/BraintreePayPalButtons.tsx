@@ -81,7 +81,6 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                     ] as string;
 
                     const braintreeNamespace = getBraintreeWindowNamespace();
-
                     braintreeNamespace.client
                         .create({
                             authorization: clientToken,
@@ -96,12 +95,19 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                                 type: DISPATCH_ACTION.SET_BRAINTREE_INSTANCE,
                                 value: paypalCheckoutInstance,
                             });
+                        })
+                        .catch((err) => {
+                            setErrorState(() => {
+                                throw new Error(
+                                    `Failed creating the Braintree Client. ${err}`
+                                );
+                            });
                         });
                 })
                 .catch((err) => {
                     setErrorState(() => {
                         throw new Error(
-                            `Failed creating the Braintree Client. ${err}`
+                            `Unknown error occurs creating the Braintree client instance. ${err}`
                         );
                     });
                 });

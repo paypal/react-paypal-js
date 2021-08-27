@@ -162,38 +162,6 @@ describe("Braintree PayPal button fail in mount process", () => {
     });
 
     test("should fail rendering the BraintreePayPalButton component loading the Braintree Gateway", async () => {
-        window.braintree = null;
-        jest.spyOn(console, "error").mockImplementation(() => {
-            // do nothing
-        });
-
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
-        );
-
-        render(
-            <PayPalScriptProvider
-                options={{
-                    "client-id": "test",
-                    "data-client-token": CLIENT_TOKEN,
-                }}
-            >
-                <BraintreePayPalButtons />
-            </PayPalScriptProvider>,
-            { wrapper }
-        );
-
-        await waitFor(() => expect(console.error).toBeCalled());
-        await waitFor(() => {
-            expect(console.error).toBeCalledWith(
-                new Error(
-                    "Failed creating the Braintree Client. TypeError: Cannot read property 'client' of null"
-                )
-            );
-        });
-    });
-
-    test("should fail rendering the BraintreePayPalButton component creating the Braintree Client", async () => {
         loadCustomScript.mockRejectedValue(new Error("Server Error"));
         jest.spyOn(console, "error").mockImplementation(() => {
             // do nothing
@@ -216,13 +184,73 @@ describe("Braintree PayPal button fail in mount process", () => {
         );
 
         await waitFor(() => expect(console.error).toBeCalled());
-        await waitFor(() => {
-            expect(console.error).toBeCalledWith(
-                new Error(
-                    "Failed loading the Braintree Gateway. Error: Server Error"
-                )
-            );
+        expect(console.error).toBeCalledWith(
+            new Error(
+                "Failed loading the Braintree Gateway. Error: Server Error"
+            )
+        );
+    });
+
+    test("should fail rendering the BraintreePayPalButton component creating the Braintree Client", async () => {
+        window.braintree.client.create = jest
+            .fn()
+            .mockRejectedValue(new Error("Cannot create the Braintree client"));
+        jest.spyOn(console, "error").mockImplementation(() => {
+            // do nothing
         });
+
+        const wrapper = ({ children }) => (
+            <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
+        );
+
+        render(
+            <PayPalScriptProvider
+                options={{
+                    "client-id": "test",
+                    "data-client-token": CLIENT_TOKEN,
+                }}
+            >
+                <BraintreePayPalButtons />
+            </PayPalScriptProvider>,
+            { wrapper }
+        );
+
+        await waitFor(() => expect(console.error).toBeCalled());
+        expect(console.error).toBeCalledWith(
+            new Error(
+                "Failed creating the Braintree Client. Error: Cannot create the Braintree client"
+            )
+        );
+    });
+
+    test("should fail rendering the BraintreePayPalButton component catching any unknown error creating the Braintree Client", async () => {
+        window.braintree = null;
+        jest.spyOn(console, "error").mockImplementation(() => {
+            // do nothing
+        });
+
+        const wrapper = ({ children }) => (
+            <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
+        );
+
+        render(
+            <PayPalScriptProvider
+                options={{
+                    "client-id": "test",
+                    "data-client-token": CLIENT_TOKEN,
+                }}
+            >
+                <BraintreePayPalButtons />
+            </PayPalScriptProvider>,
+            { wrapper }
+        );
+
+        await waitFor(() => expect(console.error).toBeCalled());
+        expect(console.error).toBeCalledWith(
+            new Error(
+                "Unknown error occurs creating the Braintree client instance. TypeError: Cannot read property 'client' of null"
+            )
+        );
     });
 });
 
