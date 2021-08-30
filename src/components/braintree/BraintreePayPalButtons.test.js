@@ -47,15 +47,12 @@ const setup = () => {
     loadCustomScript.mockResolvedValue(window.braintree);
 };
 
-const wrapperComponent = (onError) => {
-    return function boundary({ children }) {
-        return (
-            <ErrorBoundary fallback={<div>Oh no</div>} onError={onError}>
-                {children}
-            </ErrorBoundary>
-        );
-    };
-};
+const onError = jest.fn();
+const wrapper = ({ children }) => (
+    <ErrorBoundary fallback={<div>Error</div>} onError={onError}>
+        {children}
+    </ErrorBoundary>
+);
 
 describe("Braintree PayPal button fail in mount process", () => {
     beforeEach(setup);
@@ -172,10 +169,10 @@ describe("Braintree PayPal button fail in mount process", () => {
     });
 
     test("should fail rendering the BraintreePayPalButton component loading the Braintree Gateway", async () => {
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
         loadCustomScript.mockRejectedValue(new Error("Server Error"));
-        jest.spyOn(console, "error").mockImplementation(() => {
-            // do nothing
-        });
 
         render(
             <PayPalScriptProvider
@@ -186,25 +183,26 @@ describe("Braintree PayPal button fail in mount process", () => {
             >
                 <BraintreePayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper: wrapperComponent(console.error) }
+            { wrapper }
         );
 
-        await waitFor(() => expect(console.error).toBeCalled());
-        expect(console.error.mock.calls[2][0]).toEqual(
+        await waitFor(() => expect(onError).toBeCalled());
+        expect(onError.mock.calls[0][0]).toEqual(
             expect.objectContaining({
                 message:
                     "An error occurred when loading the Braintree scripts: Error: Server Error",
             })
         );
+        spyConsoleError.mockRestore();
     });
 
     test("should fail rendering the BraintreePayPalButton component creating the Braintree Client", async () => {
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
         window.braintree.client.create = jest
             .fn()
             .mockRejectedValue(new Error("Cannot create the Braintree client"));
-        jest.spyOn(console, "error").mockImplementation(() => {
-            // do nothing
-        });
 
         render(
             <PayPalScriptProvider
@@ -215,23 +213,24 @@ describe("Braintree PayPal button fail in mount process", () => {
             >
                 <BraintreePayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper: wrapperComponent(console.error) }
+            { wrapper }
         );
 
-        await waitFor(() => expect(console.error).toBeCalled());
-        expect(console.error.mock.calls[2][0]).toEqual(
+        await waitFor(() => expect(onError).toBeCalled());
+        expect(onError.mock.calls[0][0]).toEqual(
             expect.objectContaining({
                 message:
                     "An error occurred when loading the Braintree scripts: Error: Cannot create the Braintree client",
             })
         );
+        spyConsoleError.mockRestore();
     });
 
     test("should fail rendering the BraintreePayPalButton component catching any unknown error creating the Braintree Client", async () => {
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
         window.braintree = null;
-        jest.spyOn(console, "error").mockImplementation(() => {
-            // do nothing
-        });
 
         render(
             <PayPalScriptProvider
@@ -242,16 +241,17 @@ describe("Braintree PayPal button fail in mount process", () => {
             >
                 <BraintreePayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper: wrapperComponent(console.error) }
+            { wrapper }
         );
 
-        await waitFor(() => expect(console.error).toBeCalled());
-        expect(console.error.mock.calls[2][0]).toEqual(
+        await waitFor(() => expect(onError).toBeCalled());
+        expect(onError.mock.calls[0][0]).toEqual(
             expect.objectContaining({
                 message:
                     "An error occurred when loading the Braintree scripts: TypeError: Cannot read property 'client' of null",
             })
         );
+        spyConsoleError.mockRestore();
     });
 });
 

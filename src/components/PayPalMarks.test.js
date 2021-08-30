@@ -11,15 +11,12 @@ jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
 }));
 
-const wrapperComponent = (onError) => {
-    return function boundary({ children }) {
-        return (
-            <ErrorBoundary fallback={<div>Oh no</div>} onError={onError}>
-                {children}
-            </ErrorBoundary>
-        );
-    };
-};
+const onError = jest.fn();
+const wrapper = ({ children }) => (
+    <ErrorBoundary fallback={<div>Error</div>} onError={onError}>
+        {children}
+    </ErrorBoundary>
+);
 
 describe("<PayPalMarks />", () => {
     beforeEach(() => {
@@ -75,30 +72,25 @@ describe("<PayPalMarks />", () => {
     });
 
     test("should throw an error when no components are passed to the PayPalScriptProvider", async () => {
-        jest.spyOn(console, "error").mockImplementation(() => {
-            // do nothing
-        });
-
-        const onError = jest.fn();
-
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
         render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks />
             </PayPalScriptProvider>,
-            { wrapper: wrapperComponent(onError) }
+            { wrapper }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
         expect(onError.mock.calls[0][0].message).toMatchSnapshot();
+        spyConsoleError.mockRestore();
     });
 
     test("should throw an error when the 'marks' component is missing from the components list passed to the PayPalScriptProvider", async () => {
-        jest.spyOn(console, "error").mockImplementation(() => {
-            // do nothing
-        });
-
-        const onError = jest.fn();
-
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
         render(
             <PayPalScriptProvider
                 options={{
@@ -108,18 +100,18 @@ describe("<PayPalMarks />", () => {
             >
                 <PayPalMarks />
             </PayPalScriptProvider>,
-            { wrapper: wrapperComponent(onError) }
+            { wrapper }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
         expect(onError.mock.calls[0][0].message).toMatchSnapshot();
+        spyConsoleError.mockRestore();
     });
 
     test("should catch and throw unexpected zoid render errors", async () => {
-        jest.spyOn(console, "error").mockImplementation(() => {
-            // do nothing
-        });
-
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
         window.paypal.Marks = () => {
             return {
                 isEligible: jest.fn().mockReturnValue(true),
@@ -131,16 +123,15 @@ describe("<PayPalMarks />", () => {
             };
         };
 
-        const onError = jest.fn();
-
         render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks />
             </PayPalScriptProvider>,
-            { wrapper: wrapperComponent(onError) }
+            { wrapper }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
         expect(onError.mock.calls[0][0].message).toMatchSnapshot();
+        spyConsoleError.mockRestore();
     });
 });
