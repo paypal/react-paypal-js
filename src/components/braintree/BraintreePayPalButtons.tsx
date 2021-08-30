@@ -58,30 +58,16 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
 
         useEffect(() => {
             Promise.all([
-                loadCustomScript({ url: BRAINTREE_SOURCE }).catch((err) => {
-                    setErrorState(() => {
-                        throw new Error(
-                            `Failed loading the Braintree Gateway. ${err}`
-                        );
-                    });
-                }),
-                loadCustomScript({
-                    url: BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
-                }).catch((err) => {
-                    setErrorState(() => {
-                        throw new Error(
-                            `Failed loading the Braintree Gateway PayPalCheckout. ${err}`
-                        );
-                    });
-                }),
+                loadCustomScript({ url: BRAINTREE_SOURCE }),
+                loadCustomScript({ url: BRAINTREE_PAYPAL_CHECKOUT_SOURCE }),
             ])
                 .then(() => {
                     const clientToken = providerContext.options[
                         DATA_CLIENT_TOKEN
                     ] as string;
-
                     const braintreeNamespace = getBraintreeWindowNamespace();
-                    braintreeNamespace.client
+
+                    return braintreeNamespace.client
                         .create({
                             authorization: clientToken,
                         })
@@ -95,19 +81,12 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                                 type: DISPATCH_ACTION.SET_BRAINTREE_INSTANCE,
                                 value: paypalCheckoutInstance,
                             });
-                        })
-                        .catch((err) => {
-                            setErrorState(() => {
-                                throw new Error(
-                                    `Failed creating the Braintree Client. ${err}`
-                                );
-                            });
                         });
                 })
                 .catch((err) => {
                     setErrorState(() => {
                         throw new Error(
-                            `Unknown error occurs creating the Braintree client instance. ${err}`
+                            `An error occurred when loading the Braintree scripts: ${err}`
                         );
                     });
                 });

@@ -1,6 +1,7 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { loadScript, loadCustomScript } from "@paypal/paypal-js";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { BraintreePayPalButtons } from "./BraintreePayPalButtons";
 import { PayPalScriptProvider } from "../PayPalScriptProvider";
@@ -10,7 +11,6 @@ import {
     BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
 } from "../../constants";
 import { FUNDING } from "@paypal/sdk-constants";
-import { ErrorBoundary } from "../../__utils__/commons";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
@@ -45,6 +45,16 @@ const setup = () => {
 
     loadScript.mockResolvedValue(window.paypal);
     loadCustomScript.mockResolvedValue(window.braintree);
+};
+
+const wrapperComponent = (onError) => {
+    return function boundary({ children }) {
+        return (
+            <ErrorBoundary fallback={<div>Oh no</div>} onError={onError}>
+                {children}
+            </ErrorBoundary>
+        );
+    };
 };
 
 describe("Braintree PayPal button fail in mount process", () => {
@@ -167,10 +177,6 @@ describe("Braintree PayPal button fail in mount process", () => {
             // do nothing
         });
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider
                 options={{
@@ -180,14 +186,15 @@ describe("Braintree PayPal button fail in mount process", () => {
             >
                 <BraintreePayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(console.error) }
         );
 
         await waitFor(() => expect(console.error).toBeCalled());
-        expect(console.error).toBeCalledWith(
-            new Error(
-                "Failed loading the Braintree Gateway. Error: Server Error"
-            )
+        expect(console.error.mock.calls[2][0]).toEqual(
+            expect.objectContaining({
+                message:
+                    "An error occurred when loading the Braintree scripts: Error: Server Error",
+            })
         );
     });
 
@@ -199,10 +206,6 @@ describe("Braintree PayPal button fail in mount process", () => {
             // do nothing
         });
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider
                 options={{
@@ -212,14 +215,15 @@ describe("Braintree PayPal button fail in mount process", () => {
             >
                 <BraintreePayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(console.error) }
         );
 
         await waitFor(() => expect(console.error).toBeCalled());
-        expect(console.error).toBeCalledWith(
-            new Error(
-                "Failed creating the Braintree Client. Error: Cannot create the Braintree client"
-            )
+        expect(console.error.mock.calls[2][0]).toEqual(
+            expect.objectContaining({
+                message:
+                    "An error occurred when loading the Braintree scripts: Error: Cannot create the Braintree client",
+            })
         );
     });
 
@@ -229,10 +233,6 @@ describe("Braintree PayPal button fail in mount process", () => {
             // do nothing
         });
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider
                 options={{
@@ -242,14 +242,15 @@ describe("Braintree PayPal button fail in mount process", () => {
             >
                 <BraintreePayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(console.error) }
         );
 
         await waitFor(() => expect(console.error).toBeCalled());
-        expect(console.error).toBeCalledWith(
-            new Error(
-                "Unknown error occurs creating the Braintree client instance. TypeError: Cannot read property 'client' of null"
-            )
+        expect(console.error.mock.calls[2][0]).toEqual(
+            expect.objectContaining({
+                message:
+                    "An error occurred when loading the Braintree scripts: TypeError: Cannot read property 'client' of null",
+            })
         );
     });
 });

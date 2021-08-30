@@ -6,16 +6,26 @@ import {
     fireEvent,
     act,
 } from "@testing-library/react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { PayPalButtons } from "./PayPalButtons";
 import { FUNDING } from "@paypal/sdk-constants";
 import { loadScript } from "@paypal/paypal-js";
 import { PayPalScriptProvider } from "../components/PayPalScriptProvider";
-import { ErrorBoundary } from "../__utils__/commons";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
 }));
+
+const wrapperComponent = (onError) => {
+    return function boundary({ children }) {
+        return (
+            <ErrorBoundary fallback={<div>Oh no</div>} onError={onError}>
+                {children}
+            </ErrorBoundary>
+        );
+    };
+};
 
 describe("<PayPalButtons />", () => {
     beforeEach(() => {
@@ -222,15 +232,11 @@ describe("<PayPalButtons />", () => {
         window.paypal = {};
         const onError = jest.fn();
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={onError}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(onError) }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
@@ -246,10 +252,6 @@ describe("<PayPalButtons />", () => {
         window.paypal = {};
         const onError = jest.fn();
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={onError}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider
                 options={{
@@ -259,7 +261,7 @@ describe("<PayPalButtons />", () => {
             >
                 <PayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(onError) }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
@@ -285,15 +287,11 @@ describe("<PayPalButtons />", () => {
 
         const onError = jest.fn();
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={onError}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalButtons />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(onError) }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
@@ -314,10 +312,6 @@ describe("<PayPalButtons />", () => {
             // do nothing
         });
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={console.error}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider
                 options={{
@@ -330,14 +324,15 @@ describe("<PayPalButtons />", () => {
                     fundingSource={FUNDING.VENMO}
                 />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(console.error) }
         );
 
         await waitFor(() => expect(console.error).toBeCalled());
-        expect(console.error).toBeCalledWith(
-            new Error(
-                "Failed to render <PayPalButtons /> component. Failed to initialize:  Error: Unexpected style.color for venmo button: gold, expected blue, silver, black, white"
-            )
+        expect(console.error.mock.calls[2][0]).toEqual(
+            expect.objectContaining({
+                message:
+                    "Failed to render <PayPalButtons /> component. Failed to initialize:  Error: Unexpected style.color for venmo button: gold, expected blue, silver, black, white",
+            })
         );
     });
 });

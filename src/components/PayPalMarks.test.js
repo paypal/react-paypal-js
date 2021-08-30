@@ -5,11 +5,21 @@ import { PayPalScriptProvider } from "../components/PayPalScriptProvider.tsx";
 import { PayPalMarks } from "./PayPalMarks";
 import { FUNDING } from "@paypal/sdk-constants";
 import { loadScript } from "@paypal/paypal-js";
-import { ErrorBoundary } from "../__utils__/commons";
+import { ErrorBoundary } from "react-error-boundary";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
 }));
+
+const wrapperComponent = (onError) => {
+    return function boundary({ children }) {
+        return (
+            <ErrorBoundary fallback={<div>Oh no</div>} onError={onError}>
+                {children}
+            </ErrorBoundary>
+        );
+    };
+};
 
 describe("<PayPalMarks />", () => {
     beforeEach(() => {
@@ -71,15 +81,11 @@ describe("<PayPalMarks />", () => {
 
         const onError = jest.fn();
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={onError}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(onError) }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
@@ -93,10 +99,6 @@ describe("<PayPalMarks />", () => {
 
         const onError = jest.fn();
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={onError}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider
                 options={{
@@ -106,7 +108,7 @@ describe("<PayPalMarks />", () => {
             >
                 <PayPalMarks />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(onError) }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
@@ -131,15 +133,11 @@ describe("<PayPalMarks />", () => {
 
         const onError = jest.fn();
 
-        const wrapper = ({ children }) => (
-            <ErrorBoundary onError={onError}>{children}</ErrorBoundary>
-        );
-
         render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks />
             </PayPalScriptProvider>,
-            { wrapper }
+            { wrapper: wrapperComponent(onError) }
         );
 
         await waitFor(() => expect(onError).toHaveBeenCalled());
