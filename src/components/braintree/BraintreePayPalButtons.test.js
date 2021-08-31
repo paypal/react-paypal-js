@@ -168,7 +168,7 @@ describe("Braintree PayPal button fail in mount process", () => {
         expect(console.error).toBeCalled();
     });
 
-    test("should fail rendering the BraintreePayPalButton component loading the Braintree Gateway", async () => {
+    test("should fail rendering the BraintreePayPalButton component when loading the Braintree Gateway", async () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();
@@ -196,7 +196,7 @@ describe("Braintree PayPal button fail in mount process", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should fail rendering the BraintreePayPalButton component creating the Braintree Client", async () => {
+    test("should fail rendering the BraintreePayPalButton component when creating the Braintree Client", async () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();
@@ -226,7 +226,7 @@ describe("Braintree PayPal button fail in mount process", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should fail rendering the BraintreePayPalButton component catching any unknown error creating the Braintree Client", async () => {
+    test("should fail rendering the BraintreePayPalButton component when the window.braintree namespace is null", async () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();

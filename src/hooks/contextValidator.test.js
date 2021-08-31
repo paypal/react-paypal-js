@@ -4,7 +4,7 @@ import {
 } from "./contextValidator";
 
 describe("contextNotEmptyValidator", () => {
-    test("should throw an exception with no args", () => {
+    test("should throw an exception when called with no args", () => {
         expect(() => {
             contextNotEmptyValidator();
         }).toThrowError(
@@ -14,7 +14,7 @@ describe("contextNotEmptyValidator", () => {
         );
     });
 
-    test("should throw an exception with empty object not containing dispatch function", () => {
+    test("should throw an exception when called with an empty object", () => {
         expect(() => {
             contextNotEmptyValidator({});
         }).toThrowError(
@@ -24,7 +24,7 @@ describe("contextNotEmptyValidator", () => {
         );
     });
 
-    test("should throw an exception with object containing dispatch as value not a function", () => {
+    test("should throw an exception when the dispatch function is invalid", () => {
         expect(() => {
             contextNotEmptyValidator({ dispatch: 10 });
         }).toThrowError(
@@ -41,7 +41,7 @@ describe("contextNotEmptyValidator", () => {
 });
 
 describe("contextOptionClientTokenNotEmptyValidator", () => {
-    test("should throw an exception with no args", () => {
+    test("should throw an exception when called with no args", () => {
         expect(() => {
             contextOptionClientTokenNotEmptyValidator();
         }).toThrowError(
@@ -51,7 +51,7 @@ describe("contextOptionClientTokenNotEmptyValidator", () => {
         );
     });
 
-    test("should throw an exception with empty object as args", () => {
+    test("should throw an exception when called with an empty object", () => {
         expect(() => {
             contextOptionClientTokenNotEmptyValidator({});
         }).toThrowError(
@@ -61,7 +61,7 @@ describe("contextOptionClientTokenNotEmptyValidator", () => {
         );
     });
 
-    test("should throw an exception with data client token equals to null", () => {
+    test("should throw an exception when data-client-token is null", () => {
         expect(() => {
             contextOptionClientTokenNotEmptyValidator({
                 options: { "data-client-token": null },
@@ -73,7 +73,7 @@ describe("contextOptionClientTokenNotEmptyValidator", () => {
         );
     });
 
-    test("should throw an exception with data client token equals to empty string", () => {
+    test("should throw an exception when data-client-token is an empty string", () => {
         expect(() => {
             contextOptionClientTokenNotEmptyValidator({
                 options: { "data-client-token": "" },

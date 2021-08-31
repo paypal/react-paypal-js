@@ -6,7 +6,7 @@ import {
 import type { ScriptContextState, StrictScriptContextState } from "../types";
 
 /**
- * Check if the context is available checking by the dispatch function
+ * Check if the context is valid and ready to dispatch actions.
  *
  * @param scriptContext the result of connecting to the context provider
  * @returns strict context avoiding null values in the type
