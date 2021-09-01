@@ -14,7 +14,7 @@ import {
     FUNDING,
 } from "../index";
 import { getOptionsFromQueryString } from "./utils";
-import { COMPONENT_PROPS } from "./constants";
+import { COMPONENT_PROPS, ARG_TYPE_AMOUNT } from "./constants";
 import type { Story } from "@storybook/react/types-6-0";
 
 const scriptProviderOptions: PayPalScriptOptions = {
@@ -33,22 +33,7 @@ export default {
         docs: { source: { type: "code" } },
     },
     argTypes: {
-        amount: {
-            description:
-                "This is not a property from PayPalButtons. It is custom control for testing the amount sent in the createOrder process",
-            options: ["2.00", "30.00", "100.00"],
-            control: {
-                type: "select",
-            },
-            defaultValue: "2.00",
-            table: {
-                defaultValue: {
-                    summary: "2.00",
-                },
-                category: "Custom",
-                type: { summary: "number|string" },
-            },
-        },
+        amount: ARG_TYPE_AMOUNT,
         className: { control: null, table: { category: "Props" } },
         fundingSource: {
             options: [
@@ -68,6 +53,9 @@ export default {
             },
             table: { category: COMPONENT_PROPS },
         },
+    },
+    args: {
+        amount: "2.00",
     },
 };
 

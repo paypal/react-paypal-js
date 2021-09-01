@@ -20,7 +20,6 @@ export default {
     },
     argTypes: {
         style: {
-            defaultValue: { layout: "text" },
             description:
                 "Make inline change in the way the component will be render.",
         },
@@ -42,6 +41,9 @@ export default {
             description:
                 "This represent the amount of money to charge. Can be a numeric value `10` or a string value `'10.00'`",
         },
+    },
+    args: {
+        style: { layout: "text" },
     },
 };
 

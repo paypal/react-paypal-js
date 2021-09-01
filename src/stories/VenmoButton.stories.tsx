@@ -41,9 +41,6 @@ export default {
                 }`,
                 },
             },
-            defaultValue: {
-                color: "blue",
-            },
         },
         onShippingChange: {
             description:
@@ -57,6 +54,9 @@ export default {
         // This turns on the `onShippingChange()` feature which uses the popup experience with the Standard Card button.
         // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
         onShippingChange: null,
+        style: {
+            color: "blue",
+        },
     },
 };
 

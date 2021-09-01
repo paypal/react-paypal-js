@@ -91,7 +91,6 @@ export default {
                 type: "select",
                 options: [true, false],
             },
-            defaultValue: false,
             description:
                 "Allow to defer the loading of the PayPal script. If the value is `true` you'll need to load manually.",
             table: { category: "Props" },
@@ -100,6 +99,9 @@ export default {
             control: { disable: true },
             table: { category: "Props" },
         },
+    },
+    args: {
+        deferLoading: false,
     },
 };
 

@@ -53,7 +53,6 @@ export default {
                 type: { summary: "string" },
                 defaultValue: { summary: "USD" },
             },
-            defaultValue: "USD",
         },
         amount: ARG_TYPE_AMOUNT,
         size: {
@@ -61,7 +60,6 @@ export default {
             description:
                 "This is not a property from PayPalButtons. It is custom control to change the size of the PayPal buttons container in pixels.",
             control: { type: "range", min: 200, max: 750, step: 5 },
-            defaultValue: 750,
             table: {
                 defaultValue: {
                     summary: "750px",
@@ -74,7 +72,6 @@ export default {
             description:
                 "This is not a property from PayPalButtons. It is custom control to show or not a spinner when PayPal SDK is loading.",
             control: { type: "select", options: [true, false] },
-            defaultValue: false,
             table: {
                 defaultValue: {
                     summary: "false",
@@ -85,15 +82,11 @@ export default {
         },
         style: {
             control: { type: "object" },
-            defaultValue: {
-                layout: "vertical",
-            },
             table: { category: COMPONENT_PROPS },
         },
         disabled: {
             options: [true, false],
             control: { type: "select" },
-            defaultValue: false,
             table: { category: COMPONENT_PROPS },
         },
         forceReRender: { control: false, table: { category: COMPONENT_PROPS } },
@@ -136,6 +129,14 @@ export default {
         // This turns on the `onShippingChange()` feature which uses the popup experience with the Standard Card button.
         // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
         onShippingChange: null,
+        amount: "2.00",
+        currency: "USD",
+        size: 750,
+        showSpinner: false,
+        style: {
+            layout: "vertical",
+        },
+        disabled: false,
     },
     decorators: [
         (Story: FC, storyArg: { args: { size: number } }): ReactElement => (

@@ -9,7 +9,6 @@ export const ARG_TYPE_AMOUNT = {
     control: {
         type: "select",
     },
-    defaultValue: "2.00",
     table: {
         defaultValue: {
             summary: "2.00",

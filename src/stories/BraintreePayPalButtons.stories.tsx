@@ -17,7 +17,11 @@ import {
     getClientToken,
     approveSale,
 } from "./utils";
-import { COMPONENT_PROPS, COMPONENT_EVENTS } from "./constants";
+import {
+    COMPONENT_PROPS,
+    COMPONENT_EVENTS,
+    ARG_TYPE_AMOUNT,
+} from "./constants";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -33,27 +37,12 @@ export default {
         docs: { source: { type: "code" } },
     },
     argTypes: {
-        amount: {
-            description:
-                "This is not a property from PayPalButtons. It is custom control for testing the amount sent in the createOrder process",
-            options: ["2.00", "30.00", "100.00"],
-            control: {
-                type: "select",
-            },
-            defaultValue: "2.00",
-            table: {
-                defaultValue: {
-                    summary: "2.00",
-                },
-                category: "Custom",
-            },
-        },
+        amount: ARG_TYPE_AMOUNT,
         size: {
             name: "container size",
             description:
                 "This is not a property from PayPalButtons. It is custom control to change the size of the PayPal buttons container",
             control: { type: "range", min: 20, max: 100, step: 5 },
-            defaultValue: 100,
             table: {
                 defaultValue: {
                     summary: "100%",
@@ -63,17 +52,11 @@ export default {
         },
         style: {
             control: { type: "object", expanded: true },
-            defaultValue: {
-                color: "gold",
-                label: "paypal",
-                layout: "vertical",
-            },
             table: { category: COMPONENT_PROPS },
         },
         disabled: {
             options: [true, false],
             control: { type: "select" },
-            defaultValue: false,
             table: { category: COMPONENT_PROPS },
         },
         forceReRender: { control: false, table: { category: COMPONENT_PROPS } },
@@ -116,6 +99,14 @@ export default {
         // This turns on the `onShippingChange()` feature which uses the popup experience with the Standard Card button.
         // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
         onShippingChange: null,
+        amount: "2.00",
+        size: 100,
+        style: {
+            color: "gold",
+            label: "paypal",
+            layout: "vertical",
+        },
+        disabled: false,
     },
     decorators: [
         (Story: FC, storyArg: { args: { size: number } }): ReactElement => {

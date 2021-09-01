@@ -69,10 +69,13 @@ export default {
                     summary: "subscription",
                 },
             },
-            defaultValue: "subscription",
             description: "Change the PayPal checkout intent.",
         },
         amount: ARG_TYPE_AMOUNT,
+    },
+    args: {
+        type: "subscription",
+        amount: "2.00",
     },
     decorators: [
         (Story: FC): ReactElement => (
