@@ -139,20 +139,25 @@ export default {
         disabled: false,
     },
     decorators: [
-        (Story: FC, storyArg: { args: { size: number } }): ReactElement => (
-            <div style={{ maxWidth: `${storyArg.args.size}px` }}>
-                <PayPalScriptProvider
-                    options={{
-                        ...scriptProviderOptions,
-                        "data-namespace": generateRandomString(),
-                    }}
-                >
-                    <div style={{ minHeight: "200px" }}>
-                        <Story />
-                    </div>
-                </PayPalScriptProvider>
-            </div>
-        ),
+        (Story: FC, storyArg: { args: { size: number } }): ReactElement => {
+            const uid = generateRandomString();
+
+            return (
+                <div style={{ maxWidth: `${storyArg.args.size}px` }}>
+                    <PayPalScriptProvider
+                        options={{
+                            ...scriptProviderOptions,
+                            "data-namespace": uid,
+                            "data-uid": uid,
+                        }}
+                    >
+                        <div style={{ minHeight: "200px" }}>
+                            <Story />
+                        </div>
+                    </PayPalScriptProvider>
+                </div>
+            );
+        },
     ],
 };
 

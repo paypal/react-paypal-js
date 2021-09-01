@@ -114,6 +114,8 @@ export default {
             // The new experimental loaders doesn't work in Docs views
             const [clientToken, setClientToken] = useState<string | null>(null);
 
+            const uid = generateRandomString();
+
             useEffect(() => {
                 (async () => {
                     setClientToken(await getClientToken());
@@ -128,7 +130,8 @@ export default {
                                 options={{
                                     ...scriptProviderOptions,
                                     "data-client-token": clientToken,
-                                    "data-namespace": generateRandomString(),
+                                    "data-namespace": uid,
+                                    "data-uid": uid,
                                 }}
                             >
                                 <Story />

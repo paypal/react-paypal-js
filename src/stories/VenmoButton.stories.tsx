@@ -73,19 +73,24 @@ export const Default: FC<{
             | "donate";
         shape?: "rect" | "pill";
     };
-}> = ({ style }) => (
-    <PayPalScriptProvider
-        options={{
-            ...scriptProviderOptions,
-            "data-namespace": generateRandomString(),
-        }}
-    >
-        <PayPalButtons
-            fundingSource={FUNDING.VENMO}
-            style={style}
-            forceReRender={[style]}
+}> = ({ style }) => {
+    const uid = generateRandomString();
+
+    return (
+        <PayPalScriptProvider
+            options={{
+                ...scriptProviderOptions,
+                "data-namespace": uid,
+                "data-uid": uid,
+            }}
         >
-            <p>You are not eligible to pay with Venmo.</p>
-        </PayPalButtons>
-    </PayPalScriptProvider>
-);
+            <PayPalButtons
+                fundingSource={FUNDING.VENMO}
+                style={style}
+                forceReRender={[style]}
+            >
+                <p>You are not eligible to pay with Venmo.</p>
+            </PayPalButtons>
+        </PayPalScriptProvider>
+    );
+};

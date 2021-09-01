@@ -78,18 +78,23 @@ export default {
         amount: "2.00",
     },
     decorators: [
-        (Story: FC): ReactElement => (
-            <PayPalScriptProvider
-                options={{
-                    ...subscriptionOptions,
-                    "data-namespace": generateRandomString(),
-                }}
-            >
-                <div style={{ minHeight: "250px" }}>
-                    <Story />
-                </div>
-            </PayPalScriptProvider>
-        ),
+        (Story: FC): ReactElement => {
+            const uid = generateRandomString();
+
+            return (
+                <PayPalScriptProvider
+                    options={{
+                        ...subscriptionOptions,
+                        "data-namespace": uid,
+                        "data-uid": uid,
+                    }}
+                >
+                    <div style={{ minHeight: "250px" }}>
+                        <Story />
+                    </div>
+                </PayPalScriptProvider>
+            );
+        },
     ],
 };
 
