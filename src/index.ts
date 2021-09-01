@@ -6,6 +6,7 @@ export * from "./components/braintree/BraintreePayPalButtons";
 export * from "./components/PayPalMarks";
 export * from "./components/PayPalMessages";
 export * from "./components/PayPalScriptProvider";
+export * from "./components/hostedFields/HostedFields";
 
 import * as constants from "@paypal/sdk-constants/dist/module";
 
