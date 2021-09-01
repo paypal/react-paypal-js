@@ -71,7 +71,8 @@ export default {
         showSpinner: {
             description:
                 "This is not a property from PayPalButtons. It is custom control to show or not a spinner when PayPal SDK is loading.",
-            control: { type: "select", options: [true, false] },
+            options: [true, false],
+            control: { type: "select" },
             table: {
                 defaultValue: {
                     summary: "false",

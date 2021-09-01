@@ -87,9 +87,9 @@ export default {
     },
     argTypes: {
         deferLoading: {
+            options: [true, false],
             control: {
                 type: "select",
-                options: [true, false],
             },
             description:
                 "Allow to defer the loading of the PayPal script. If the value is `true` you'll need to load manually.",
