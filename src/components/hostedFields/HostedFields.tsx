@@ -1,36 +1,103 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 
 import { usePayPalScriptReducer } from "../../hooks/scriptProviderHooks";
-import { getPayPalWindowNamespace } from "../../utils";
 import { DATA_NAMESPACE } from "../../constants";
-import { throwMissingHostedFieldsError } from "./utils";
+import { decorateHostedFields, addHostedFieldStyles } from "./utils";
+import CardNumber from "./CardNumber";
+import CardVerificationValue from "./CardVerificationValue";
+import ExpirationDate from "./ExpirationDate";
+import { DISPATCH_ACTION } from "../../types";
+import type { HostedFieldsComponentProps } from "../../types/hostedFieldTypes";
 
-export const HostedFields: FC = () => {
-    const [{ isResolved, options }] = usePayPalScriptReducer();
+export const HostedFields: FC<HostedFieldsComponentProps> = ({
+    showLabels = true,
+    styles = {
+        ".valid": {
+            color: "#28A745",
+        },
+        ".invalid": {
+            color: "#DC3545",
+        },
+    },
+    placeholder = { number: "", cvv: "", expirationDate: "" },
+    createOrder,
+}) => {
+    const [{ isResolved, options }, dispatch] = usePayPalScriptReducer(true);
     const [isEligible, setIsEligible] = useState(true);
+    const [styleResolved, setStyleResolved] = useState(false);
+    const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
+    const cardNumberRef = useRef<HTMLDivElement>(null);
+    const cardVerificationValueRef = useRef<HTMLDivElement>(null);
+    const cardExpirationDateRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const paypalWindowNamespace = getPayPalWindowNamespace(
-            options[DATA_NAMESPACE]
-        );
+        const linkElement = addHostedFieldStyles();
 
-        // verify dependency on window object
-        if (paypalWindowNamespace.HostedFields === undefined) {
-            throwMissingHostedFieldsError({
-                components: options.components,
-                [DATA_NAMESPACE]: options[DATA_NAMESPACE],
-            });
-        }
+        setStyleResolved(true);
+        // Clean the style from DOM after component unmount
+        return () => linkElement.remove();
+    }, []);
 
-        if (!paypalWindowNamespace.HostedFields?.isEligible()) {
+    useEffect(() => {
+        if (!isResolved || !setStyleResolved) return;
+        const hostedFields = decorateHostedFields({
+            components: options.components,
+            [DATA_NAMESPACE]: options[DATA_NAMESPACE],
+        });
+
+        // Only render the hosted fields when eligible
+        if (!hostedFields.isEligible()) {
             setIsEligible(false);
+            hostedFields.close(hostedFieldsContainerRef.current);
         }
-    }, [options]);
+
+        hostedFields
+            .render({
+                // Call your server to set up the transaction
+                createOrder: createOrder,
+                styles: styles,
+                fields: {
+                    number: {
+                        selector: `#${cardNumberRef.current?.id}`,
+                        placeholder: placeholder.number,
+                    },
+                    cvv: {
+                        selector: `#${cardVerificationValueRef.current?.id}`,
+                        placeholder: placeholder.cvv,
+                    },
+                    expirationDate: {
+                        selector: `#${cardExpirationDateRef.current?.id}`,
+                        placeholder: placeholder.expirationDate,
+                    },
+                },
+            })
+            .then((cardFields) => {
+                dispatch({
+                    type: DISPATCH_ACTION.SET_HOSTED_FIELDS_INSTANCE,
+                    value: cardFields,
+                });
+            });
+    }, [isResolved]);
 
     return (
-        <div>
-            <span>start using hosted fields</span>
-        </div>
+        <>
+            {isEligible && styleResolved && (
+                <div
+                    ref={hostedFieldsContainerRef}
+                    id="hosted-fields-container"
+                >
+                    <CardNumber ref={cardNumberRef} showLabel={showLabels} />
+                    <CardVerificationValue
+                        ref={cardVerificationValueRef}
+                        showLabel={showLabels}
+                    />
+                    <ExpirationDate
+                        ref={cardExpirationDateRef}
+                        showLabel={showLabels}
+                    />
+                </div>
+            )}
+        </>
     );
 };

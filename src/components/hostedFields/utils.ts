@@ -1,4 +1,11 @@
 import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../../constants";
+import { getPayPalWindowNamespace } from "../../utils";
+
+import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
+import type {
+    HostedFieldsNamespace,
+    DecoratedPayPalHostedFieldsComponent,
+} from "../../types/hostedFieldTypes";
 
 /**
  * Throw and exception if the HostedFields is not found in the paypal namespace
@@ -13,10 +20,7 @@ import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../../constants";
 export const throwMissingHostedFieldsError = ({
     components = "",
     [DATA_NAMESPACE]: dataNamespace = DEFAULT_PAYPAL_NAMESPACE,
-}: {
-    components: string | undefined;
-    [DATA_NAMESPACE: string]: string | undefined;
-}): never => {
+}: HostedFieldsNamespace): never => {
     const errorMessage = `Unable to render <HostedFields /> because window.${dataNamespace}.HostedFields is undefined.
     ${
         components.includes("hosted-fields")
@@ -27,4 +31,37 @@ export const throwMissingHostedFieldsError = ({
     `;
 
     throw new Error(errorMessage);
+};
+
+export const decorateHostedFields = (
+    options: HostedFieldsNamespace
+): DecoratedPayPalHostedFieldsComponent => {
+    const hostedFields = getPayPalWindowNamespace(
+        options[DATA_NAMESPACE]
+    ).HostedFields;
+    // check if the hosted fields are available in PayPal namespace
+    if (hostedFields == null) throwMissingHostedFieldsError(options);
+
+    return {
+        ...(hostedFields as PayPalHostedFieldsComponent),
+        close(container) {
+            if (container != null) {
+                container.querySelectorAll("*").forEach((element) => {
+                    element.remove();
+                });
+            }
+        },
+    };
+};
+
+export const addHostedFieldStyles = (): HTMLLinkElement => {
+    const linkElement = document.createElement("link");
+    linkElement.setAttribute("rel", "stylesheet");
+    linkElement.setAttribute("type", "text/css");
+    linkElement.setAttribute(
+        "href",
+        "https://www.paypalobjects.com/webstatic/en_US/developer/docs/css/cardfields.css"
+    );
+
+    return document.head.appendChild(linkElement);
 };

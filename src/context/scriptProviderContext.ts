@@ -80,6 +80,11 @@ export function scriptReducer(
                 braintreePayPalCheckoutInstance:
                     action.value as BraintreePayPalCheckout,
             };
+        case DISPATCH_ACTION.SET_HOSTED_FIELDS_INSTANCE:
+            return {
+                ...state,
+                hostedFields: action.value,
+            };
 
         default: {
             return state;

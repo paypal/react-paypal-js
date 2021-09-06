@@ -1,9 +1,35 @@
 import { useContext } from "react";
 
 import { ScriptContext } from "../context/scriptProviderContext";
-import { contextNotEmptyValidator } from "./contextValidator";
-import type { ScriptContextDerivedState, ScriptReducerAction } from "../types";
+import {
+    contextNotEmptyValidator,
+    contextOptionClientTokenNotEmptyValidator,
+} from "./contextValidator";
+import type {
+    ScriptContextDerivedState,
+    ScriptContextState,
+    ScriptReducerAction,
+} from "../types";
 import { SCRIPT_LOADING_STATE } from "../types";
+
+/**
+ * Validate if the ScriptProvider context is valid and checks
+ * if the data-client-token is not empty for specific cases
+ *
+ * @param context             the ScriptProvider context
+ * @param validateClientToken the flag to check the data-client-token or not
+ * @returns a valid ScriptProvider context
+ */
+const validateContext = (
+    context: ScriptContextState | null,
+    validateClientToken: boolean | undefined
+) => {
+    const notEmptyContext = contextNotEmptyValidator(context);
+
+    return validateClientToken
+        ? contextOptionClientTokenNotEmptyValidator(notEmptyContext)
+        : notEmptyContext;
+};
 
 /**
  * Custom hook to get access to the Script context and
@@ -12,11 +38,13 @@ import { SCRIPT_LOADING_STATE } from "../types";
  * @returns a tuple containing the state of the context and
  * a dispatch function to modify the state
  */
-export function usePayPalScriptReducer(): [
-    ScriptContextDerivedState,
-    React.Dispatch<ScriptReducerAction>
-] {
-    const scriptContext = contextNotEmptyValidator(useContext(ScriptContext));
+export function usePayPalScriptReducer(
+    validateClientToken?: boolean
+): [ScriptContextDerivedState, React.Dispatch<ScriptReducerAction>] {
+    const scriptContext = validateContext(
+        useContext(ScriptContext),
+        validateClientToken
+    );
 
     const derivedStatusContext = {
         ...scriptContext,
