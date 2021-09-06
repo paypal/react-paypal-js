@@ -38,13 +38,11 @@ const validateContext = (
  * @returns a tuple containing the state of the context and
  * a dispatch function to modify the state
  */
-export function usePayPalScriptReducer(
-    validateClientToken?: boolean
-): [ScriptContextDerivedState, React.Dispatch<ScriptReducerAction>] {
-    const scriptContext = validateContext(
-        useContext(ScriptContext),
-        validateClientToken
-    );
+export function usePayPalScriptReducer(): [
+    ScriptContextDerivedState,
+    React.Dispatch<ScriptReducerAction>
+] {
+    const scriptContext = contextNotEmptyValidator(useContext(ScriptContext));
 
     const derivedStatusContext = {
         ...scriptContext,
@@ -57,4 +55,20 @@ export function usePayPalScriptReducer(
     };
 
     return [derivedStatusContext, scriptContext.dispatch];
+}
+
+/**
+ * Custom hook to get access to the ScriptProvider context
+ *
+ * @returns the state of the context
+ */
+export function useScriptProviderContext(): [
+    ScriptContextState,
+    React.Dispatch<ScriptReducerAction>
+] {
+    const scriptContext = contextOptionClientTokenNotEmptyValidator(
+        contextNotEmptyValidator(useContext(ScriptContext))
+    );
+
+    return [scriptContext, scriptContext.dispatch];
 }

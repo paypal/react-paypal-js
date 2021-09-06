@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 
-import { usePayPalScriptReducer } from "../../hooks/scriptProviderHooks";
+import { useScriptProviderContext } from "../../hooks/scriptProviderHooks";
 import { DATA_NAMESPACE } from "../../constants";
 import { decorateHostedFields, addHostedFieldStyles } from "./utils";
 import CardNumber from "./CardNumber";
 import CardVerificationValue from "./CardVerificationValue";
 import ExpirationDate from "./ExpirationDate";
-import { DISPATCH_ACTION } from "../../types";
+import BillingAddress from "./BillingAddress";
+import SubmitButton from "./SubmitButton";
+import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "../../types";
 import type { HostedFieldsComponentProps } from "../../types/hostedFieldTypes";
 
 export const HostedFields: FC<HostedFieldsComponentProps> = ({
@@ -20,16 +22,23 @@ export const HostedFields: FC<HostedFieldsComponentProps> = ({
             color: "#DC3545",
         },
     },
+    billingAddress = { show: false },
     placeholder = { number: "", cvv: "", expirationDate: "" },
     createOrder,
 }) => {
-    const [{ isResolved, options }, dispatch] = usePayPalScriptReducer(true);
+    const [{ options, hostedFields, loadingStatus }, dispatch] =
+        useScriptProviderContext();
+    const isResolved = loadingStatus === SCRIPT_LOADING_STATE.RESOLVED;
     const [isEligible, setIsEligible] = useState(true);
     const [styleResolved, setStyleResolved] = useState(false);
     const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
     const cardNumberRef = useRef<HTMLDivElement>(null);
     const cardVerificationValueRef = useRef<HTMLDivElement>(null);
     const cardExpirationDateRef = useRef<HTMLDivElement>(null);
+
+    const submitOrder = () => {
+        if (hostedFields) hostedFields.submit({});
+    };
 
     useEffect(() => {
         const linkElement = addHostedFieldStyles();
@@ -96,6 +105,10 @@ export const HostedFields: FC<HostedFieldsComponentProps> = ({
                         ref={cardExpirationDateRef}
                         showLabel={showLabels}
                     />
+                    {billingAddress.show && (
+                        <BillingAddress billingAddress={billingAddress} />
+                    )}
+                    <SubmitButton clickHandler={submitOrder} />
                 </div>
             )}
         </>

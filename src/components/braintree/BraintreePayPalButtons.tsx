@@ -7,7 +7,7 @@ import {
     BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
 } from "../../constants";
 import { PayPalButtons } from "../PayPalButtons";
-import { useBraintreeProviderContext } from "../../hooks/braintreeProviderHooks";
+import { useScriptProviderContext } from "../../hooks/scriptProviderHooks";
 import { getBraintreeWindowNamespace } from "../../utils";
 import { decorateActions } from "./utils";
 import type { BraintreePayPalButtonsComponentProps } from "../../types";
@@ -54,7 +54,7 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
         ...buttonProps
     }: BraintreePayPalButtonsComponentProps) => {
         const [, setErrorState] = useState(null);
-        const [providerContext, dispatch] = useBraintreeProviderContext();
+        const [providerContext, dispatch] = useScriptProviderContext();
 
         useEffect(() => {
             Promise.all([

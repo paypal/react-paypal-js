@@ -35,7 +35,9 @@ export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
     braintreePayPalCheckoutInstance?: BraintreePayPalCheckout;
-    hostedFields?: unknown;
+    hostedFields?: {
+        submit: (argument: Record<string, unknown>) => void;
+    };
     dispatch: React.Dispatch<ScriptReducerAction> | null;
 }
 
