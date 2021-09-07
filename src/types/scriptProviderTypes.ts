@@ -38,15 +38,11 @@ export interface ScriptContextState {
     hostedFields?: {
         submit: (argument: Record<string, unknown>) => void;
     };
-    dispatch: React.Dispatch<ScriptReducerAction> | null;
-}
-
-export interface StrictScriptContextState extends ScriptContextState {
     dispatch: React.Dispatch<ScriptReducerAction>;
 }
 
-export interface ScriptContextDerivedState {
-    options: ReactPayPalScriptOptions;
+export interface ScriptContextDerivedState
+    extends Pick<ScriptContextState, "options"> {
     isInitial: boolean;
     isPending: boolean;
     isRejected: boolean;

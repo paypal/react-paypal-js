@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 
 import { ScriptContext } from "../context/scriptProviderContext";
 import {
@@ -11,25 +11,6 @@ import type {
     ScriptReducerAction,
 } from "../types";
 import { SCRIPT_LOADING_STATE } from "../types";
-
-/**
- * Validate if the ScriptProvider context is valid and checks
- * if the data-client-token is not empty for specific cases
- *
- * @param context             the ScriptProvider context
- * @param validateClientToken the flag to check the data-client-token or not
- * @returns a valid ScriptProvider context
- */
-const validateContext = (
-    context: ScriptContextState | null,
-    validateClientToken: boolean | undefined
-) => {
-    const notEmptyContext = contextNotEmptyValidator(context);
-
-    return validateClientToken
-        ? contextOptionClientTokenNotEmptyValidator(notEmptyContext)
-        : notEmptyContext;
-};
 
 /**
  * Custom hook to get access to the Script context and

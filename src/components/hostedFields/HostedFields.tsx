@@ -28,7 +28,6 @@ export const HostedFields: FC<HostedFieldsComponentProps> = ({
 }) => {
     const [{ options, hostedFields, loadingStatus }, dispatch] =
         useScriptProviderContext();
-    const isResolved = loadingStatus === SCRIPT_LOADING_STATE.RESOLVED;
     const [isEligible, setIsEligible] = useState(true);
     const [styleResolved, setStyleResolved] = useState(false);
     const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
@@ -49,7 +48,11 @@ export const HostedFields: FC<HostedFieldsComponentProps> = ({
     }, []);
 
     useEffect(() => {
-        if (!isResolved || !setStyleResolved) return;
+        if (
+            !(loadingStatus === SCRIPT_LOADING_STATE.RESOLVED) ||
+            !setStyleResolved
+        )
+            return;
         const hostedFields = decorateHostedFields({
             components: options.components,
             [DATA_NAMESPACE]: options[DATA_NAMESPACE],
@@ -87,7 +90,7 @@ export const HostedFields: FC<HostedFieldsComponentProps> = ({
                     value: cardFields,
                 });
             });
-    }, [isResolved]);
+    }, [loadingStatus]);
 
     return (
         <>

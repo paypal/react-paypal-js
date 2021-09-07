@@ -3,7 +3,7 @@ import {
     EMPTY_PROVIDER_CONTEXT_ERROR_MESSAGE,
     EMPTY_PROVIDER_CONTEXT_CLIENT_TOKEN_ERROR_MESSAGE,
 } from "../constants";
-import type { ScriptContextState, StrictScriptContextState } from "../types";
+import type { ScriptContextState } from "../types";
 
 /**
  * Check if the context is valid and ready to dispatch actions.
@@ -13,12 +13,14 @@ import type { ScriptContextState, StrictScriptContextState } from "../types";
  */
 export function contextNotEmptyValidator(
     scriptContext: ScriptContextState | null
-): StrictScriptContextState {
-    if (typeof scriptContext?.dispatch !== "function") {
-        throw new Error(EMPTY_PROVIDER_CONTEXT_ERROR_MESSAGE);
-    }
-
-    return scriptContext as StrictScriptContextState;
+): ScriptContextState {
+    if (
+        scriptContext != null &&
+        typeof scriptContext.dispatch === "function" &&
+        scriptContext.dispatch.length !== 0
+    )
+        return scriptContext;
+    throw new Error(EMPTY_PROVIDER_CONTEXT_ERROR_MESSAGE);
 }
 
 /**
@@ -30,10 +32,10 @@ export function contextNotEmptyValidator(
  */
 export const contextOptionClientTokenNotEmptyValidator = (
     scriptContext: ScriptContextState | null
-): StrictScriptContextState => {
+): ScriptContextState => {
     if (!scriptContext?.options?.[DATA_CLIENT_TOKEN]) {
         throw new Error(EMPTY_PROVIDER_CONTEXT_CLIENT_TOKEN_ERROR_MESSAGE);
     }
 
-    return scriptContext as StrictScriptContextState;
+    return scriptContext;
 };
