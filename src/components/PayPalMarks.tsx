@@ -45,10 +45,9 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
         const { current } = markContainerRef;
 
         // only render the mark when eligible
-        if ((mark != null && mark.isEligible()) === false || current == null)
-            return;
-        // Remove any children before
-        if (current !== null && current.firstChild != null)
+        if (!current || !mark.isEligible()) return;
+        // Remove any children before render it again
+        if (current.firstChild)
             /* istanbul ignore next */ // Can't find a solution to test the next line
             current.removeChild(current.firstChild);
 
