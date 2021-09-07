@@ -39,49 +39,32 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
     const [, setErrorState] = useState(null);
 
     /**
-     * Remove any instance of the PayPal Mark from the DOM
-     */
-    const removeCurrentPayPalMark = () => {
-        if (
-            markContainerRef.current !== null &&
-            markContainerRef.current.firstChild != null
-        ) {
-            markContainerRef.current.removeChild(
-                markContainerRef.current.firstChild
-            );
-        }
-    };
-
-    /**
      * Render PayPal Mark into the DOM
      */
     const renderPayPalMark = (mark: PayPalMarksComponent) => {
-        removeCurrentPayPalMark();
-        // only render the mark when eligible
-        if (
-            (mark != null && mark.isEligible()) === false ||
-            markContainerRef.current == null
-        )
-            return;
+        const { current } = markContainerRef;
 
-        if (mark && markContainerRef.current) {
-            mark.render(markContainerRef.current).catch((err) => {
-                // component failed to render, possibly because it was closed or destroyed.
-                if (
-                    markContainerRef.current === null ||
-                    markContainerRef.current.children.length === 0
-                ) {
-                    // paypal marks container is no longer in the DOM, we can safely ignore the error
-                    return;
-                }
-                // paypal marks container is still in the DOM
-                setErrorState(() => {
-                    throw new Error(
-                        `Failed to render <PayPalMarks /> component. ${err}`
-                    );
-                });
+        // only render the mark when eligible
+        if ((mark != null && mark.isEligible()) === false || current == null)
+            return;
+        // Remove any children before
+        if (current !== null && current.firstChild != null)
+            /* istanbul ignore next */ // Can't find a solution to test the next line
+            current.removeChild(current.firstChild);
+
+        mark.render(current).catch((err) => {
+            // component failed to render, possibly because it was closed or destroyed.
+            if (current === null || current.children.length === 0) {
+                // paypal marks container is no longer in the DOM, we can safely ignore the error
+                return;
+            }
+            // paypal marks container is still in the DOM
+            setErrorState(() => {
+                throw new Error(
+                    `Failed to render <PayPalMarks /> component. ${err}`
+                );
             });
-        }
+        });
     };
 
     useEffect(() => {

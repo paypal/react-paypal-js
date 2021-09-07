@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { render, waitFor } from "@testing-library/react";
 
 import { PayPalScriptProvider } from "../components/PayPalScriptProvider.tsx";
@@ -9,6 +9,15 @@ import { ErrorBoundary } from "react-error-boundary";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
+}));
+
+jest.mock("react", () => ({
+    ...jest.requireActual("react"),
+    useRef: jest.fn().mockReturnValue({
+        current: {
+            firstChild: "mio",
+        },
+    }),
 }));
 
 const onError = jest.fn();
@@ -149,8 +158,7 @@ describe("<PayPalMarks />", () => {
         const { container } = render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks className="test-class" />
-            </PayPalScriptProvider>,
-            { wrapper }
+            </PayPalScriptProvider>
         );
 
         await waitFor(() =>
@@ -161,47 +169,28 @@ describe("<PayPalMarks />", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should remove component when PayPalMarks is not eligible", async () => {
-        window.paypal.Marks = () => ({
-            isEligible: jest.fn().mockReturnValue(true),
-            render: jest.fn((element) => {
-                const newElement = document.createElement("div");
-                newElement.setAttribute("id", "new-element");
-                // simulate adding markup for paypal mark
-                element.append(newElement);
-                return Promise.resolve();
-            }),
-        });
-        const { container } = render(
-            <PayPalScriptProvider options={{ "client-id": "test" }}>
-                <PayPalMarks />
-            </PayPalScriptProvider>,
-            { wrapper }
-        );
-        // Should put element in the DOM
-        await waitFor(() =>
-            expect(
-                container.querySelector("#new-element") instanceof
-                    HTMLDivElement
-            ).toBeTruthy()
-        );
-
+    test("should not render component when is not eligible", async () => {
         // Make Marks not eligible
         window.paypal.Marks = () => ({
             isEligible: jest.fn().mockReturnValue(false),
-            render: jest.fn(),
+            render: (element) => {
+                const spanElement = document.createElement("span");
+
+                spanElement.setAttribute("id", "span-element");
+                element.append(spanElement);
+                return Promise.resolve();
+            },
         });
-        const { container: containerAfterRerender } = render(
+
+        const { container } = render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks />
-            </PayPalScriptProvider>,
-            { wrapper }
+            </PayPalScriptProvider>
         );
 
-        // Should remove the PayPalMarks from DOM
         await waitFor(() =>
             expect(
-                containerAfterRerender.querySelector("#new-element") instanceof
+                container.querySelector("#span-element") instanceof
                     HTMLDivElement
             ).toBeFalsy()
         );
