@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { render, waitFor } from "@testing-library/react";
 
 import { PayPalScriptProvider } from "../components/PayPalScriptProvider.tsx";
