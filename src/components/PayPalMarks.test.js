@@ -134,4 +134,76 @@ describe("<PayPalMarks />", () => {
         expect(onError.mock.calls[0][0].message).toMatchSnapshot();
         spyConsoleError.mockRestore();
     });
+
+    test("should safely ignore error on render process when paypal marks container is no longer in the DOM ", async () => {
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
+        window.paypal.Marks = () => ({
+            isEligible: jest.fn().mockReturnValue(true),
+            render: jest.fn((element) => {
+                element.removeAttribute("class");
+                return Promise.reject(new Error("Unknow error"));
+            }),
+        });
+        const { container } = render(
+            <PayPalScriptProvider options={{ "client-id": "test" }}>
+                <PayPalMarks className="test-class" />
+            </PayPalScriptProvider>,
+            { wrapper }
+        );
+
+        await waitFor(() =>
+            expect(
+                container.querySelector(".test-class") instanceof HTMLDivElement
+            ).toBeFalsy()
+        );
+        spyConsoleError.mockRestore();
+    });
+
+    test("should remove component when PayPalMarks is not eligible", async () => {
+        window.paypal.Marks = () => ({
+            isEligible: jest.fn().mockReturnValue(true),
+            render: jest.fn((element) => {
+                const newElement = document.createElement("div");
+                newElement.setAttribute("id", "new-element");
+                // simulate adding markup for paypal mark
+                element.append(newElement);
+                return Promise.resolve();
+            }),
+        });
+        const { container } = render(
+            <PayPalScriptProvider options={{ "client-id": "test" }}>
+                <PayPalMarks />
+            </PayPalScriptProvider>,
+            { wrapper }
+        );
+        // Should put element in the DOM
+        await waitFor(() =>
+            expect(
+                container.querySelector("#new-element") instanceof
+                    HTMLDivElement
+            ).toBeTruthy()
+        );
+
+        // Make Marks not eligible
+        window.paypal.Marks = () => ({
+            isEligible: jest.fn().mockReturnValue(false),
+            render: jest.fn(),
+        });
+        const { container: containerAfterRerender } = render(
+            <PayPalScriptProvider options={{ "client-id": "test" }}>
+                <PayPalMarks />
+            </PayPalScriptProvider>,
+            { wrapper }
+        );
+
+        // Should remove the PayPalMarks from DOM
+        await waitFor(() =>
+            expect(
+                containerAfterRerender.querySelector("#new-element") instanceof
+                    HTMLDivElement
+            ).toBeFalsy()
+        );
+    });
 });

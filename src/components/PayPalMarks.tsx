@@ -36,7 +36,6 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
 }: PayPalMarksComponentProps) => {
     const [{ isResolved, options }] = usePayPalScriptReducer();
     const markContainerRef = useRef<HTMLDivElement>(null);
-    const mark = useRef<PayPalMarksComponent | null>(null);
     const [, setErrorState] = useState(null);
 
     /**
@@ -56,10 +55,17 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
     /**
      * Render PayPal Mark into the DOM
      */
-    const renderPayPalMark = () => {
+    const renderPayPalMark = (mark: PayPalMarksComponent) => {
         removeCurrentPayPalMark();
-        if (mark.current && markContainerRef.current) {
-            mark.current.render(markContainerRef.current).catch((err) => {
+        // only render the mark when eligible
+        if (
+            (mark != null && mark.isEligible()) === false ||
+            markContainerRef.current == null
+        )
+            return;
+
+        if (mark && markContainerRef.current) {
+            mark.render(markContainerRef.current).catch((err) => {
                 // component failed to render, possibly because it was closed or destroyed.
                 if (
                     markContainerRef.current === null ||
@@ -97,16 +103,7 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
             return;
         }
 
-        mark.current = paypalWindowNamespace.Marks({ ...markProps });
-
-        // only render the mark when eligible
-        if (
-            mark.current.isEligible() === false ||
-            markContainerRef.current == null
-        )
-            return;
-
-        renderPayPalMark();
+        renderPayPalMark(paypalWindowNamespace.Marks({ ...markProps }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isResolved, markProps.fundingSource]);
 
