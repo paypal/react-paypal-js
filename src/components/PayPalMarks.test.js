@@ -195,4 +195,36 @@ describe("<PayPalMarks />", () => {
             ).toBeFalsy()
         );
     });
+
+    test("should rerender the component when the funding source change", async () => {
+        window.paypal.Marks = () => ({
+            isEligible: jest.fn().mockReturnValue(true),
+            render: (element) => {
+                const markElement = document.createElement("div");
+
+                markElement.setAttribute("id", "children-div");
+                element.append(markElement);
+                return Promise.resolve();
+            },
+        });
+
+        const { container, rerender } = render(
+            <PayPalScriptProvider options={{ "client-id": "test" }}>
+                <PayPalMarks fundingSource="paypal" />
+            </PayPalScriptProvider>
+        );
+
+        await waitFor(() =>
+            expect(
+                container.querySelector("#children-div") instanceof
+                    HTMLDivElement
+            ).toBeTruthy()
+        );
+
+        rerender(
+            <PayPalScriptProvider options={{ "client-id": "test" }}>
+                <PayPalMarks fundingSource="card" />
+            </PayPalScriptProvider>
+        );
+    });
 });

@@ -47,9 +47,7 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
         // only render the mark when eligible
         if (!current || !mark.isEligible()) return;
         // Remove any children before render it again
-        if (current.firstChild)
-            /* istanbul ignore next */ // Can't find a solution to test the next line
-            current.removeChild(current.firstChild);
+        if (current.firstChild) current.removeChild(current.firstChild);
 
         mark.render(current).catch((err) => {
             // component failed to render, possibly because it was closed or destroyed.
