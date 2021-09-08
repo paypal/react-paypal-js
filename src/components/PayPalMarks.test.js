@@ -11,15 +11,6 @@ jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
 }));
 
-jest.mock("react", () => ({
-    ...jest.requireActual("react"),
-    useRef: jest.fn().mockReturnValue({
-        current: {
-            firstChild: "mio",
-        },
-    }),
-}));
-
 const onError = jest.fn();
 const wrapper = ({ children }) => (
     <ErrorBoundary fallback={<div>Error</div>} onError={onError}>
