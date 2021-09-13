@@ -163,8 +163,6 @@ describe("<PayPalMarks />", () => {
     test("should not render component when ineligible", async () => {
         const mockIsEligible = jest.fn().mockReturnValue(false);
         const mockRender = jest.fn().mockResolvedValue();
-
-        // Make Marks not eligible
         window.paypal.Marks = () => ({
             isEligible: mockIsEligible,
             render: mockRender,
