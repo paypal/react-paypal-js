@@ -160,31 +160,24 @@ describe("<PayPalMarks />", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should not render component when is not eligible", async () => {
+    test("should not render component when ineligible", async () => {
+        const mockIsEligible = jest.fn().mockReturnValue(false);
+        const mockRender = jest.fn().mockResolvedValue();
+
         // Make Marks not eligible
         window.paypal.Marks = () => ({
-            isEligible: jest.fn().mockReturnValue(false),
-            render: (element) => {
-                const spanElement = document.createElement("span");
-
-                spanElement.setAttribute("id", "span-element");
-                element.append(spanElement);
-                return Promise.resolve();
-            },
+            isEligible: mockIsEligible,
+            render: mockRender,
         });
 
-        const { container } = render(
+        render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks />
             </PayPalScriptProvider>
         );
 
-        await waitFor(() =>
-            expect(
-                container.querySelector("#span-element") instanceof
-                    HTMLDivElement
-            ).toBeFalsy()
-        );
+        await waitFor(() => expect(mockIsEligible).toBeCalled());
+        expect(mockRender).not.toBeCalled();
     });
 
     test("should rerender the component when the funding source change", async () => {
