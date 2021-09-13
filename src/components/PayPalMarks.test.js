@@ -139,24 +139,21 @@ describe("<PayPalMarks />", () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();
+        const mockRender = jest
+            .fn()
+            .mockRejectedValue(new Error("Unknown error"));
         window.paypal.Marks = () => ({
             isEligible: jest.fn().mockReturnValue(true),
-            render: jest.fn((element) => {
-                element.removeAttribute("class");
-                return Promise.reject(new Error("Unknow error"));
-            }),
+            render: mockRender,
         });
-        const { container } = render(
+
+        render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks className="test-class" />
             </PayPalScriptProvider>
         );
 
-        await waitFor(() =>
-            expect(
-                container.querySelector(".test-class") instanceof HTMLDivElement
-            ).toBeFalsy()
-        );
+        await waitFor(() => expect(mockRender).toBeCalled());
         spyConsoleError.mockRestore();
     });
 
@@ -179,34 +176,32 @@ describe("<PayPalMarks />", () => {
     });
 
     test("should rerender the component when the funding source change", async () => {
+        const mockRender = jest.fn((element) => {
+            const markElement = document.createElement("div");
+
+            markElement.setAttribute("id", "children-div");
+            element.append(markElement);
+            return Promise.resolve();
+        });
         window.paypal.Marks = () => ({
             isEligible: jest.fn().mockReturnValue(true),
-            render: (element) => {
-                const markElement = document.createElement("div");
-
-                markElement.setAttribute("id", "children-div");
-                element.append(markElement);
-                return Promise.resolve();
-            },
+            render: mockRender,
         });
 
-        const { container, rerender } = render(
+        const { rerender } = render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks fundingSource="paypal" />
             </PayPalScriptProvider>
         );
 
-        await waitFor(() =>
-            expect(
-                container.querySelector("#children-div") instanceof
-                    HTMLDivElement
-            ).toBeTruthy()
-        );
+        await waitFor(() => expect(mockRender).toBeCalledTimes(1));
 
         rerender(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
                 <PayPalMarks fundingSource="card" />
             </PayPalScriptProvider>
         );
+
+        await waitFor(() => expect(mockRender).toBeCalledTimes(2));
     });
 });
