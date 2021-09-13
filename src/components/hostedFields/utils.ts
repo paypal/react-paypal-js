@@ -3,9 +3,9 @@ import { getPayPalWindowNamespace } from "../../utils";
 
 import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
 import type {
-    HostedFieldsNamespace,
+    PayPalHostedFieldsNamespace,
     DecoratedPayPalHostedFieldsComponent,
-} from "../../types/hostedFieldTypes";
+} from "../../types/payPalhostedFieldTypes";
 
 /**
  * Throw and exception if the HostedFields is not found in the paypal namespace
@@ -20,7 +20,7 @@ import type {
 export const throwMissingHostedFieldsError = ({
     components = "",
     [DATA_NAMESPACE]: dataNamespace = DEFAULT_PAYPAL_NAMESPACE,
-}: HostedFieldsNamespace): never => {
+}: PayPalHostedFieldsNamespace): never => {
     const errorMessage = `Unable to render <HostedFields /> because window.${dataNamespace}.HostedFields is undefined.
     ${
         components.includes("hosted-fields")
@@ -34,7 +34,7 @@ export const throwMissingHostedFieldsError = ({
 };
 
 export const decorateHostedFields = (
-    options: HostedFieldsNamespace
+    options: PayPalHostedFieldsNamespace
 ): DecoratedPayPalHostedFieldsComponent => {
     const hostedFields = getPayPalWindowNamespace(
         options[DATA_NAMESPACE]
@@ -64,4 +64,14 @@ export const addHostedFieldStyles = (): HTMLLinkElement => {
     );
 
     return document.head.appendChild(linkElement);
+};
+
+export const concatClassName = (
+    classes: string[],
+    initialSpace = false
+): string => {
+    if (classes.length === 0) return "";
+    const joinedClasses = classes.join(" ");
+
+    return initialSpace ? ` ${joinedClasses}` : joinedClasses;
 };

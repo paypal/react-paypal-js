@@ -1,8 +1,8 @@
-import { HostedFieldsHandler } from "@paypal/paypal-js/types/components/hosted-fields";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
+
 import { SCRIPT_ID } from "../constants";
 import { BraintreePayPalCheckout } from "./braintree/paypalCheckout";
-import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "./enums";
+import { SCRIPT_PROVIDER_DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "./enums";
 
 export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
     [SCRIPT_ID]: string;
@@ -10,20 +10,16 @@ export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
 
 export type ScriptReducerAction =
     | {
-          type: `${DISPATCH_ACTION.LOADING_STATUS}`;
+          type: `${SCRIPT_PROVIDER_DISPATCH_ACTION.LOADING_STATUS}`;
           value: SCRIPT_LOADING_STATE;
       }
     | {
-          type: `${DISPATCH_ACTION.RESET_OPTIONS}`;
+          type: `${SCRIPT_PROVIDER_DISPATCH_ACTION.RESET_OPTIONS}`;
           value: PayPalScriptOptions | ReactPayPalScriptOptions;
       }
     | {
-          type: `${DISPATCH_ACTION.SET_BRAINTREE_INSTANCE}`;
+          type: `${SCRIPT_PROVIDER_DISPATCH_ACTION.SET_BRAINTREE_INSTANCE}`;
           value: BraintreePayPalCheckout;
-      }
-    | {
-          type: `${DISPATCH_ACTION.SET_HOSTED_FIELDS_INSTANCE}`;
-          value: HostedFieldsHandler;
       };
 
 export type InitialState = {
@@ -35,9 +31,6 @@ export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
     braintreePayPalCheckoutInstance?: BraintreePayPalCheckout;
-    hostedFields?: {
-        submit: (argument: Record<string, unknown>) => void;
-    };
     dispatch: React.Dispatch<ScriptReducerAction>;
 }
 

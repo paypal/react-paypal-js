@@ -5,9 +5,19 @@ export enum SCRIPT_LOADING_STATE {
     RESOLVED = "resolved",
 }
 
-export enum DISPATCH_ACTION {
+export enum SCRIPT_PROVIDER_DISPATCH_ACTION {
     LOADING_STATUS = "setLoadingStatus",
     RESET_OPTIONS = "resetOptions",
     SET_BRAINTREE_INSTANCE = "braintreeInstance",
-    SET_HOSTED_FIELDS_INSTANCE = "hostedFieldInstance",
+}
+
+export enum HOSTED_FIELDS_DISPATCH_ACTION {
+    SET_CARD_FIELDS = "setLoadingStatus",
+}
+
+export enum HOSTED_FIELDS_TYPES {
+    NUMBER = "number",
+    CVV = "cvv",
+    EXPIRATION_DATE = "expirationDate",
+    CUSTOM = "custom",
 }

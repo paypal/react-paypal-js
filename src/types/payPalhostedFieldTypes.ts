@@ -1,6 +1,11 @@
-import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
+import type {
+    HostedFieldsHandler,
+    PayPalHostedFieldsComponent,
+} from "@paypal/paypal-js/types/components/hosted-fields";
 
-export type HostedFieldsNamespace = {
+import { HOSTED_FIELDS_DISPATCH_ACTION, HOSTED_FIELDS_TYPES } from "./enums";
+
+export type PayPalHostedFieldsNamespace = {
     components: string | undefined;
     [DATA_NAMESPACE: string]: string | undefined;
 };
@@ -10,12 +15,14 @@ export interface DecoratedPayPalHostedFieldsComponent
     close(container: HTMLDivElement | null): void;
 }
 
-export interface HostedFieldProps {
-    showLabel: boolean;
-    label?: string;
+export interface PayPalHostedFieldProps {
+    identifier: string;
+    type: HOSTED_FIELDS_TYPES;
+    classes?: string[];
+    style?: Record<string, string>;
 }
 
-export interface HostedFieldsBillingAddressProps {
+export interface PayPalHostedFieldsBillingAddressProps {
     show: boolean;
     firstName?: { show: boolean; label: string; placeholder: string };
     lastName?: { show: boolean; label: string; placeholder: string };
@@ -31,7 +38,7 @@ export interface HostedFieldsBillingAddressProps {
     postalCode?: { show: boolean; label: string; placeholder: string };
 }
 
-export interface HostedFieldsBillingAddress {
+export interface PayPalHostedFieldsBillingAddress {
     firstName?: string;
     lastName?: string;
     company?: string;
@@ -50,14 +57,25 @@ export interface HostedFieldsBillingAddress {
     postalCode?: string;
 }
 
-export interface HostedFieldsComponentProps {
-    showLabels: boolean;
-    styles?: Record<string, unknown>;
-    placeholder?: {
-        number: string;
-        cvv: string;
-        expirationDate: string;
-    };
-    billingAddress: HostedFieldsBillingAddressProps;
+export type DefaultPayPalHostedFields = {
+    number?: { selector: string };
+    cvv?: { selector: string };
+    expirationDate?: { selector: string };
+    custom?: unknown;
+};
+
+export interface PayPalHostedFieldsComponentProps {
     createOrder: () => Promise<string>;
+    children: React.ReactNode;
+    styles?: Record<string, unknown>;
+}
+
+export type PayPalHostedFieldsAction = {
+    type: `${HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS}`;
+    value: HostedFieldsHandler;
+};
+
+export interface PayPalHostedFieldsContextState {
+    cardFields?: HostedFieldsHandler;
+    dispatch: React.Dispatch<PayPalHostedFieldsAction>;
 }

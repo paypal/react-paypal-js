@@ -1,9 +1,11 @@
 import {
     DATA_CLIENT_TOKEN,
-    EMPTY_PROVIDER_CONTEXT_ERROR_MESSAGE,
     EMPTY_PROVIDER_CONTEXT_CLIENT_TOKEN_ERROR_MESSAGE,
 } from "../constants";
-import type { ScriptContextState } from "../types";
+import type {
+    ScriptContextState,
+    PayPalHostedFieldsContextState,
+} from "../types";
 
 /**
  * Check if the context is valid and ready to dispatch actions.
@@ -11,16 +13,19 @@ import type { ScriptContextState } from "../types";
  * @param scriptContext the result of connecting to the context provider
  * @returns strict context avoiding null values in the type
  */
-export function contextNotEmptyValidator(
-    scriptContext: ScriptContextState | null
-): ScriptContextState {
+export function contextNotEmptyValidator<
+    Type extends ScriptContextState | PayPalHostedFieldsContextState
+>(scriptContext: Type | null, executorName: string): Type {
     if (
-        scriptContext != null &&
-        typeof scriptContext.dispatch === "function" &&
+        typeof scriptContext?.dispatch === "function" &&
         scriptContext.dispatch.length !== 0
-    )
+    ) {
         return scriptContext;
-    throw new Error(EMPTY_PROVIDER_CONTEXT_ERROR_MESSAGE);
+    }
+
+    throw new Error(
+        `${executorName} must be used within a PayPalScriptProvider`
+    );
 }
 
 /**

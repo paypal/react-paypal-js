@@ -5,8 +5,6 @@ export const DATA_SDK_INTEGRATION_SOURCE = "data-sdk-integration-source";
 export const DATA_SDK_INTEGRATION_SOURCE_VALUE = "react-paypal-js";
 export const DATA_NAMESPACE = "data-namespace";
 
-export const EMPTY_PROVIDER_CONTEXT_ERROR_MESSAGE =
-    "usePayPalScriptReducer must be used within a PayPalScriptProvider";
 export const EMPTY_PROVIDER_CONTEXT_CLIENT_TOKEN_ERROR_MESSAGE =
     "A client token wasn't found in the provider parent component";
 
