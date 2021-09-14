@@ -329,4 +329,29 @@ describe("<PayPalButtons />", () => {
         );
         spyConsoleError.mockRestore();
     });
+
+    test("should safely ignore error on render process when paypal buttons container is no longer in the DOM ", async () => {
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
+        const mockRender = jest
+            .fn()
+            .mockRejectedValue(new Error("Unknown error"));
+        window.paypal.Buttons = () => {
+            return {
+                close: jest.fn().mockResolvedValue(),
+                isEligible: jest.fn().mockReturnValue(true),
+                render: mockRender,
+            };
+        };
+
+        render(
+            <PayPalScriptProvider options={{ "client-id": "test" }}>
+                <PayPalButtons />
+            </PayPalScriptProvider>
+        );
+
+        await waitFor(() => expect(mockRender).toBeCalled());
+        spyConsoleError.mockRestore();
+    });
 });
