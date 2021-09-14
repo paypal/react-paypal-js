@@ -105,9 +105,7 @@ export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
     return (
         <>
             {isEligible ? (
-                <div ref={markContainerRef} className={className}>
-                    {children}
-                </div>
+                <div ref={markContainerRef} className={className} />
             ) : (
                 children
             )}
