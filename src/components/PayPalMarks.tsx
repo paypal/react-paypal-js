@@ -6,14 +6,14 @@ import type {
     PayPalMarksComponentOptions,
     PayPalMarksComponent,
 } from "@paypal/paypal-js/types/components/marks";
-import type { PayPalProviderChildren } from "../types/scriptProviderTypes";
+import type { Children } from "../types/scriptProviderTypes";
 
 export interface PayPalMarksComponentProps extends PayPalMarksComponentOptions {
     /**
      * Pass a css class to the div container.
      */
     className?: string;
-    children?: PayPalProviderChildren;
+    children?: Children;
 }
 
 /**

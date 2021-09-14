@@ -47,4 +47,4 @@ export interface ScriptProviderProps {
     deferLoading?: boolean;
 }
 
-export type PayPalProviderChildren = ReactElement | ReactPortal | ReactFragment;
+export type Children = ReactElement | ReactPortal | ReactFragment;
