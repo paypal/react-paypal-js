@@ -58,10 +58,7 @@ export interface PayPalHostedFieldsBillingAddress {
 }
 
 export type DefaultPayPalHostedFields = {
-    number?: { selector: string };
-    cvv?: { selector: string };
-    expirationDate?: { selector: string };
-    custom?: unknown;
+    [key in keyof HOSTED_FIELDS_TYPES]?: { selector: string };
 };
 
 export interface PayPalHostedFieldsComponentProps {

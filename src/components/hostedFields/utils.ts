@@ -1,11 +1,19 @@
 import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../../constants";
 import { getPayPalWindowNamespace } from "../../utils";
 
+import { HOSTED_FIELDS_TYPES } from "../../types";
 import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
 import type {
     PayPalHostedFieldsNamespace,
     DecoratedPayPalHostedFieldsComponent,
+    DefaultPayPalHostedFields,
 } from "../../types/payPalhostedFieldTypes";
+import type {
+    ReactChild,
+    ReactFragment,
+    ReactPortal,
+    ReactElement,
+} from "react";
 
 /**
  * Throw and exception if the HostedFields is not found in the paypal namespace
@@ -33,6 +41,12 @@ export const throwMissingHostedFieldsError = ({
     throw new Error(errorMessage);
 };
 
+/**
+ * Decorate the HostedFields object in the window with a close custom method
+ *
+ * @param options scriptProvider options to get the HostedFields dependency
+ * @returns the modified HostedFields object
+ */
 export const decorateHostedFields = (
     options: PayPalHostedFieldsNamespace
 ): DecoratedPayPalHostedFieldsComponent => {
@@ -54,6 +68,11 @@ export const decorateHostedFields = (
     };
 };
 
+/**
+ * Add HostedFields styles into the DOM
+ *
+ * @returns the link created and attached element
+ */
 export const addHostedFieldStyles = (): HTMLLinkElement => {
     const linkElement = document.createElement("link");
     linkElement.setAttribute("rel", "stylesheet");
@@ -66,6 +85,15 @@ export const addHostedFieldStyles = (): HTMLLinkElement => {
     return document.head.appendChild(linkElement);
 };
 
+/**
+ * Utility function to concat hosted fields component classNames.
+ * Here we include the identifier to avoid using references
+ * in the render process of the hosted fields
+ *
+ * @param classes      a list of classes
+ * @param initialSpace add space at the beginning
+ * @returns all the classes contact by space
+ */
 export const concatClassName = (
     classes: string[],
     initialSpace = false
@@ -74,4 +102,22 @@ export const concatClassName = (
     const joinedClasses = classes.join(" ");
 
     return initialSpace ? ` ${joinedClasses}` : joinedClasses;
+};
+
+export const getHostedFieldsFromChildren = (
+    childrenList: (ReactChild | ReactPortal | ReactFragment)[],
+    requiredChildren: HOSTED_FIELDS_TYPES[]
+): DefaultPayPalHostedFields => {
+    return childrenList.reduce<DefaultPayPalHostedFields>((fields, child) => {
+        const {
+            props: { type, identifier },
+        } = child as ReactElement;
+
+        if (requiredChildren.includes(type)) {
+            fields[type] = {
+                selector: `.${identifier}`,
+            };
+        }
+        return fields;
+    }, {});
 };

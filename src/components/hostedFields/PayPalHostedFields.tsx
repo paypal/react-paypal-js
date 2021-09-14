@@ -4,7 +4,6 @@ import React, {
     useRef,
     useReducer,
     Children,
-    ReactChild,
 } from "react";
 import type { FC, ReactElement } from "react";
 
@@ -14,17 +13,17 @@ import {
 } from "../../context/payPalHostedFieldsContext";
 import { useScriptProviderContext } from "../../hooks/scriptProviderHooks";
 import { DATA_NAMESPACE } from "../../constants";
-import { decorateHostedFields, addHostedFieldStyles } from "./utils";
+import {
+    decorateHostedFields,
+    addHostedFieldStyles,
+    getHostedFieldsFromChildren,
+} from "./utils";
 import {
     HOSTED_FIELDS_DISPATCH_ACTION,
     HOSTED_FIELDS_TYPES,
     SCRIPT_LOADING_STATE,
-} from "../../types";
-import type {
-    PayPalHostedFieldsComponentProps,
-    PayPalHostedFieldProps,
-    DefaultPayPalHostedFields,
-} from "../../types/payPalhostedFieldTypes";
+} from "../../types/enums";
+import type { PayPalHostedFieldsComponentProps } from "../../types/payPalhostedFieldTypes";
 
 export const PayPalHostedFields: FC<PayPalHostedFieldsComponentProps> = ({
     styles = {
@@ -51,9 +50,6 @@ export const PayPalHostedFields: FC<PayPalHostedFieldsComponentProps> = ({
     const [isEligible, setIsEligible] = useState(true);
     const [styleResolved, setStyleResolved] = useState(false);
     const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
-    const cardNumberRef = useRef<HTMLDivElement>(null);
-    const cardVerificationValueRef = useRef<HTMLDivElement>(null);
-    const cardExpirationDateRef = useRef<HTMLDivElement>(null);
     const [, setErrorState] = useState(null);
 
     // const submitOrder = () => {
@@ -106,62 +102,15 @@ export const PayPalHostedFields: FC<PayPalHostedFieldsComponentProps> = ({
             hostedFields.close(hostedFieldsContainerRef.current);
         }
 
-        childrenList.reduce<DefaultPayPalHostedFields>((acc, child) => {
-            const castChild = child as ReactElement<
-                PayPalHostedFieldProps,
-                FC<PayPalHostedFieldProps>
-            >;
-
-            if (requiredChildren.includes(castChild.props.type)) {
-                acc[castChild.props.type] = {
-                    selector: `.${castChild.props.identifier}`,
-                };
-            }
-            return acc;
-        }, {});
-
-        console.log(
-            childrenList.reduce<DefaultPayPalHostedFields>((acc, child) => {
-                const castChild = child as ReactElement<
-                    PayPalHostedFieldProps,
-                    FC<PayPalHostedFieldProps>
-                >;
-
-                if (requiredChildren.includes(castChild.props.type)) {
-                    acc[castChild.props.type] = {
-                        selector: `.${castChild.props.identifier}`,
-                    };
-                }
-                return acc;
-            }, {})
-        );
-        // {
-        //     number: {
-        //         selector: cardNumberRef.current,
-        //     },
-        //     cvv: {
-        //         selector: `#${cardVerificationValueRef.current?.id}`,
-        //     },
-        //     expirationDate: {
-        //         selector: `#${cardExpirationDateRef.current?.id}`,
-        //     },
-        // }
         hostedFields
             .render({
                 // Call your server to set up the transaction
                 createOrder: createOrder,
                 styles: styles,
-                fields: {
-                    number: {
-                        selector: ".card-number",
-                    },
-                    cvv: {
-                        selector: ".cvv",
-                    },
-                    expirationDate: {
-                        selector: ".expiration-date",
-                    },
-                },
+                fields: getHostedFieldsFromChildren(
+                    childrenList,
+                    requiredChildren
+                ),
             })
             .then((cardFields) => {
                 dispatch({
