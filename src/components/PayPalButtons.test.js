@@ -345,13 +345,16 @@ describe("<PayPalButtons />", () => {
             };
         };
 
-        render(
+        const { container } = render(
             <PayPalScriptProvider options={{ "client-id": "test" }}>
-                <PayPalButtons />
+                <PayPalButtons class="test-children" />
             </PayPalScriptProvider>
         );
 
         await waitFor(() => expect(mockRender).toBeCalled());
+        expect(
+            container.querySelector(".test-children") instanceof HTMLDivElement
+        ).toBeFalsy();
         spyConsoleError.mockRestore();
     });
 });
