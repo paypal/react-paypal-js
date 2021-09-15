@@ -2,6 +2,7 @@ import type {
     HostedFieldsHandler,
     PayPalHostedFieldsComponent,
 } from "@paypal/paypal-js/types/components/hosted-fields";
+import type { ReactNode } from "react";
 
 import {
     PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION,
@@ -91,7 +92,7 @@ export interface PayPalHostedFieldsBillingAddress {
 
 export interface PayPalHostedFieldsComponentProps {
     createOrder: () => Promise<string>;
-    children: React.ReactNode;
+    children: ReactNode;
     styles?: Record<string, unknown>;
 }
 

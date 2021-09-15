@@ -5,7 +5,7 @@ import React, {
     useReducer,
     Children,
 } from "react";
-import type { FC, ReactElement } from "react";
+import type { FC } from "react";
 
 import {
     PayPalHostedFieldsContext,
@@ -18,6 +18,7 @@ import {
     addHostedFieldStyles,
     getHostedFieldsFromChildren,
 } from "./utils";
+import { validateHostedFieldChildren } from "./validators";
 import {
     PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION,
     PAYPAL_HOSTED_FIELDS_TYPES,
@@ -68,15 +69,7 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
     const [, setErrorState] = useState(null);
 
     useEffect(() => {
-        const registerTypes = childrenList.map(
-            (child) => (child as ReactElement).props.hostedFieldType
-        );
-
-        if (!requiredChildren.every((type) => registerTypes.includes(type))) {
-            throw new Error(
-                "To use HostedFields you must use it with at least 3 children with types: [number, cvv, expirationDate] includes"
-            );
-        }
+        validateHostedFieldChildren(childrenList, requiredChildren);
 
         const linkElement = addHostedFieldStyles();
         setStyleResolved(true);
@@ -117,7 +110,8 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
                     value: cardFields,
                 });
             });
-    }, [loadingStatus]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadingStatus, styles]);
 
     return (
         <>

@@ -15,7 +15,7 @@ import type {
  */
 export function contextNotEmptyValidator<
     Type extends ScriptContextState | PayPalHostedFieldsContextState
->(scriptContext: Type | null, executorName: string): Type {
+>(scriptContext: Type | null, executorName = "usePayPalScriptReducer"): Type {
     if (
         typeof scriptContext?.dispatch === "function" &&
         scriptContext.dispatch.length !== 0

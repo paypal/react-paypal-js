@@ -1,8 +1,8 @@
 import React from "react";
 import type { FC } from "react";
 
-import type { PayPalHostedFieldProps } from "../../types/payPalHostedFieldTypes";
 import { concatClassName } from "./utils";
+import type { PayPalHostedFieldProps } from "../../types/payPalHostedFieldTypes";
 
 /**
  * React functional component to create a specific hosted fields

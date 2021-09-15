@@ -1,5 +1,5 @@
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
-import type { ReactElement, ReactPortal, ReactFragment } from "react";
+
 import { SCRIPT_ID } from "../constants";
 import { BraintreePayPalCheckout } from "./braintree/paypalCheckout";
 import { SCRIPT_PROVIDER_DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "./enums";
@@ -47,5 +47,3 @@ export interface ScriptProviderProps {
     children?: React.ReactNode;
     deferLoading?: boolean;
 }
-
-export type Children = ReactElement | ReactPortal | ReactFragment;
