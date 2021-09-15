@@ -19,5 +19,8 @@ export enum HOSTED_FIELDS_TYPES {
     NUMBER = "number",
     CVV = "cvv",
     EXPIRATION_DATE = "expirationDate",
+    EXPIRATION_MONTH = "expirationMonth",
+    EXPIRATION_YEAR = "expirationYear",
+    POSTAL_CODE = "postalCode",
     CUSTOM = "custom",
 }

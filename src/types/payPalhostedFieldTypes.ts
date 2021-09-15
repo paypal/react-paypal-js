@@ -10,14 +10,43 @@ export type PayPalHostedFieldsNamespace = {
     [DATA_NAMESPACE: string]: string | undefined;
 };
 
+export type PayPalHostedFieldOptions = {
+    // The string element selector (#id, .class). Represent the field identifier
+    selector: string;
+    // The placeholder of the field cvv->(300), expirationDate->(MM/YY)
+    placeholder?: string;
+    // The `type` attribute of the input. To mask `cvv` input, for instance, `type: "password"` can be used
+    type?: string;
+    // Enable or disable automatic formatting on this field
+    formatInput?: boolean;
+    // Enable or disable input masking when input is not focused. If set to `true` instead of an object, the defaults for the `maskInput` parameters will be used
+    maskInput?: unknown;
+    // FIXME: maskInput.character
+    select?:
+        | boolean
+        | {
+              options: (string | number)[];
+          };
+    // This option applies only to the CVV and postal code fields. Will be used as the `maxlength` attribute of the input if it is less than the default.
+    // The primary use cases for the `maxlength` option are: limiting the length of the CVV input for CVV-only verifications when the card type is known and limiting the length of the postal code input when cards are coming from a known region.
+    maxlength?: number;
+    // This option applies only to the cvv and postal code fields. Will be used as the `minlength` attribute of the input.
+    minlength?: number;
+    // A value to prefill the field with. For example, when creating an update card form, you can prefill the expiration date fields with the old expiration date data.
+    prefill?: string;
+    // Only allow card types that your merchant account is able to process. Unsupported card types will invalidate the card form. e.g.
+    // if you only process Visa cards, a customer entering a American Express card would get an invalid card field. This can only be used for the `number` field.
+    rejectUnsupportedCards?: boolean;
+};
+
 export interface DecoratedPayPalHostedFieldsComponent
     extends PayPalHostedFieldsComponent {
     close(container: HTMLDivElement | null): void;
 }
 
 export interface PayPalHostedFieldProps {
-    identifier: string;
-    type: HOSTED_FIELDS_TYPES;
+    hostedFieldType: HOSTED_FIELDS_TYPES;
+    options: PayPalHostedFieldOptions;
     classes?: string[];
     style?: Record<string, string>;
 }
@@ -56,10 +85,6 @@ export interface PayPalHostedFieldsBillingAddress {
     countryCodeNumeric?: string;
     postalCode?: string;
 }
-
-export type DefaultPayPalHostedFields = {
-    [key in keyof HOSTED_FIELDS_TYPES]?: { selector: string };
-};
 
 export interface PayPalHostedFieldsComponentProps {
     createOrder: () => Promise<string>;

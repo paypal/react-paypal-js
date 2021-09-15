@@ -4,7 +4,7 @@ import { PayPalHostedFieldsContext } from "../context/payPalHostedFieldsContext"
 import type {
     PayPalHostedFieldsContextState,
     PayPalHostedFieldsAction,
-} from "../types/payPalhostedFieldTypes";
+} from "../types/payPalHostedFieldTypes";
 import { contextNotEmptyValidator } from "./contextValidator";
 
 /**

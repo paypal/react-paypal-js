@@ -1,23 +1,26 @@
 import React from "react";
 import type { FC } from "react";
 
-import type { PayPalHostedFieldProps } from "../../types/payPalhostedFieldTypes";
+import type { PayPalHostedFieldProps } from "../../types/payPalHostedFieldTypes";
 import { concatClassName } from "./utils";
 import { HOSTED_FIELDS_TYPES } from "../../types";
 
 export const PayPalHostedField: FC<PayPalHostedFieldProps> = ({
-    identifier,
-    type,
+    hostedFieldType,
+    options,
     classes = ["card_field"],
     style = {},
 }) => {
     return (
         <>
-            {type === HOSTED_FIELDS_TYPES.CUSTOM ? (
+            {hostedFieldType === HOSTED_FIELDS_TYPES.CUSTOM ? (
                 <input type="text" />
             ) : (
                 <div
-                    className={`${identifier}${concatClassName(classes, true)}`}
+                    className={`${options.selector}${concatClassName(
+                        classes,
+                        true
+                    )}`}
                     style={style}
                 ></div>
             )}

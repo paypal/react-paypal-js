@@ -23,26 +23,36 @@ import {
     HOSTED_FIELDS_TYPES,
     SCRIPT_LOADING_STATE,
 } from "../../types/enums";
-import type { PayPalHostedFieldsComponentProps } from "../../types/payPalhostedFieldTypes";
+import type { PayPalHostedFieldsComponentProps } from "../../types/payPalHostedFieldTypes";
 
-export const PayPalHostedFields: FC<PayPalHostedFieldsComponentProps> = ({
-    styles = {
-        ".valid": {
-            color: "#28A745",
-        },
-        ".invalid": {
-            color: "#DC3545",
-        },
+// Required hosted fields inside the provider
+const requiredChildren = [
+    HOSTED_FIELDS_TYPES.NUMBER,
+    HOSTED_FIELDS_TYPES.CVV,
+    HOSTED_FIELDS_TYPES.EXPIRATION_DATE,
+];
+// HostedFields namespace supported elements
+const optionalChildren = [
+    HOSTED_FIELDS_TYPES.EXPIRATION_MONTH,
+    HOSTED_FIELDS_TYPES.EXPIRATION_YEAR,
+    HOSTED_FIELDS_TYPES.POSTAL_CODE,
+];
+
+const defaultStyle = {
+    ".valid": {
+        color: "#28A745",
     },
+    ".invalid": {
+        color: "#DC3545",
+    },
+};
+
+export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
+    styles = defaultStyle,
     createOrder,
     children,
 }) => {
     const childrenList = Children.toArray(children);
-    const requiredChildren = [
-        HOSTED_FIELDS_TYPES.NUMBER,
-        HOSTED_FIELDS_TYPES.CVV,
-        HOSTED_FIELDS_TYPES.EXPIRATION_DATE,
-    ];
     const [{ options, loadingStatus }] = useScriptProviderContext();
     const [state, dispatch] = useReducer(payPalHostedFieldsReducer, {
         dispatch: () => null,
@@ -70,7 +80,7 @@ export const PayPalHostedFields: FC<PayPalHostedFieldsComponentProps> = ({
 
     useEffect(() => {
         const registerTypes = childrenList.map(
-            (child) => (child as ReactElement).props.type
+            (child) => (child as ReactElement).props.hostedFieldType
         );
 
         if (!requiredChildren.every((type) => registerTypes.includes(type))) {
@@ -107,10 +117,10 @@ export const PayPalHostedFields: FC<PayPalHostedFieldsComponentProps> = ({
                 // Call your server to set up the transaction
                 createOrder: createOrder,
                 styles: styles,
-                fields: getHostedFieldsFromChildren(
-                    childrenList,
-                    requiredChildren
-                ),
+                fields: getHostedFieldsFromChildren(childrenList, [
+                    ...requiredChildren,
+                    ...optionalChildren,
+                ]),
             })
             .then((cardFields) => {
                 dispatch({

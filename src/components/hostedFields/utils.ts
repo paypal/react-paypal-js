@@ -2,18 +2,25 @@ import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../../constants";
 import { getPayPalWindowNamespace } from "../../utils";
 
 import { HOSTED_FIELDS_TYPES } from "../../types";
-import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
-import type {
-    PayPalHostedFieldsNamespace,
-    DecoratedPayPalHostedFieldsComponent,
-    DefaultPayPalHostedFields,
-} from "../../types/payPalhostedFieldTypes";
 import type {
     ReactChild,
     ReactFragment,
     ReactPortal,
     ReactElement,
+    FC,
 } from "react";
+import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
+import type {
+    PayPalHostedFieldsNamespace,
+    DecoratedPayPalHostedFieldsComponent,
+    PayPalHostedFieldProps,
+    PayPalHostedFieldOptions,
+} from "../../types/payPalHostedFieldTypes";
+
+// Define the type of the fields object use in the HostedFields.render options
+type PayPalHostedFieldOption = {
+    [key in HOSTED_FIELDS_TYPES]?: PayPalHostedFieldOptions;
+};
 
 /**
  * Throw and exception if the HostedFields is not found in the paypal namespace
@@ -104,20 +111,35 @@ export const concatClassName = (
     return initialSpace ? ` ${joinedClasses}` : joinedClasses;
 };
 
+/**
+ * Identify all the valid hosted fields children
+ *
+ * @param childrenList     the list of children received
+ * @param possibleChildren a list of child type to transform into fields format
+ * @returns the fields object required to render the HostedFields
+ */
 export const getHostedFieldsFromChildren = (
     childrenList: (ReactChild | ReactPortal | ReactFragment)[],
-    requiredChildren: HOSTED_FIELDS_TYPES[]
-): DefaultPayPalHostedFields => {
-    return childrenList.reduce<DefaultPayPalHostedFields>((fields, child) => {
+    validChildren: HOSTED_FIELDS_TYPES[]
+): PayPalHostedFieldOption =>
+    childrenList.reduce<PayPalHostedFieldOption>((fields, child) => {
         const {
-            props: { type, identifier },
-        } = child as ReactElement;
+            props: { hostedFieldType, options },
+        } = child as ReactElement<PayPalHostedFieldProps, FC>;
 
-        if (requiredChildren.includes(type)) {
-            fields[type] = {
-                selector: `.${identifier}`,
+        if (validChildren.includes(hostedFieldType)) {
+            fields[hostedFieldType] = {
+                selector: `.${options.selector}`,
+                placeholder: options.placeholder,
+                type: options.type,
+                formatInput: options.formatInput,
+                maskInput: options.maskInput,
+                select: options.select,
+                maxlength: options.maxlength,
+                minlength: options.minlength,
+                prefill: options.prefill,
+                rejectUnsupportedCards: options.rejectUnsupportedCards,
             };
         }
         return fields;
     }, {});
-};

@@ -4,7 +4,7 @@ import { HOSTED_FIELDS_DISPATCH_ACTION } from "../types/enums";
 import type {
     PayPalHostedFieldsContextState,
     PayPalHostedFieldsAction,
-} from "../types/payPalhostedFieldTypes";
+} from "../types/payPalHostedFieldTypes";
 
 /**
  * Reducer function to handle state related to PayPal hosted fields
