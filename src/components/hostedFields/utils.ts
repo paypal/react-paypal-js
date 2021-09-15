@@ -112,7 +112,8 @@ export const concatClassName = (
 };
 
 /**
- * Identify all the valid hosted fields children
+ * Identify all the valid hosted fields children and generate the valid options
+ * to use in the HostedFields.render process
  *
  * @param childrenList     the list of children received
  * @param possibleChildren a list of child type to transform into fields format
