@@ -1,7 +1,7 @@
 import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../../constants";
 import { getPayPalWindowNamespace } from "../../utils";
 
-import { HOSTED_FIELDS_TYPES } from "../../types";
+import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types";
 import type {
     ReactChild,
     ReactFragment,
@@ -19,7 +19,7 @@ import type {
 
 // Define the type of the fields object use in the HostedFields.render options
 type PayPalHostedFieldOption = {
-    [key in HOSTED_FIELDS_TYPES]?: PayPalHostedFieldOptions;
+    [key in PAYPAL_HOSTED_FIELDS_TYPES]?: PayPalHostedFieldOptions;
 };
 
 /**
@@ -121,7 +121,7 @@ export const concatClassName = (
  */
 export const getHostedFieldsFromChildren = (
     childrenList: (ReactChild | ReactPortal | ReactFragment)[],
-    validChildren: HOSTED_FIELDS_TYPES[]
+    validChildren: PAYPAL_HOSTED_FIELDS_TYPES[]
 ): PayPalHostedFieldOption =>
     childrenList.reduce<PayPalHostedFieldOption>((fields, child) => {
         const {

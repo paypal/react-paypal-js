@@ -19,23 +19,23 @@ import {
     getHostedFieldsFromChildren,
 } from "./utils";
 import {
-    HOSTED_FIELDS_DISPATCH_ACTION,
-    HOSTED_FIELDS_TYPES,
+    PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION,
+    PAYPAL_HOSTED_FIELDS_TYPES,
     SCRIPT_LOADING_STATE,
 } from "../../types/enums";
 import type { PayPalHostedFieldsComponentProps } from "../../types/payPalHostedFieldTypes";
 
 // Required hosted fields inside the provider
 const requiredChildren = [
-    HOSTED_FIELDS_TYPES.NUMBER,
-    HOSTED_FIELDS_TYPES.CVV,
-    HOSTED_FIELDS_TYPES.EXPIRATION_DATE,
+    PAYPAL_HOSTED_FIELDS_TYPES.NUMBER,
+    PAYPAL_HOSTED_FIELDS_TYPES.CVV,
+    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE,
 ];
 // HostedFields namespace supported elements
 const optionalChildren = [
-    HOSTED_FIELDS_TYPES.EXPIRATION_MONTH,
-    HOSTED_FIELDS_TYPES.EXPIRATION_YEAR,
-    HOSTED_FIELDS_TYPES.POSTAL_CODE,
+    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH,
+    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR,
+    PAYPAL_HOSTED_FIELDS_TYPES.POSTAL_CODE,
 ];
 
 const defaultStyle = {
@@ -46,7 +46,12 @@ const defaultStyle = {
         color: "#DC3545",
     },
 };
-
+/**
+ * TODO: Finish the documentation similar to PayPalButtons
+ *
+ * @param param0
+ * @returns
+ */
 export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
     styles = defaultStyle,
     createOrder,
@@ -61,22 +66,6 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
     const [styleResolved, setStyleResolved] = useState(false);
     const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
     const [, setErrorState] = useState(null);
-
-    // const submitOrder = () => {
-    //     if (hostedFields) {
-    //         hostedFields.submit({
-    //             cardholderName: "John Doe",
-    //             billingAddress: {
-    //                 countryCodeAlpha2: "US"
-    //             }
-    //         }).then(data => onApprove(data))
-    //         .catch(err => {
-    //             setErrorState(() => {
-    //                 throw new Error("Cannot process the payment: " + err.message);
-    //             });
-    //         });
-    //     }
-    // };
 
     useEffect(() => {
         const registerTypes = childrenList.map(
@@ -124,7 +113,7 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
             })
             .then((cardFields) => {
                 dispatch({
-                    type: HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS,
+                    type: PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS,
                     value: cardFields,
                 });
             });

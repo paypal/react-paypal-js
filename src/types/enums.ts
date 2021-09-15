@@ -1,3 +1,8 @@
+/**
+ * Enum for the SDK script resolve status,
+ *
+ * @enum {string}
+ */
 export enum SCRIPT_LOADING_STATE {
     INITIAL = "initial",
     PENDING = "pending",
@@ -5,22 +10,36 @@ export enum SCRIPT_LOADING_STATE {
     RESOLVED = "resolved",
 }
 
+/**
+ * Enum for the PayPalScriptProvider context dispatch actions
+ *
+ * @enum {string}
+ */
 export enum SCRIPT_PROVIDER_DISPATCH_ACTION {
     LOADING_STATUS = "setLoadingStatus",
     RESET_OPTIONS = "resetOptions",
     SET_BRAINTREE_INSTANCE = "braintreeInstance",
 }
 
-export enum HOSTED_FIELDS_DISPATCH_ACTION {
+/**
+ * Enum for the PayPalHostedFieldsForm context dispatch actions
+ *
+ * @enum {string}
+ */
+export enum PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION {
     SET_CARD_FIELDS = "setLoadingStatus",
 }
 
-export enum HOSTED_FIELDS_TYPES {
+/**
+ * Enum for all the available hosted fields
+ *
+ * @enum {string}
+ */
+export enum PAYPAL_HOSTED_FIELDS_TYPES {
     NUMBER = "number",
     CVV = "cvv",
     EXPIRATION_DATE = "expirationDate",
     EXPIRATION_MONTH = "expirationMonth",
     EXPIRATION_YEAR = "expirationYear",
     POSTAL_CODE = "postalCode",
-    CUSTOM = "custom",
 }

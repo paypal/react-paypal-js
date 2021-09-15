@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { HOSTED_FIELDS_DISPATCH_ACTION } from "../types/enums";
+import { PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION } from "../types/enums";
 import type {
     PayPalHostedFieldsContextState,
     PayPalHostedFieldsAction,
@@ -18,7 +18,7 @@ export function payPalHostedFieldsReducer(
     action: PayPalHostedFieldsAction
 ): PayPalHostedFieldsContextState {
     switch (action.type) {
-        case HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS:
+        case PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS:
             return {
                 ...state,
                 cardFields: action.value,

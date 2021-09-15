@@ -3,7 +3,10 @@ import type {
     PayPalHostedFieldsComponent,
 } from "@paypal/paypal-js/types/components/hosted-fields";
 
-import { HOSTED_FIELDS_DISPATCH_ACTION, HOSTED_FIELDS_TYPES } from "./enums";
+import {
+    PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION,
+    PAYPAL_HOSTED_FIELDS_TYPES,
+} from "./enums";
 
 export type PayPalHostedFieldsNamespace = {
     components: string | undefined;
@@ -20,8 +23,8 @@ export type PayPalHostedFieldOptions = {
     // Enable or disable automatic formatting on this field
     formatInput?: boolean;
     // Enable or disable input masking when input is not focused. If set to `true` instead of an object, the defaults for the `maskInput` parameters will be used
-    maskInput?: unknown;
-    // FIXME: maskInput.character
+    maskInput?: unknown; // FIXME:  not sure what is the object type definition for this key
+    // FIXME: maskInput.character not sure hpow to use it
     select?:
         | boolean
         | {
@@ -45,7 +48,7 @@ export interface DecoratedPayPalHostedFieldsComponent
 }
 
 export interface PayPalHostedFieldProps {
-    hostedFieldType: HOSTED_FIELDS_TYPES;
+    hostedFieldType: PAYPAL_HOSTED_FIELDS_TYPES;
     options: PayPalHostedFieldOptions;
     classes?: string[];
     style?: Record<string, string>;
@@ -93,7 +96,7 @@ export interface PayPalHostedFieldsComponentProps {
 }
 
 export type PayPalHostedFieldsAction = {
-    type: `${HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS}`;
+    type: `${PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS}`;
     value: HostedFieldsHandler;
 };
 
