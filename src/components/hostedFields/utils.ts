@@ -1,4 +1,8 @@
-import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../../constants";
+import {
+    DEFAULT_PAYPAL_NAMESPACE,
+    DATA_NAMESPACE,
+    HOSTED_FIELDS_CSS_URL,
+} from "../../constants";
 import { getPayPalWindowNamespace } from "../../utils";
 
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types";
@@ -84,10 +88,7 @@ export const addHostedFieldStyles = (): HTMLLinkElement => {
     const linkElement = document.createElement("link");
     linkElement.setAttribute("rel", "stylesheet");
     linkElement.setAttribute("type", "text/css");
-    linkElement.setAttribute(
-        "href",
-        "https://www.paypalobjects.com/webstatic/en_US/developer/docs/css/cardfields.css"
-    );
+    linkElement.setAttribute("href", HOSTED_FIELDS_CSS_URL);
 
     return document.head.appendChild(linkElement);
 };
@@ -105,7 +106,7 @@ export const concatClassName = (
     classes: string[],
     initialSpace = false
 ): string => {
-    if (classes.length === 0) return "";
+    if ((classes?.length || 0) === 0) return "";
     const joinedClasses = classes.join(" ");
 
     return initialSpace ? ` ${joinedClasses}` : joinedClasses;

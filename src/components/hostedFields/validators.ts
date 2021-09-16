@@ -6,6 +6,11 @@ import type {
 } from "react";
 
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types";
+import {
+    HOSTED_FIELDS_CHILDREN_ERROR,
+    HOSTED_FIELDS_DUPLICATE_CHILDREN_ERROR,
+    HOSTED_FIELDS_COMBINE_CHILDREN_ERROR,
+} from "../../constants";
 
 /**
  * Get only PayPalHostedField children, exclude all the other children
@@ -42,20 +47,9 @@ const validateExpirationDate = (
     registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]
 ) => {
     return (
-        (registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) &&
-            (registerTypes.includes(
-                PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH
-            ) ||
-                registerTypes.includes(
-                    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR
-                ))) ||
-        (!registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) &&
-            (!registerTypes.includes(
-                PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH
-            ) ||
-                !registerTypes.includes(
-                    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR
-                )))
+        !registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) ||
+        (registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH) &&
+            registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR))
     );
 };
 
@@ -72,9 +66,7 @@ const hasDefaultChildren = (registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]) => {
         !registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.CVV) ||
         validateExpirationDate(registerTypes)
     ) {
-        throw new Error(
-            "To use HostedFields you must use it with at least 3 children with types: [number, cvv, expirationDate] includes"
-        );
+        throw new Error(HOSTED_FIELDS_CHILDREN_ERROR);
     }
 };
 
@@ -86,7 +78,7 @@ const hasDefaultChildren = (registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]) => {
  */
 const notDuplicateChildren = (registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]) => {
     if (registerTypes.length !== new Set(registerTypes).size) {
-        throw new Error("Cannot use duplicate HostedFields as children");
+        throw new Error(HOSTED_FIELDS_DUPLICATE_CHILDREN_ERROR);
     }
 };
 
@@ -102,14 +94,22 @@ const notCombinableExpirationDate = (
     registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]
 ) => {
     if (
-        registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) &&
-        (registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH) ||
-            registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR))
+        (registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) &&
+            (registerTypes.includes(
+                PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH
+            ) ||
+                registerTypes.includes(
+                    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR
+                ))) ||
+        (!registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) &&
+            (!registerTypes.includes(
+                PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH
+            ) ||
+                !registerTypes.includes(
+                    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR
+                )))
     ) {
-        throw new Error(
-            `Cannot use the expirationDate field in combination with expirationMonth and expirationYear.
-            You should use expirationDate or combine expirationMonth and expirationYear`
-        );
+        throw new Error(HOSTED_FIELDS_COMBINE_CHILDREN_ERROR);
     }
 };
 
