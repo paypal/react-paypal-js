@@ -21,23 +21,9 @@ import {
 import { validateHostedFieldChildren } from "./validators";
 import {
     PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION,
-    PAYPAL_HOSTED_FIELDS_TYPES,
     SCRIPT_LOADING_STATE,
 } from "../../types/enums";
 import type { PayPalHostedFieldsComponentProps } from "../../types/payPalHostedFieldTypes";
-
-// Required hosted fields inside the provider
-const requiredChildren = [
-    PAYPAL_HOSTED_FIELDS_TYPES.NUMBER,
-    PAYPAL_HOSTED_FIELDS_TYPES.CVV,
-    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE,
-];
-// HostedFields namespace supported elements
-const optionalChildren = [
-    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH,
-    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR,
-    PAYPAL_HOSTED_FIELDS_TYPES.POSTAL_CODE,
-];
 
 const defaultStyle = {
     ".valid": {
@@ -69,7 +55,7 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
     const [, setErrorState] = useState(null);
 
     useEffect(() => {
-        validateHostedFieldChildren(childrenList, requiredChildren);
+        validateHostedFieldChildren(childrenList);
 
         const linkElement = addHostedFieldStyles();
         setStyleResolved(true);
@@ -99,10 +85,7 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
                 // Call your server to set up the transaction
                 createOrder: createOrder,
                 styles: styles,
-                fields: getHostedFieldsFromChildren(childrenList, [
-                    ...requiredChildren,
-                    ...optionalChildren,
-                ]),
+                fields: getHostedFieldsFromChildren(childrenList),
             })
             .then((cardFields) => {
                 dispatch({

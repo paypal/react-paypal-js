@@ -120,15 +120,16 @@ export const concatClassName = (
  * @returns the fields object required to render the HostedFields
  */
 export const getHostedFieldsFromChildren = (
-    childrenList: (ReactChild | ReactPortal | ReactFragment)[],
-    validChildren: PAYPAL_HOSTED_FIELDS_TYPES[]
+    childrenList: (ReactChild | ReactPortal | ReactFragment)[]
 ): PayPalHostedFieldOption =>
     childrenList.reduce<PayPalHostedFieldOption>((fields, child) => {
         const {
             props: { hostedFieldType, options },
         } = child as ReactElement<PayPalHostedFieldProps, FC>;
 
-        if (validChildren.includes(hostedFieldType)) {
+        if (
+            Object.values(PAYPAL_HOSTED_FIELDS_TYPES).includes(hostedFieldType)
+        ) {
             fields[hostedFieldType] = {
                 selector: `.${options.selector}`,
                 placeholder: options.placeholder,
