@@ -5,6 +5,7 @@ import { concatClassName } from "./utils";
 import type { PayPalHostedFieldProps } from "../../types/payPalHostedFieldTypes";
 
 /**
+ * TODO: Complete documentation for further storybook
  * React functional component to create a specific hosted fields
  * Available hosted fields are @enum {PAYPAL_HOSTED_FIELDS_TYPES}
  *
