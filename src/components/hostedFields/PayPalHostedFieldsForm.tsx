@@ -16,7 +16,7 @@ import { DATA_NAMESPACE } from "../../constants";
 import {
     decorateHostedFields,
     addHostedFieldStyles,
-    getHostedFieldsFromChildren,
+    generateHostedFieldsFromChildren,
 } from "./utils";
 import { validateHostedFieldChildren } from "./validators";
 import {
@@ -85,7 +85,7 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
                 // Call your server to set up the transaction
                 createOrder: createOrder,
                 styles: styles,
-                fields: getHostedFieldsFromChildren(childrenList),
+                fields: generateHostedFieldsFromChildren(childrenList),
             })
             .then((cardFields) => {
                 dispatch({

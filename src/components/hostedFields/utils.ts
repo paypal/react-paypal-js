@@ -70,7 +70,7 @@ export const decorateHostedFields = (
     return {
         ...(hostedFields as PayPalHostedFieldsComponent),
         close(container) {
-            if (container != null) {
+            if (container) {
                 container.querySelectorAll("*").forEach((element) => {
                     element.remove();
                 });
@@ -120,7 +120,7 @@ export const concatClassName = (
  * @param possibleChildren a list of child type to transform into fields format
  * @returns the fields object required to render the HostedFields
  */
-export const getHostedFieldsFromChildren = (
+export const generateHostedFieldsFromChildren = (
     childrenList: (ReactChild | ReactPortal | ReactFragment)[]
 ): PayPalHostedFieldOption =>
     childrenList.reduce<PayPalHostedFieldOption>((fields, child) => {

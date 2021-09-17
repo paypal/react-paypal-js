@@ -9,7 +9,6 @@ import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types";
 import {
     HOSTED_FIELDS_CHILDREN_ERROR,
     HOSTED_FIELDS_DUPLICATE_CHILDREN_ERROR,
-    HOSTED_FIELDS_COMBINE_CHILDREN_ERROR,
 } from "../../constants";
 
 /**
@@ -47,9 +46,9 @@ const validateExpirationDate = (
     registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]
 ) => {
     return (
-        !registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) ||
-        (registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH) &&
-            registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR))
+        !registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) &&
+        !registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH) &&
+        !registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR)
     );
 };
 
@@ -83,37 +82,6 @@ const notDuplicateChildren = (registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]) => {
 };
 
 /**
- * Check if the children not combine expirationDate type
- * with expirationMonth and expirationYear. If expirationDate is a child
- * we don't need to use expirationMonth and expirationYear and vice versa
- *
- * @param registerTypes the list of all the children types pass to the parent
- * @throw an @type {Error} when expirationDate is combine with expirationMonth and expirationYear
- */
-const notCombinableExpirationDate = (
-    registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]
-) => {
-    if (
-        (registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) &&
-            (registerTypes.includes(
-                PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH
-            ) ||
-                registerTypes.includes(
-                    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR
-                ))) ||
-        (!registerTypes.includes(PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE) &&
-            (!registerTypes.includes(
-                PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH
-            ) ||
-                !registerTypes.includes(
-                    PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR
-                )))
-    ) {
-        throw new Error(HOSTED_FIELDS_COMBINE_CHILDREN_ERROR);
-    }
-};
-
-/**
  * Validate the hosted fields children past to the PayPalHostedFieldsForm component
  * These are the rule:
  * 1- We need to find 3 default children type [[number, expiration, cvv]
@@ -130,5 +98,4 @@ export const validateHostedFieldChildren = (
 
     hasDefaultChildren(registerTypes);
     notDuplicateChildren(registerTypes);
-    notCombinableExpirationDate(registerTypes);
 };
