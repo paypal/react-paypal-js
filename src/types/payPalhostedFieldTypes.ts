@@ -24,13 +24,8 @@ export type PayPalHostedFieldOptions = {
     // Enable or disable automatic formatting on this field
     formatInput?: boolean;
     // Enable or disable input masking when input is not focused. If set to `true` instead of an object, the defaults for the `maskInput` parameters will be used
-    maskInput?: unknown; // FIXME:  not sure what is the object type definition for this key
-    // FIXME: maskInput.character not sure hpow to use it
-    select?:
-        | boolean
-        | {
-              options: (string | number)[];
-          };
+    maskInput?: boolean | { character: string };
+    select?: boolean | { options: (string | number)[] };
     // This option applies only to the CVV and postal code fields. Will be used as the `maxlength` attribute of the input if it is less than the default.
     // The primary use cases for the `maxlength` option are: limiting the length of the CVV input for CVV-only verifications when the card type is known and limiting the length of the postal code input when cards are coming from a known region.
     maxlength?: number;
