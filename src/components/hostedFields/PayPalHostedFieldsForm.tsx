@@ -61,23 +61,23 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
         setStyleResolved(true);
         // Clean the style from DOM after component unmount
         return () => linkElement.remove();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (
-            !(loadingStatus === SCRIPT_LOADING_STATE.RESOLVED) ||
-            !setStyleResolved
-        )
-            return;
         const hostedFields = decorateHostedFields({
             components: options.components,
             [DATA_NAMESPACE]: options[DATA_NAMESPACE],
         });
 
-        // Only render the hosted fields when eligible
-        if (!hostedFields.isEligible()) {
-            setIsEligible(false);
-            hostedFields.close(hostedFieldsContainerRef.current);
+        // Only render the hosted fields when script is loaded and hostedFields is eligible
+        if (
+            !(loadingStatus === SCRIPT_LOADING_STATE.RESOLVED) ||
+            !setStyleResolved ||
+            !hostedFields.isEligible()
+        ) {
+            setIsEligible(hostedFields.isEligible());
+            return hostedFields.close(hostedFieldsContainerRef.current);
         }
 
         hostedFields
@@ -92,12 +92,19 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
                     type: PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS,
                     value: cardFields,
                 });
+            })
+            .catch((err) => {
+                setErrorState(() => {
+                    throw new Error(
+                        `Failed to render <PayPalHostedFieldsForm /> component. ${err}`
+                    );
+                });
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loadingStatus, styles]);
 
     return (
-        <>
+        <div ref={hostedFieldsContainerRef}>
             {isEligible && styleResolved && (
                 <PayPalHostedFieldsContext.Provider
                     value={{ ...state, dispatch }}
@@ -105,6 +112,6 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
                     {children}
                 </PayPalHostedFieldsContext.Provider>
             )}
-        </>
+        </div>
     );
 };

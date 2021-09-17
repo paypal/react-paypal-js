@@ -38,6 +38,7 @@ describe("<PayPalButtons />", () => {
 
         loadScript.mockResolvedValue(window.paypal);
     });
+
     afterEach(() => {
         jest.clearAllMocks();
     });
