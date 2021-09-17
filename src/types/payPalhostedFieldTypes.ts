@@ -98,5 +98,5 @@ export type PayPalHostedFieldsAction = {
 
 export interface PayPalHostedFieldsContextState {
     cardFields?: HostedFieldsHandler;
-    dispatch: React.Dispatch<PayPalHostedFieldsAction>;
+    dispatch?: React.Dispatch<PayPalHostedFieldsAction>;
 }

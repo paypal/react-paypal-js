@@ -33,6 +33,7 @@ const defaultStyle = {
         color: "#DC3545",
     },
 };
+
 /**
  * TODO: Finish the documentation similar to PayPalButtons
  *
@@ -46,9 +47,7 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
 }) => {
     const childrenList = Children.toArray(children);
     const [{ options, loadingStatus }] = useScriptProviderContext();
-    const [state, dispatch] = useReducer(payPalHostedFieldsReducer, {
-        dispatch: () => null,
-    });
+    const [state, dispatch] = useReducer(payPalHostedFieldsReducer, {});
     const [isEligible, setIsEligible] = useState(true);
     const [styleResolved, setStyleResolved] = useState(false);
     const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
@@ -65,19 +64,19 @@ export const PayPalHostedFieldsForm: FC<PayPalHostedFieldsComponentProps> = ({
     }, []);
 
     useEffect(() => {
+        // Only render the hosted fields when script is loaded and hostedFields is eligible
+        if (
+            !(loadingStatus === SCRIPT_LOADING_STATE.RESOLVED) ||
+            !setStyleResolved
+        )
+            return;
         const hostedFields = decorateHostedFields({
             components: options.components,
             [DATA_NAMESPACE]: options[DATA_NAMESPACE],
         });
 
-        // Only render the hosted fields when script is loaded and hostedFields is eligible
-        if (
-            !(loadingStatus === SCRIPT_LOADING_STATE.RESOLVED) ||
-            !setStyleResolved ||
-            !hostedFields.isEligible()
-        ) {
-            setIsEligible(hostedFields.isEligible());
-            return hostedFields.close(hostedFieldsContainerRef.current);
+        if (!hostedFields.isEligible()) {
+            return setIsEligible(false);
         }
 
         hostedFields

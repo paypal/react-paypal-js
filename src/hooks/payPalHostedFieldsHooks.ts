@@ -22,5 +22,8 @@ export function usePayPalHostedFieldsContext(): [
             "usePayPalHostedFieldsContext"
         );
 
-    return [payPalHostedFieldsContext, payPalHostedFieldsContext.dispatch];
+    return [
+        payPalHostedFieldsContext,
+        payPalHostedFieldsContext.dispatch as React.Dispatch<PayPalHostedFieldsAction>,
+    ];
 }

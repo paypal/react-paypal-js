@@ -31,7 +31,7 @@ export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
     braintreePayPalCheckoutInstance?: BraintreePayPalCheckout;
-    dispatch: React.Dispatch<ScriptReducerAction>;
+    dispatch?: React.Dispatch<ScriptReducerAction>;
 }
 
 export interface ScriptContextDerivedState

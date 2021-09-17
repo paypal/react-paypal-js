@@ -93,7 +93,7 @@ describe("PayPalHostedFieldsForm", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should throw an Error about missing HostedFields in paypal SDK because hosted-fields isn't imported in components", () => {
+    test("should throw an Error about missing HostedFields in paypal SDK because hosted-fields isn't imported in components", async () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();
@@ -128,24 +128,26 @@ describe("PayPalHostedFieldsForm", () => {
             { wrapper }
         );
 
-        expect(onError.mock.calls[0][0].message).toEqual(
-            "Unable to render <HostedFields /> because window.paypal.HostedFields is undefined." +
-                "\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: " +
-                "<PayPalScriptProvider options={{ components: ',hosted-fields'}}>"
-        );
+        await waitFor(() => {
+            expect(onError.mock.calls[0][0].message).toEqual(
+                "Unable to render <HostedFields /> because window.paypal.HostedFields is undefined." +
+                    "\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: " +
+                    "<PayPalScriptProvider options={{ components: ',hosted-fields'}}>"
+            );
+        });
         spyConsoleError.mockRestore();
     });
 
-    test("should return inmediatly when script provider isn't in a loaded state", async () => {
+    test("should return inmediatly when script provider is rejected", async () => {
         loadScript.mockRejectedValue(new Error("Unknown error"));
-        isEligible.mockReturnValue(false);
 
-        const { container } = render(
+        render(
             <PayPalScriptProvider
                 options={{
                     "client-id": "test-client",
                     currency: "USD",
                     intent: "authorize",
+                    components: "hosted-fields",
                     "data-client-token": "test-data-client-token",
                 }}
             >
@@ -170,7 +172,42 @@ describe("PayPalHostedFieldsForm", () => {
         await waitFor(() => {
             expect(loadScript).toBeCalled();
         });
-        expect(container.querySelector(".number")).toEqual(null);
+    });
+
+    test("should remove hostedfields components when unilegible", async () => {
+        isEligible.mockReturnValue(false);
+
+        const { container } = render(
+            <PayPalScriptProvider
+                options={{
+                    "client-id": "test-client",
+                    currency: "USD",
+                    intent: "authorize",
+                    components: "hosted-fields",
+                    "data-client-token": "test-data-client-token",
+                }}
+            >
+                <PayPalHostedFieldsForm>
+                    <PayPalHostedField
+                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                        options={{ selector: "number" }}
+                    />
+                    <PayPalHostedField
+                        hostedFieldType={
+                            PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
+                        }
+                        options={{ selector: "expiration" }}
+                    />
+                    <PayPalHostedField
+                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                        options={{ selector: "cvv" }}
+                    />
+                </PayPalHostedFieldsForm>
+            </PayPalScriptProvider>
+        );
+        await waitFor(() => {
+            expect(container.querySelector(".number")).toEqual(null);
+        });
         expect(container.querySelector(".expiration")).toEqual(null);
         expect(container.querySelector(".cvv")).toEqual(null);
     });

@@ -40,7 +40,10 @@ export function usePayPalScriptReducer(): [
             scriptContext.loadingStatus === SCRIPT_LOADING_STATE.REJECTED,
     };
 
-    return [derivedStatusContext, scriptContext.dispatch];
+    return [
+        derivedStatusContext,
+        scriptContext.dispatch as React.Dispatch<ScriptReducerAction>,
+    ];
 }
 
 /**
@@ -59,5 +62,8 @@ export function useScriptProviderContext(): [
         )
     );
 
-    return [scriptContext, scriptContext.dispatch];
+    return [
+        scriptContext,
+        scriptContext.dispatch as React.Dispatch<ScriptReducerAction>,
+    ];
 }
