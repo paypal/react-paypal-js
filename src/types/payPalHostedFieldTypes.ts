@@ -43,12 +43,12 @@ export interface DecoratedPayPalHostedFieldsComponent
     close(container: HTMLDivElement | null): void;
 }
 
-export interface PayPalHostedFieldProps {
+export type PayPalHostedFieldProps = {
+    [key: string]: string;
+} & {
     hostedFieldType: PAYPAL_HOSTED_FIELDS_TYPES;
     options: PayPalHostedFieldOptions;
-    classes?: string[];
-    style?: Record<string, string>;
-}
+};
 
 export interface PayPalHostedFieldsBillingAddressProps {
     show: boolean;

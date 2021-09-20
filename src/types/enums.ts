@@ -22,7 +22,7 @@ export enum SCRIPT_PROVIDER_DISPATCH_ACTION {
 }
 
 /**
- * Enum for the PayPalHostedFieldsForm context dispatch actions
+ * Enum for the PayPalHostedFieldsProvider context dispatch actions
  *
  * @enum {string}
  */

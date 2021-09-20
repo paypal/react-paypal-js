@@ -82,7 +82,7 @@ const notDuplicateChildren = (registerTypes: PAYPAL_HOSTED_FIELDS_TYPES[]) => {
 };
 
 /**
- * Validate the hosted fields children past to the PayPalHostedFieldsForm component
+ * Validate the hosted fields children past to the PayPalHostedFieldsProvider component
  * These are the rule:
  * 1- We need to find 3 default children type [[number, expiration, cvv]
  * 2- We cannot find duplicate children type

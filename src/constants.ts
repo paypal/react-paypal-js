@@ -30,5 +30,3 @@ export const HOSTED_FIELDS_CHILDREN_ERROR =
     "To use HostedFields you must use it with at least 3 children with types: [number, cvv, expirationDate] includes";
 export const HOSTED_FIELDS_DUPLICATE_CHILDREN_ERROR =
     "Cannot use duplicate HostedFields as children";
-export const HOSTED_FIELDS_CSS_URL =
-    "https://www.paypalobjects.com/webstatic/en_US/developer/docs/css/cardfields.css";

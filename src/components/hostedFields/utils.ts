@@ -1,8 +1,4 @@
-import {
-    DEFAULT_PAYPAL_NAMESPACE,
-    DATA_NAMESPACE,
-    HOSTED_FIELDS_CSS_URL,
-} from "../../constants";
+import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../../constants";
 import { getPayPalWindowNamespace } from "../../utils";
 
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types";
@@ -74,39 +70,6 @@ export const decorateHostedFields = (
             }
         },
     };
-};
-
-/**
- * Add HostedFields styles into the DOM
- *
- * @returns the link created and attached element
- */
-export const addHostedFieldStyles = (): HTMLLinkElement => {
-    const linkElement = document.createElement("link");
-    linkElement.setAttribute("rel", "stylesheet");
-    linkElement.setAttribute("type", "text/css");
-    linkElement.setAttribute("href", HOSTED_FIELDS_CSS_URL);
-
-    return document.head.appendChild(linkElement);
-};
-
-/**
- * Utility function to concat hosted fields component classNames.
- * Here we include the identifier to avoid using references
- * in the render process of the hosted fields
- *
- * @param classes      a list of classes
- * @param initialSpace add space at the beginning
- * @returns all the classes contact by space
- */
-export const concatClassName = (
-    classes: string[],
-    initialSpace = false
-): string => {
-    if ((classes?.length || 0) === 0) return "";
-    const joinedClasses = classes.join(" ");
-
-    return initialSpace ? ` ${joinedClasses}` : joinedClasses;
 };
 
 /**

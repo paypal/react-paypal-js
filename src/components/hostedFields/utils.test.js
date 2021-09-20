@@ -4,8 +4,6 @@ import { PayPalHostedField } from "./PayPalHostedField";
 import {
     throwMissingHostedFieldsError,
     decorateHostedFields,
-    addHostedFieldStyles,
-    concatClassName,
     generateHostedFieldsFromChildren,
 } from "./utils";
 import { DATA_NAMESPACE } from "../../constants";
@@ -111,40 +109,6 @@ describe("decorateHostedFields", () => {
             document.querySelector(`#${cardNumberIdentifier}`) instanceof
                 HTMLInputElement
         ).toBeFalsy();
-    });
-});
-
-describe("addHostedFieldStyles", () => {
-    test("should add style to the current page", () => {
-        const linkElement = addHostedFieldStyles();
-
-        expect(linkElement instanceof HTMLLinkElement).toBeTruthy();
-    });
-});
-
-describe("concatClassName", () => {
-    test("should return empty string when pass empty argument", () => {
-        const result = concatClassName();
-
-        expect(result).toEqual("");
-    });
-
-    test("should return empty string when pass empty array as argument", () => {
-        const result = concatClassName([]);
-
-        expect(result).toEqual("");
-    });
-
-    test("should concat classes array", () => {
-        const result = concatClassName(["a", "b"]);
-
-        expect(result).toEqual("a b");
-    });
-
-    test("should concat classes array with a space at the beginning", () => {
-        const result = concatClassName(["a", "b"], true);
-
-        expect(result).toEqual(" a b");
     });
 });
 

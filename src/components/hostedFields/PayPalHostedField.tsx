@@ -1,7 +1,6 @@
 import React from "react";
 import type { FC } from "react";
 
-import { concatClassName } from "./utils";
 import type { PayPalHostedFieldProps } from "../../types/payPalHostedFieldTypes";
 
 /**
@@ -12,15 +11,9 @@ import type { PayPalHostedFieldProps } from "../../types/payPalHostedFieldTypes"
  * @param param0
  * @returns
  */
+// @typescript-eslint/no-unused-vars
 export const PayPalHostedField: FC<PayPalHostedFieldProps> = ({
-    options,
-    classes = ["card_field"],
-    style = {},
-}) => {
-    return (
-        <div
-            className={`${options.selector}${concatClassName(classes, true)}`}
-            style={style}
-        />
-    );
-};
+    hostedFieldType, // eslint-disable-line @typescript-eslint/no-unused-vars
+    options, // eslint-disable-line @typescript-eslint/no-unused-vars
+    ...props
+}) => <div {...props} />;

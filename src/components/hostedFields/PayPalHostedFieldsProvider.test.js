@@ -4,7 +4,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { loadScript } from "@paypal/paypal-js";
 
 import { PayPalScriptProvider } from "../PayPalScriptProvider";
-import { PayPalHostedFieldsForm } from "./PayPalHostedFieldsForm";
+import { PayPalHostedFieldsProvider } from "./PayPalHostedFieldsProvider";
 import { PayPalHostedField } from "./PayPalHostedField";
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types/enums";
 
@@ -19,7 +19,7 @@ jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
 }));
 
-describe("PayPalHostedFieldsForm", () => {
+describe("PayPalHostedFieldsProvider", () => {
     const isEligible = jest.fn();
 
     beforeEach(() => {
@@ -44,7 +44,7 @@ describe("PayPalHostedFieldsForm", () => {
             .spyOn(console, "error")
             .mockImplementation();
 
-        render(<PayPalHostedFieldsForm />, { wrapper });
+        render(<PayPalHostedFieldsProvider />, { wrapper });
         expect(onError.mock.calls[0][0].message).toEqual(
             "usePayPalScriptReducer must be used within a PayPalScriptProvider"
         );
@@ -58,7 +58,7 @@ describe("PayPalHostedFieldsForm", () => {
 
         render(
             <PayPalScriptProvider>
-                <PayPalHostedFieldsForm />
+                <PayPalHostedFieldsProvider />
             </PayPalScriptProvider>,
             { wrapper }
         );
@@ -83,7 +83,7 @@ describe("PayPalHostedFieldsForm", () => {
                     "data-client-token": "test-data-client-token",
                 }}
             >
-                <PayPalHostedFieldsForm />
+                <PayPalHostedFieldsProvider />
             </PayPalScriptProvider>,
             { wrapper }
         );
@@ -108,7 +108,7 @@ describe("PayPalHostedFieldsForm", () => {
                     "data-client-token": "test-data-client-token",
                 }}
             >
-                <PayPalHostedFieldsForm>
+                <PayPalHostedFieldsProvider>
                     <PayPalHostedField
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
                         options={{ selector: "number" }}
@@ -123,7 +123,7 @@ describe("PayPalHostedFieldsForm", () => {
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
                         options={{ selector: "cvv" }}
                     />
-                </PayPalHostedFieldsForm>
+                </PayPalHostedFieldsProvider>
             </PayPalScriptProvider>,
             { wrapper }
         );
@@ -151,7 +151,7 @@ describe("PayPalHostedFieldsForm", () => {
                     "data-client-token": "test-data-client-token",
                 }}
             >
-                <PayPalHostedFieldsForm>
+                <PayPalHostedFieldsProvider>
                     <PayPalHostedField
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
                         options={{ selector: "number" }}
@@ -166,7 +166,7 @@ describe("PayPalHostedFieldsForm", () => {
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
                         options={{ selector: "cvv" }}
                     />
-                </PayPalHostedFieldsForm>
+                </PayPalHostedFieldsProvider>
             </PayPalScriptProvider>
         );
         await waitFor(() => {
@@ -187,7 +187,7 @@ describe("PayPalHostedFieldsForm", () => {
                     "data-client-token": "test-data-client-token",
                 }}
             >
-                <PayPalHostedFieldsForm>
+                <PayPalHostedFieldsProvider>
                     <PayPalHostedField
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
                         options={{ selector: "number" }}
@@ -202,7 +202,7 @@ describe("PayPalHostedFieldsForm", () => {
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
                         options={{ selector: "cvv" }}
                     />
-                </PayPalHostedFieldsForm>
+                </PayPalHostedFieldsProvider>
             </PayPalScriptProvider>
         );
         await waitFor(() => {
@@ -229,7 +229,7 @@ describe("PayPalHostedFieldsForm", () => {
                     "data-client-token": "test-data-client-token",
                 }}
             >
-                <PayPalHostedFieldsForm>
+                <PayPalHostedFieldsProvider>
                     <PayPalHostedField
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
                         options={{ selector: "number" }}
@@ -244,14 +244,14 @@ describe("PayPalHostedFieldsForm", () => {
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
                         options={{ selector: "cvv" }}
                     />
-                </PayPalHostedFieldsForm>
+                </PayPalHostedFieldsProvider>
             </PayPalScriptProvider>,
             { wrapper }
         );
 
         await waitFor(() => {
             expect(onError.mock.calls[0][0].message).toEqual(
-                "Failed to render <PayPalHostedFieldsForm /> component. Error: Failing rendering hostedFields"
+                "Failed to render <PayPalHostedFieldsProvider /> component. Error: Failing rendering hostedFields"
             );
         });
         spyConsoleError.mockRestore();
@@ -267,24 +267,28 @@ describe("PayPalHostedFieldsForm", () => {
                     "data-client-token": "test-data-client-token",
                 }}
             >
-                <PayPalHostedFieldsForm>
+                <PayPalHostedFieldsProvider>
                     <PayPalHostedField
+                        className="number"
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                        options={{ selector: "number" }}
+                        options={{ selector: ".number" }}
                     />
                     <PayPalHostedField
+                        className="expiration"
                         hostedFieldType={
                             PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
                         }
-                        options={{ selector: "expiration" }}
+                        options={{ selector: ".expiration" }}
                     />
                     <PayPalHostedField
+                        className="cvv"
                         hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                        options={{ selector: "cvv" }}
+                        options={{ selector: ".cvv" }}
                     />
-                </PayPalHostedFieldsForm>
+                </PayPalHostedFieldsProvider>
             </PayPalScriptProvider>
         );
+
         await waitFor(() => {
             expect(window.paypal.HostedFields.render).toBeCalled();
         });
