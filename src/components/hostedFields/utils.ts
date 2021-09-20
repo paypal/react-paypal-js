@@ -129,7 +129,7 @@ export const generateHostedFieldsFromChildren = (
             Object.values(PAYPAL_HOSTED_FIELDS_TYPES).includes(hostedFieldType)
         ) {
             fields[hostedFieldType] = {
-                selector: `${options.selector}`, // FIXME: support any kind of selector
+                selector: options.selector,
                 placeholder: options.placeholder,
                 type: options.type,
                 formatInput: options.formatInput,

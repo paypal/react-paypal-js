@@ -163,23 +163,23 @@ describe("generateHostedFieldsFromChildren", () => {
         ).toEqual({});
     });
 
-    test("should return empty object when children argument doesn't have PayPalHostedField components", () => {
+    test("should return teh PayPalHostedField children components", () => {
         expect(
             generateHostedFieldsFromChildren([
                 <PayPalHostedField
                     key="0"
                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                    options={{ selector: "car-number" }}
+                    options={{ selector: ".car-number" }}
                 />,
                 <PayPalHostedField
                     key="1"
                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
-                    options={{ selector: "expiration" }}
+                    options={{ selector: ".expiration" }}
                 />,
                 <PayPalHostedField
                     key="2"
                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                    options={{ selector: "cvv" }}
+                    options={{ selector: ".cvv" }}
                 />,
             ])
         ).toMatchObject({
