@@ -24,15 +24,6 @@ import {
 } from "../../types/enums";
 import type { PayPalHostedFieldsComponentProps } from "../../types/payPalHostedFieldTypes";
 
-const defaultStyle = {
-    ".valid": {
-        color: "#28A745",
-    },
-    ".invalid": {
-        color: "#DC3545",
-    },
-};
-
 /**
  * TODO: Finish the documentation similar to PayPalButtons
  *
@@ -40,7 +31,7 @@ const defaultStyle = {
  * @returns
  */
 export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
-    ({ styles = defaultStyle, createOrder, children }) => {
+    ({ styles, createOrder, children }) => {
         const childrenList = Children.toArray(children);
         const [{ options, loadingStatus }] = useScriptProviderContext();
         const [state, dispatch] = useReducer(payPalHostedFieldsReducer, {});
