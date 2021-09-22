@@ -207,6 +207,91 @@ export default function App() {
 
 Checkout the docs page for the [BraintreePayPalButtons](https://paypal.github.io/react-paypal-js/?path=/docs/example-braintreepaypalbuttons--default) to learn more about the available props.
 
+### PayPalHostedFields
+
+The Braintree hosted field SDK can be used with the PayPal JS SDK to render hosted fields to create custom secure payment UIs. Read more about this integration in the [Braintree PayPal client-side integration docs](https://developer.paypal.com/braintree/docs/guides/hosted-fields/overview). To integrate your hosted fields in your site you need to use two components. The parent `<PayPalHostedFieldsProvider />`and the `<PayPalHostedField>` children. The first one is similar to the `<PayPalScripProvider>` if you are familiar with that component.
+Below you can see an example:
+
+```jsx
+import {
+    PayPalScriptProvider,
+    PayPalHostedFieldsProvider,
+    PayPalHostedField,
+} from "@paypal/react-paypal-js";
+
+export default function App() {
+    return (
+        <PayPalScriptProvider
+            options={{
+                "client-id": "your-client-id",
+                "data-client-token": "your-data-client-token",
+            }}
+        >
+            <PayPalHostedFieldsProvider
+                createOrder={() => {
+                    // here define the call to create and order
+                    return Promise.resolve(orderId);
+                }}
+            >
+                <PayPalHostedField
+                    id="card-number"
+                    hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                    options={{ selector: "#card-number" }}
+                />
+                <PayPalHostedField
+                    id="cvv"
+                    hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                    options={{ selector: "#cvv" }}
+                />
+                <PayPalHostedField
+                    id="expiration-date"
+                    hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
+                    options={{
+                        selector: "#expiration-date",
+                        placeholder: "MM/YY",
+                    }}
+                />
+            </PayPalHostedFieldsProvider>
+        </PayPalScriptProvider>
+    );
+}
+```
+
+Notice you need to wrap the `<PayPalHostedFieldsProvider />` component with the `<PayPalScriptProvider />` in the say way we use the PayPal buttons. It is required to define three `<PayPalHostedField />` children or more. One to represent the number card, second to represent the CVV code in the card and third the expiration date. These are required fields, if some of them is missing the component will fail to render the UI.
+
+The expiration date can be represent by a unique field with a `MM/YYYY` format for example or can be define with two separate fields, one to introduce the month and other to introduce the year.
+Below you can find an example with expiration date separate in two fields:
+
+```jsx
+<PayPalHostedFieldsProvider
+    createOrder={() => {
+        // here define the call to create and order
+        return Promise.resolve(orderId);
+    }}
+>
+    <PayPalHostedField
+        id="card-number"
+        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+        options={{ selector: "#card-number" }}
+    />
+    <PayPalHostedField
+        id="cvv"
+        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+        options={{ selector: "#cvv" }}
+    />
+    <PayPalHostedField
+        id="expiration-month"
+        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH}
+        options={{ selector: "#expiration-month", placeholder: "MM" }}
+    />
+    <PayPalHostedField
+        id="expiration-year"
+        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR}
+        options={{ selector: "#expiration-year", placeholder: "YYYY" }}
+    />
+</PayPalHostedFieldsProvider>
+```
+
 ### Browser Support
 
 This library supports all popular browsers, including IE 11. It provides the same browser support as the JS SDK. Here's the [full list of supported browsers](https://developer.paypal.com/docs/business/checkout/reference/browser-support/#supported-browsers-by-platform).
