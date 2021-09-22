@@ -130,7 +130,7 @@ describe("PayPalHostedFieldsProvider", () => {
 
         await waitFor(() => {
             expect(onError.mock.calls[0][0].message).toEqual(
-                "Unable to render <HostedFields /> because window.paypal.HostedFields is undefined." +
+                "Unable to render <PayPalHostedFieldsProvider /> because window.paypal.HostedFields is undefined." +
                     "\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: " +
                     "<PayPalScriptProvider options={{ components: ',hosted-fields'}}>"
             );

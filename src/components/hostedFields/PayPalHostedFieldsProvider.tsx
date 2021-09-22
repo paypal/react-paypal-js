@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, Children } from "react";
+import React, {
+    useState,
+    useEffect,
+    useRef,
+    Children,
+    isValidElement,
+} from "react";
 import type { FC } from "react";
 
 import { PayPalHostedFieldsContext } from "../../context/payPalHostedFieldsContext";

@@ -2,30 +2,28 @@ import React, { useState, useEffect, ReactElement } from "react";
 import type { FC } from "react";
 
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
-import type {
-    CreateOrderBraintreeActions,
-    OnApproveBraintreeActions,
-    OnApproveBraintreeData,
-} from "../types";
 
-import { PayPalScriptProvider, BraintreePayPalButtons } from "../index";
+import {
+    PayPalScriptProvider,
+    PayPalHostedFieldsProvider,
+    PayPalHostedField,
+    PAYPAL_HOSTED_FIELDS_TYPES,
+} from "../index";
 import {
     getOptionsFromQueryString,
     generateRandomString,
     getClientToken,
-    approveSale,
 } from "./utils";
 
-const AMOUNT = "10.0";
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
-    components: "buttons",
+    components: "hosted-fields",
     ...getOptionsFromQueryString(),
 };
 
 export default {
-    title: "Example/BraintreePayPalButtons",
-    component: BraintreePayPalButtons,
+    title: "Example/PayPalHostedFields",
+    component: PayPalHostedFieldsProvider,
     argTypes: {
         style: { control: null },
     },
@@ -40,7 +38,6 @@ export default {
             // Workaround to render the story after got the client token,
             // The new experimental loaders doesn't work in Docs views
             const [clientToken, setClientToken] = useState<string | null>(null);
-
             const uid = generateRandomString();
 
             useEffect(() => {
@@ -73,41 +70,26 @@ export default {
 
 export const Default: FC = () => {
     return (
-        <BraintreePayPalButtons
-            createOrder={(
-                data: Record<string, unknown>,
-                actions: CreateOrderBraintreeActions
-            ) =>
-                actions.braintree.createPayment({
-                    flow: "checkout",
-                    amount: AMOUNT,
-                    currency: "USD",
-                    intent: "capture",
-                    enableShippingAddress: true,
-                    shippingAddressEditable: false,
-                    shippingAddressOverride: {
-                        recipientName: "Scruff McGruff",
-                        line1: "1234 Main St.",
-                        line2: "Unit 1",
-                        city: "Chicago",
-                        countryCode: "US",
-                        postalCode: "60652",
-                        state: "IL",
-                        phone: "123.456.7890",
-                    },
-                })
-            }
-            onApprove={(
-                data: OnApproveBraintreeData,
-                actions: OnApproveBraintreeActions
-            ) =>
-                actions.braintree.tokenizePayment(data).then((payload) => {
-                    approveSale(payload.nonce, AMOUNT).then((data) => {
-                        alert(JSON.stringify(data));
-                        // Call server-side endpoint to finish the sale
-                    });
-                })
-            }
-        />
+        <PayPalHostedFieldsProvider
+            createOrder={() => {
+                return Promise.resolve("76536453");
+            }}
+        >
+            <PayPalHostedField
+                id="card-number"
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                options={{ selector: "#card-number" }}
+            />
+            <PayPalHostedField
+                id="cvv"
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                options={{ selector: "#cvv" }}
+            />
+            <PayPalHostedField
+                id="expiration-date"
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
+                options={{ selector: "#expiration-date" }}
+            />
+        </PayPalHostedFieldsProvider>
     );
 };
