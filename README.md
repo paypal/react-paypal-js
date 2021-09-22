@@ -207,9 +207,11 @@ export default function App() {
 
 Checkout the docs page for the [BraintreePayPalButtons](https://paypal.github.io/react-paypal-js/?path=/docs/example-braintreepaypalbuttons--default) to learn more about the available props.
 
-### PayPalHostedFields
+### PayPal Hosted Fields
 
-The Braintree hosted field SDK can be used with the PayPal JS SDK to render hosted fields to create custom secure payment UIs. Read more about this integration in the [Braintree PayPal client-side integration docs](https://developer.paypal.com/braintree/docs/guides/hosted-fields/overview). To integrate your hosted fields in your site you need to use two components. The parent `<PayPalHostedFieldsProvider />`and the `<PayPalHostedField>` children. The first one is similar to the `<PayPalScripProvider>` if you are familiar with that component.
+The Braintree hosted field SDK can be used with the PayPal JS SDK to render hosted fields to create custom secure payment UIs. Read more about this integration in the [Braintree PayPal client-side integration docs](https://developer.paypal.com/braintree/docs/guides/hosted-fields/overview).
+
+To integrate your hosted fields in your site you need to use two components. The parent `<PayPalHostedFieldsProvider />`and the `<PayPalHostedField>` children. The first one is similar to the `<PayPalScripProvider>` if you are familiar with that component.
 Below you can see an example:
 
 ```jsx
@@ -257,10 +259,10 @@ export default function App() {
 }
 ```
 
-Notice you need to wrap the `<PayPalHostedFieldsProvider />` component with the `<PayPalScriptProvider />` in the say way we use the PayPal buttons. It is required to define three `<PayPalHostedField />` children or more. One to represent the number card, second to represent the CVV code in the card and third the expiration date. These are required fields, if some of them is missing the component will fail to render the UI.
+Notice you need to wrap the `<PayPalHostedFieldsProvider />` component with the `<PayPalScriptProvider />` in the say way we use the PayPal buttons. It is required to define three `<PayPalHostedField />` children or more. One to represent the number card, second to represent the CVV code in the card and third the expiration date. These are required fields, if some of them is missing the component will fail to render the fields.
 
-The expiration date can be represent by a unique field with a `MM/YYYY` format for example or can be define with two separate fields, one to introduce the month and other to introduce the year.
-Below you can find an example with expiration date separate in two fields:
+The expiration date can be represent by a unique field with a custom format `MM/YYYY` for example, or can be define using two separate fields. One to introduce the month and other to introduce the year.
+Below you can find an example:
 
 ```jsx
 <PayPalHostedFieldsProvider
