@@ -84,4 +84,5 @@ export interface PayPalHostedFieldsComponentProps {
     createOrder: () => Promise<string>;
     children: ReactNode;
     styles?: Record<string, unknown>;
+    notEligibleError?: ReactNode;
 }

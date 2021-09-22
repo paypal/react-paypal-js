@@ -1,10 +1,4 @@
-import React, {
-    useState,
-    useEffect,
-    useRef,
-    Children,
-    isValidElement,
-} from "react";
+import React, { useState, useEffect, useRef, Children } from "react";
 import type { FC } from "react";
 
 import { PayPalHostedFieldsContext } from "../../context/payPalHostedFieldsContext";
@@ -26,7 +20,7 @@ import type { HostedFieldsHandler } from "@paypal/paypal-js/types/components/hos
  * @returns
  */
 export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
-    ({ styles, createOrder, children }) => {
+    ({ styles, createOrder, notEligibleError, children }) => {
         const childrenList = Children.toArray(children);
         const [{ options, loadingStatus }] = useScriptProviderContext();
         const [cardFields, setCardFields] =
@@ -72,10 +66,12 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
 
         return (
             <div ref={hostedFieldsContainerRef}>
-                {isEligible && (
+                {isEligible ? (
                     <PayPalHostedFieldsContext.Provider value={cardFields}>
                         {children}
                     </PayPalHostedFieldsContext.Provider>
+                ) : (
+                    notEligibleError
                 )}
             </div>
         );

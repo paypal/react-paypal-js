@@ -21,6 +21,10 @@ const scriptProviderOptions: PayPalScriptOptions = {
     ...getOptionsFromQueryString(),
 };
 
+const NotEligibleError = () => (
+    <h3>Your client is not able to use hosted fields</h3>
+);
+
 export default {
     title: "Example/PayPalHostedFields",
     component: PayPalHostedFieldsProvider,
@@ -74,6 +78,7 @@ export const Default: FC = () => {
             createOrder={() => {
                 return Promise.resolve("76536453");
             }}
+            notEligibleError={<NotEligibleError />}
         >
             <PayPalHostedField
                 id="card-number"
