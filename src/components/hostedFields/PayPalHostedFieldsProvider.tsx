@@ -1,16 +1,7 @@
-import React, {
-    useState,
-    useEffect,
-    useRef,
-    useReducer,
-    Children,
-} from "react";
+import React, { useState, useEffect, useRef, Children } from "react";
 import type { FC } from "react";
 
-import {
-    PayPalHostedFieldsContext,
-    payPalHostedFieldsReducer,
-} from "../../context/payPalHostedFieldsContext";
+import { PayPalHostedFieldsContext } from "../../context/payPalHostedFieldsContext";
 import { useScriptProviderContext } from "../../hooks/scriptProviderHooks";
 import { DATA_NAMESPACE } from "../../constants";
 import {
@@ -18,11 +9,9 @@ import {
     generateHostedFieldsFromChildren,
 } from "./utils";
 import { validateHostedFieldChildren } from "./validators";
-import {
-    PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION,
-    SCRIPT_LOADING_STATE,
-} from "../../types/enums";
+import { SCRIPT_LOADING_STATE } from "../../types/enums";
 import type { PayPalHostedFieldsComponentProps } from "../../types/payPalHostedFieldTypes";
+import type { HostedFieldsHandler } from "@paypal/paypal-js/types/components/hosted-fields";
 
 /**
  * TODO: Finish the documentation similar to PayPalButtons
@@ -34,7 +23,8 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
     ({ styles, createOrder, children }) => {
         const childrenList = Children.toArray(children);
         const [{ options, loadingStatus }] = useScriptProviderContext();
-        const [state, dispatch] = useReducer(payPalHostedFieldsReducer, {}); // OPTIMIZE: Should we use useStateHook to store a simple value or keep open this context to store more things in the future
+        const [cardFields, setCardFields] =
+            useState<HostedFieldsHandler | null>(null);
         const [isEligible, setIsEligible] = useState(true);
         const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
         const [, setErrorState] = useState(null);
@@ -63,10 +53,7 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
                     fields: generateHostedFieldsFromChildren(childrenList),
                 })
                 .then((cardFields) => {
-                    dispatch({
-                        type: PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS,
-                        value: cardFields,
-                    });
+                    setCardFields(cardFields);
                 })
                 .catch((err) => {
                     setErrorState(() => {
@@ -80,9 +67,7 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
         return (
             <div ref={hostedFieldsContainerRef}>
                 {isEligible && (
-                    <PayPalHostedFieldsContext.Provider
-                        value={{ ...state, dispatch }}
-                    >
+                    <PayPalHostedFieldsContext.Provider value={cardFields}>
                         {children}
                     </PayPalHostedFieldsContext.Provider>
                 )}

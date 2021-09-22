@@ -30,3 +30,9 @@ export const HOSTED_FIELDS_CHILDREN_ERROR =
     "To use HostedFields you must use it with at least 3 children with types: [number, cvv, expirationDate] includes";
 export const HOSTED_FIELDS_DUPLICATE_CHILDREN_ERROR =
     "Cannot use duplicate HostedFields as children";
+
+/*******************
+ * Script Provider *
+ *******************/
+export const SCRIPT_PROVIDER_REDUCER_ERROR =
+    "usePayPalScriptReducer must be used within a PayPalScriptProvider";

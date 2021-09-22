@@ -22,15 +22,6 @@ export enum SCRIPT_PROVIDER_DISPATCH_ACTION {
 }
 
 /**
- * Enum for the PayPalHostedFieldsProvider context dispatch actions
- *
- * @enum {string}
- */
-export enum PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION {
-    SET_CARD_FIELDS = "setLoadingStatus",
-}
-
-/**
  * Enum for all the available hosted fields
  *
  * @enum {string}

@@ -1,36 +1,15 @@
 import { useContext } from "react";
 
 import { PayPalHostedFieldsContext } from "../context/payPalHostedFieldsContext";
-import { contextNotEmptyValidator } from "./contextValidator";
-import type {
-    PayPalHostedFieldsContextState,
-    PayPalHostedFieldsAction,
-} from "../types/payPalHostedFieldTypes";
 import type { HostedFieldsHandler } from "@paypal/paypal-js/types/components/hosted-fields";
 
 /**
- * Custom hook to get access to the PayPal Hosted Fields context
+ * Custom hook to get access to the PayPal Hosted Fields instance.
+ * The instance represent the returned object after the render process
+ * With this object a user can submit the fields and dynamically modify the cards
  *
- * @returns the latest state of the context
+ * @returns the hosted fields instance if is available in the component
  */
-export function usePayPalHostedFieldsContext(): [
-    PayPalHostedFieldsContextState,
-    React.Dispatch<PayPalHostedFieldsAction>
-] {
-    const payPalHostedFieldsContext =
-        contextNotEmptyValidator<PayPalHostedFieldsContextState>(
-            useContext(PayPalHostedFieldsContext),
-            "usePayPalHostedFieldsContext"
-        );
-
-    return [
-        payPalHostedFieldsContext,
-        payPalHostedFieldsContext.dispatch as React.Dispatch<PayPalHostedFieldsAction>,
-    ];
-}
-
-export function usePayPalHostedFields(): HostedFieldsHandler | undefined {
-    const [payPalHostedFieldsContext] = usePayPalHostedFieldsContext();
-
-    return payPalHostedFieldsContext.cardFields;
+export function usePayPalHostedFields(): HostedFieldsHandler | null {
+    return useContext(PayPalHostedFieldsContext);
 }

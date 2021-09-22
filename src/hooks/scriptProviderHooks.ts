@@ -12,8 +12,6 @@ import type {
 } from "../types";
 import { SCRIPT_LOADING_STATE } from "../types";
 
-const hookName = "usePayPalScriptReducer";
-
 /**
  * Custom hook to get access to the Script context and
  * dispatch actions to modify the state on the {@link ScriptProvider} component
@@ -25,10 +23,7 @@ export function usePayPalScriptReducer(): [
     ScriptContextDerivedState,
     React.Dispatch<ScriptReducerAction>
 ] {
-    const scriptContext = contextNotEmptyValidator<ScriptContextState>(
-        useContext(ScriptContext),
-        hookName
-    );
+    const scriptContext = contextNotEmptyValidator(useContext(ScriptContext));
 
     const derivedStatusContext = {
         ...scriptContext,
@@ -56,10 +51,7 @@ export function useScriptProviderContext(): [
     React.Dispatch<ScriptReducerAction>
 ] {
     const scriptContext = contextOptionClientTokenNotEmptyValidator(
-        contextNotEmptyValidator<ScriptContextState>(
-            useContext(ScriptContext),
-            hookName
-        )
+        contextNotEmptyValidator(useContext(ScriptContext))
     );
 
     return [

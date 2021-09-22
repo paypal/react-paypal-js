@@ -1,13 +1,7 @@
-import type {
-    HostedFieldsHandler,
-    PayPalHostedFieldsComponent,
-} from "@paypal/paypal-js/types/components/hosted-fields";
+import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
 import type { ReactNode } from "react";
 
-import {
-    PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION,
-    PAYPAL_HOSTED_FIELDS_TYPES,
-} from "./enums";
+import { PAYPAL_HOSTED_FIELDS_TYPES } from "./enums";
 
 export type PayPalHostedFieldsNamespace = {
     components: string | undefined;
@@ -90,14 +84,4 @@ export interface PayPalHostedFieldsComponentProps {
     createOrder: () => Promise<string>;
     children: ReactNode;
     styles?: Record<string, unknown>;
-}
-
-export type PayPalHostedFieldsAction = {
-    type: `${PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS}`;
-    value: HostedFieldsHandler;
-};
-
-export interface PayPalHostedFieldsContextState {
-    cardFields?: HostedFieldsHandler;
-    dispatch?: React.Dispatch<PayPalHostedFieldsAction>;
 }

@@ -1,35 +1,7 @@
 import { createContext } from "react";
 
-import { PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION } from "../types/enums";
-import type {
-    PayPalHostedFieldsContextState,
-    PayPalHostedFieldsAction,
-} from "../types/payPalHostedFieldTypes";
+import type { HostedFieldsHandler } from "@paypal/paypal-js/types/components/hosted-fields";
 
-/**
- * Reducer function to handle state related to PayPal hosted fields
- *
- * @param state  the current state on the context object
- * @param action the action to be executed on the previous state
- * @returns a the same state if the action wasn't found, or a new state otherwise
- */
-export function payPalHostedFieldsReducer(
-    state: PayPalHostedFieldsContextState,
-    action: PayPalHostedFieldsAction
-): PayPalHostedFieldsContextState {
-    switch (action.type) {
-        case PAYPAL_HOSTED_FIELDS_DISPATCH_ACTION.SET_CARD_FIELDS:
-            return {
-                ...state,
-                cardFields: action.value,
-            };
-
-        default: {
-            return state;
-        }
-    }
-}
-
-// Create the React context to use in the script provider component
+// Create the React context to use in the PayPal hosted fields provider
 export const PayPalHostedFieldsContext =
-    createContext<PayPalHostedFieldsContextState | null>(null);
+    createContext<HostedFieldsHandler | null>(null);
