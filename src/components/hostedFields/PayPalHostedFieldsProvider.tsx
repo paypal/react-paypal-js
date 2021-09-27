@@ -10,7 +10,10 @@ import {
 } from "./utils";
 import { validateHostedFieldChildren } from "./validators";
 import { SCRIPT_LOADING_STATE } from "../../types/enums";
-import type { PayPalHostedFieldsComponentProps } from "../../types/payPalHostedFieldTypes";
+import type {
+    PayPalHostedFieldsComponentProps,
+    DecoratedPayPalHostedFieldsComponent,
+} from "../../types/payPalHostedFieldTypes";
 import type { HostedFieldsHandler } from "@paypal/paypal-js/types/components/hosted-fields";
 
 /**
@@ -27,6 +30,8 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
             useState<HostedFieldsHandler | null>(null);
         const [isEligible, setIsEligible] = useState(true);
         const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
+        const hostedFields =
+            useRef<DecoratedPayPalHostedFieldsComponent | null>(null);
         const [, setErrorState] = useState(null);
 
         useEffect(() => {
@@ -36,16 +41,19 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
         useEffect(() => {
             // Only render the hosted fields when script is loaded and hostedFields is eligible
             if (!(loadingStatus === SCRIPT_LOADING_STATE.RESOLVED)) return;
-            const hostedFields = decorateHostedFields({
-                components: options.components,
-                [DATA_NAMESPACE]: options[DATA_NAMESPACE],
-            });
-
-            if (!hostedFields.isEligible()) {
+            // Get the hosted fields from the [window.paypal.HostedFields] SDK
+            if (!hostedFields.current) {
+                // Set HostedFields SDK in the mount process only
+                hostedFields.current = decorateHostedFields({
+                    components: options.components,
+                    [DATA_NAMESPACE]: options[DATA_NAMESPACE],
+                });
+            }
+            if (!hostedFields.current.isEligible()) {
                 return setIsEligible(false);
             }
 
-            hostedFields
+            hostedFields.current
                 .render({
                     // Call your server to set up the transaction
                     createOrder: createOrder,
@@ -62,6 +70,7 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
                         );
                     });
                 });
+            return hostedFields.current.close(hostedFieldsContainerRef.current);
         }, [loadingStatus, styles]); // eslint-disable-line react-hooks/exhaustive-deps
 
         return (

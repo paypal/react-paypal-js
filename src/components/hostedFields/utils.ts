@@ -17,6 +17,10 @@ import type {
     PayPalHostedFieldOptions,
 } from "../../types/payPalHostedFieldTypes";
 
+// This represent the children to remove manually inside the PayPalHostedFieldsProvider
+// The HostedFields SDK manually insert and iframe and a div for each declared field
+const hostedFieldsChildrenSelector = "iframe, div[style='clear: both;']";
+
 // Define the type of the fields object use in the HostedFields.render options
 type PayPalHostedFieldOption = {
     [key in PAYPAL_HOSTED_FIELDS_TYPES]?: PayPalHostedFieldOptions;
@@ -62,9 +66,9 @@ export const decorateHostedFields = (
 
     return {
         ...(hostedFields as PayPalHostedFieldsComponent),
-        close(container) {
+        close(container, selectors = hostedFieldsChildrenSelector) {
             if (container) {
-                container.querySelectorAll("*").forEach((element) => {
+                container.querySelectorAll(selectors).forEach((element) => {
                     element.remove();
                 });
             }

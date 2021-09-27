@@ -81,11 +81,18 @@ describe("decorateHostedFields", () => {
         divElement.setAttribute("id", divIdentifier);
         document.body.appendChild(divElement);
         // Define a car number element inside the container
-        const cardNumberIdentifier = "test-hosted-field-card_number";
-        const cardNumberInput = document.createElement("input");
+        const cardNumberIdentifier = "test-hosted-field-card-number";
+        const spaceDivIdentifier = "test-hosted-field-space-div";
+        const cardNumberIframe = document.createElement("iframe");
+        const spaceDiv = document.createElement("div");
 
-        cardNumberInput.setAttribute("id", cardNumberIdentifier);
-        divElement.appendChild(cardNumberInput);
+        cardNumberIframe.setAttribute("id", cardNumberIdentifier);
+        spaceDiv.setAttribute("id", spaceDivIdentifier);
+        spaceDiv.style.clear = "both";
+
+        // Append children
+        divElement.appendChild(cardNumberIframe);
+        divElement.appendChild(spaceDiv);
         const decoratedHostedFields = decorateHostedFields({});
 
         expect(
@@ -94,20 +101,28 @@ describe("decorateHostedFields", () => {
         ).toBeTruthy();
         expect(
             document.querySelector(`#${cardNumberIdentifier}`) instanceof
-                HTMLInputElement
+                HTMLIFrameElement
         ).toBeTruthy();
 
         // Shouldn't remove anything if argument is null|undefined
         decoratedHostedFields.close();
         expect(
             document.querySelector(`#${cardNumberIdentifier}`) instanceof
-                HTMLInputElement
+                HTMLIFrameElement
+        ).toBeTruthy();
+        expect(
+            document.querySelector(`#${spaceDivIdentifier}`) instanceof
+                HTMLDivElement
         ).toBeTruthy();
         // Should remove children inside the container pass as argument
         decoratedHostedFields.close(divElement);
         expect(
             document.querySelector(`#${cardNumberIdentifier}`) instanceof
-                HTMLInputElement
+                HTMLIFrameElement
+        ).toBeFalsy();
+        expect(
+            document.querySelector(`#${spaceDivIdentifier}`) instanceof
+                HTMLDivElement
         ).toBeFalsy();
     });
 });
