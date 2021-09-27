@@ -53,7 +53,12 @@ const SubmitPayment = () => {
                 })
                 .then((data) => {
                     console.log("orderId: ", data.orderId);
-                    fetch(captureOrderUrl(data.orderId))
+                    fetch(captureOrderUrl(data.orderId), {
+                        method: "post",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    })
                         .then((response) => response.json())
                         .then((data) => {
                             alert(JSON.stringify(data));
@@ -141,7 +146,23 @@ export const Default: FC = () => {
     return (
         <PayPalHostedFieldsProvider
             createOrder={() =>
-                fetch(CREATE_ORDER_URL)
+                fetch(CREATE_ORDER_URL, {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        purchase_units: [
+                            {
+                                amount: {
+                                    value: 50,
+                                    currency_code: "USD",
+                                },
+                            },
+                        ],
+                        intent: "CAPTURE",
+                    }),
+                })
                     .then((response) => response.json())
                     .then((order) => order.id)
                     .catch((err) => {
