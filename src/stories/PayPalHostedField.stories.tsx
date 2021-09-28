@@ -37,12 +37,16 @@ function captureOrderUrl(orderId: string): string {
     return `${HEROKU_SERVER}/api/paypal/checkout/orders/${orderId}/capture`;
 }
 
-// Component to show the client isn't eligible to use hosted fields
+/**
+ * Functional component to render a custom ineligible error UI
+ */
 const NotEligibleError = () => (
     <h3>Your client is not able to use hosted fields</h3>
 );
 
-// Component to manually handle the submit process
+/**
+ * Functional component to submit the hosted fields form
+ */
 const SubmitPayment = () => {
     const [paying, setPaying] = useState(false);
     const cardHolderName = useRef<HTMLInputElement>(null);
