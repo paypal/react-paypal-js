@@ -81,8 +81,28 @@ export interface PayPalHostedFieldsBillingAddress {
 }
 
 export interface PayPalHostedFieldsComponentProps {
+    /**
+     * Function to manually create the transaction from your server
+     */
     createOrder: () => Promise<string>;
     children: ReactNode;
+    /**
+     * Custom styles for hosted fields.
+     *
+     * ```
+     *   {
+     *     ".number": {
+     *       "fontFamily": "monospace"
+     *     },
+     *     ".valid": {
+     *       "color": "green"
+     *     }
+     *   }
+     * ```
+     */
     styles?: Record<string, unknown>;
+    /**
+     * Useful to render a custom error component in the case the client is ineligible
+     */
     notEligibleError?: ReactNode;
 }

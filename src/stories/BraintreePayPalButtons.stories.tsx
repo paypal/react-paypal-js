@@ -16,6 +16,7 @@ import {
     approveSale,
 } from "./utils";
 
+const uid = generateRandomString();
 const AMOUNT = "10.0";
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -40,8 +41,6 @@ export default {
             // Workaround to render the story after got the client token,
             // The new experimental loaders doesn't work in Docs views
             const [clientToken, setClientToken] = useState<string | null>(null);
-
-            const uid = generateRandomString();
 
             useEffect(() => {
                 (async () => {

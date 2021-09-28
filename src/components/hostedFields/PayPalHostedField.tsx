@@ -64,6 +64,9 @@ You can delete the last children component form the example above and use these:
         options={{ selector: "#expiration-year", placeholder: "YYYY" }} />
 ```
 
+Note: Take care using multiple instances of the Braintree PayPal Hosted Fields.
+In the case multiple instances are used in the same page with the same selector that will cause 
+a failure in the render process.
 */
 export const PayPalHostedField: FC<PayPalHostedFieldProps> = ({
     hostedFieldType, // eslint-disable-line @typescript-eslint/no-unused-vars

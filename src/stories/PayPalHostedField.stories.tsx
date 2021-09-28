@@ -14,10 +14,12 @@ import {
     getOptionsFromQueryString,
     generateRandomString,
     getClientToken,
+    HEROKU_SERVER,
 } from "./utils";
 
-const CREATE_ORDER_URL =
-    "https://braintree-sdk-demo.herokuapp.com/api/paypal/checkout/orders";
+const uid = generateRandomString();
+const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
+const CREATE_ORDER_URL = `${HEROKU_SERVER}/api/paypal/checkout/orders`;
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id":
         "AdOu-W3GPkrfuTbJNuW9dWVijxvhaXHFIRuKrLDwu14UDwTTHWMFkUwuu9D8I1MAQluERl9cFOd7Mfqe",
@@ -25,8 +27,14 @@ const scriptProviderOptions: PayPalScriptOptions = {
     ...getOptionsFromQueryString(),
 };
 
+/**
+ * Get dynamically the capture order URL to fetch the payment info
+ *
+ * @param orderId the order identifier
+ * @returns an URL string
+ */
 function captureOrderUrl(orderId: string): string {
-    return `https://braintree-sdk-demo.herokuapp.com/api/paypal/checkout/orders/${orderId}/capture`;
+    return `${HEROKU_SERVER}/api/paypal/checkout/orders/${orderId}/capture`;
 }
 
 // Component to show the client isn't eligible to use hosted fields
@@ -55,9 +63,6 @@ const SubmitPayment = () => {
                     console.log("orderId: ", data.orderId);
                     fetch(captureOrderUrl(data.orderId), {
                         method: "post",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
                     })
                         .then((response) => response.json())
                         .then((data) => {
@@ -65,13 +70,13 @@ const SubmitPayment = () => {
                         })
                         .catch((err) => {
                             alert(JSON.stringify(err));
+                        })
+                        .finally(() => {
+                            setPaying(false);
                         });
                 })
                 .catch((err) => {
                     alert(JSON.stringify(err));
-                })
-                .finally(() => {
-                    setPaying(false);
                 });
         }
     };
@@ -97,26 +102,16 @@ const SubmitPayment = () => {
 
 export default {
     title: "Example/PayPalHostedFields",
-    component: PayPalHostedFieldsProvider,
-    argTypes: {
-        style: { control: null },
-    },
-    args: {
-        // Storybook passes empty functions by default for props like `onShippingChange`.
-        // This turns on the `onShippingChange()` feature which uses the popup experience with the Standard Card button.
-        // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
-        onShippingChange: null,
-    },
+    component: PayPalHostedField,
     decorators: [
         (Story: FC): ReactElement => {
             // Workaround to render the story after got the client token,
             // The new experimental loaders doesn't work in Docs views
             const [clientToken, setClientToken] = useState<string | null>(null);
-            const uid = generateRandomString();
 
             useEffect(() => {
                 (async () => {
-                    setClientToken(await getClientToken());
+                    setClientToken(await getClientToken(TOKEN_URL));
                 })();
             }, []);
 
@@ -213,9 +208,23 @@ export const ExpirationDate: FC = () => {
     return (
         <PayPalHostedFieldsProvider
             createOrder={() =>
-                fetch(
-                    "https://braintree-sdk-demo.herokuapp.com/api/paypal/checkout/orders"
-                )
+                fetch(CREATE_ORDER_URL, {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        purchase_units: [
+                            {
+                                amount: {
+                                    value: 50,
+                                    currency_code: "USD",
+                                },
+                            },
+                        ],
+                        intent: "CAPTURE",
+                    }),
+                })
                     .then((response) => response.json())
                     .then((order) => order.id)
                     .catch((err) => {
@@ -229,35 +238,38 @@ export const ExpirationDate: FC = () => {
             }}
         >
             <PayPalHostedField
-                id="card-number"
+                id="card-number-1"
                 className="card_field"
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
                 options={{
-                    selector: "#card-number",
+                    selector: "#card-number-1",
                     placeholder: "4111 1111 1111 1111",
                 }}
             />
             <PayPalHostedField
-                id="cvv"
+                id="cvv-1"
                 className="card_field"
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
                 options={{
-                    selector: "#cvv",
+                    selector: "#cvv-1",
                     placeholder: "123",
                     maskInput: true,
                 }}
             />
             <PayPalHostedField
-                id="expiration-month"
+                id="expiration-month-1"
                 className="card_field"
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH}
-                options={{ selector: "#expiration-month", placeholder: "MM" }}
+                options={{ selector: "#expiration-month-1", placeholder: "MM" }}
             />
             <PayPalHostedField
-                id="expiration-year"
+                id="expiration-year-1"
                 className="card_field"
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR}
-                options={{ selector: "#expiration-year", placeholder: "YEAR" }}
+                options={{
+                    selector: "#expiration-year-1",
+                    placeholder: "YYYY",
+                }}
             />
             {/* Custom client component to handle hosted fields submit */}
             <SubmitPayment />
