@@ -22,7 +22,7 @@ const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id":
         "AdOu-W3GPkrfuTbJNuW9dWVijxvhaXHFIRuKrLDwu14UDwTTHWMFkUwuu9D8I1MAQluERl9cFOd7Mfqe",
-    components: "hosted-fields",
+    components: "buttons,hosted-fields",
     ...getOptionsFromQueryString(),
 };
 
@@ -65,7 +65,7 @@ export default {
 
             return (
                 <div style={{ minHeight: "200px" }}>
-                    {clientToken != null && (
+                    {clientToken && (
                         <>
                             <PayPalScriptProvider
                                 options={{
@@ -73,6 +73,7 @@ export default {
                                     "data-client-token": clientToken,
                                     "data-namespace": uid,
                                     "data-uid": uid,
+                                    debug: true,
                                 }}
                             >
                                 <Story />
