@@ -1,5 +1,5 @@
 import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
-import type { ReactNode } from "react";
+import type { ReactNode, HTMLAttributes } from "react";
 
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "./enums";
 
@@ -38,7 +38,7 @@ export interface DecoratedPayPalHostedFieldsComponent
     close(container: HTMLDivElement | null): void;
 }
 
-export interface PayPalHostedFieldProps {
+export interface PayPalHostedFieldProps extends HTMLAttributes<HTMLDivElement> {
     /**
      * Represent the hosted field type: [NUMBER, CVV, EXPIRATION_DATE, EXPIRATION_MONTH, EXPIRATION_YEAR, POSTAL_CODE]
      */
@@ -49,9 +49,7 @@ export interface PayPalHostedFieldProps {
      * Check available options in the this type:
      */
     options: PayPalHostedFieldOptions;
-    [key: string]: PayPalHostedFieldOptions | string;
 }
-
 export interface PayPalHostedFieldsBillingAddressProps {
     show: boolean;
     firstName?: { show: boolean; label: string; placeholder: string };
