@@ -112,16 +112,16 @@ export default {
             control: { type: "null" },
             type: { required: true },
             description: `<code>{<br>
-                <b>selector</b>: The string element selector (#id, .class). Represent the field identifier.<br>
-                <b>placeholder</b>: The placeholder of the field cvv->(300), expirationDate->(MM/YY).<br>
-                <b>type</b>: The type attribute of the input. To mask cvv input, for instance, type: "password" can be used.<br>
-                <b>formatInput</b>: Enable or disable automatic formatting on this field.<br>
-                <b>maskInput</b>: Enable or disable input masking when input is not focused.<br>If set to true instead of an object, the defaults for the maskInput parameters will be used.<br>
-                <b>select</b>: 
-                <b>maxlength</b>: This option applies only to the CVV and postal code fields.<br>Will be used as the maxlength attribute of the input if it is less than the default.<br>
-                <b>minlength</b>: This option applies only to the cvv and postal code fields.<br>Will be used as the minlength attribute of the input.<br>
-                <b>prefill</b>: A value to prefill the field with. For example, when creating an update card form,<br>you can prefill the expiration date fields with the old expiration date data.<br>
-                <b>rejectUnsupportedCards</b>: Only allow card types that your merchant account is able to process.<br>Unsupported card types will invalidate the card form.<br>
+                <b class="code-json">selector</b>: The string element selector (#id, .class). Represent the field identifier.<br>
+                <b class="code-json">placeholder</b>: The placeholder of the field cvv->(300), expirationDate->(MM/YY).<br>
+                <b class="code-json">type</b>: The type attribute of the input. To mask cvv input, for instance, type: "password" can be used.<br>
+                <b class="code-json">formatInput</b>: Enable or disable automatic formatting on this field.<br>
+                <b class="code-json">maskInput</b>: Enable or disable input masking when input is not focused.<br><span class="code-json">If set to true instead of an object, the defaults for the maskInput parameters will be used.</span><br>
+                <b class="code-json">select</b>: If truthy, this field becomes a select dropdown list.<br><span class="code-json">This can only be used for expirationMonth and expirationYear fields.</span><br><span class="code-json">If you do not use a placeholder property for the field,</span><br><span class="code-json">the current month/year will be the default selected value.</span><br>
+                <b class="code-json">maxlength</b>: This option applies only to the CVV and postal code fields.<br><span class="code-json">Will be used as the maxlength attribute of the input if it is less than the default.</span><br>
+                <b class="code-json">minlength</b>: This option applies only to the cvv and postal code fields.<br><span class="code-json">Will be used as the minlength attribute of the input.</span><br>
+                <b class="code-json">prefill</b>: A value to prefill the field with. For example, when creating an update card form,<br><span class="code-json">you can prefill the expiration date fields with the old expiration date data.<span><br>
+                <b class="code-json">rejectUnsupportedCards</b>: Only allow card types that your merchant account is able to process.<br><span class="code-json">Unsupported card types will invalidate the card form.</span><br>
             }</code>
             `,
             table: {
