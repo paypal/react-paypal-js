@@ -107,6 +107,28 @@ const SubmitPayment = () => {
 export default {
     title: "Example/PayPalHostedFields",
     component: PayPalHostedField,
+    argTypes: {
+        PayPalHostedFieldOptions: {
+            control: { type: "null" },
+            type: { required: true },
+            description: `<code>{<br>
+                <b>selector</b>: The string element selector (#id, .class). Represent the field identifier.<br>
+                <b>placeholder</b>: The placeholder of the field cvv->(300), expirationDate->(MM/YY).<br>
+                <b>type</b>: The type attribute of the input. To mask cvv input, for instance, type: "password" can be used.<br>
+                <b>formatInput</b>: Enable or disable automatic formatting on this field.<br>
+                <b>maskInput</b>: Enable or disable input masking when input is not focused.<br>If set to true instead of an object, the defaults for the maskInput parameters will be used.<br>
+                <b>select</b>: 
+                <b>maxlength</b>: This option applies only to the CVV and postal code fields.<br>Will be used as the maxlength attribute of the input if it is less than the default.<br>
+                <b>minlength</b>: This option applies only to the cvv and postal code fields.<br>Will be used as the minlength attribute of the input.<br>
+                <b>prefill</b>: A value to prefill the field with. For example, when creating an update card form,<br>you can prefill the expiration date fields with the old expiration date data.<br>
+                <b>rejectUnsupportedCards</b>: Only allow card types that your merchant account is able to process.<br>Unsupported card types will invalidate the card form.<br>
+            }</code>
+            `,
+            table: {
+                category: "Types",
+            },
+        },
+    },
     decorators: [
         (Story: FC): ReactElement => {
             // Workaround to render the story after got the client token,

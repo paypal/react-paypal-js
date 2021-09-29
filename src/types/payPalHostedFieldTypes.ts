@@ -37,13 +37,19 @@ export interface DecoratedPayPalHostedFieldsComponent
     close(container: HTMLDivElement | null): void;
 }
 
-export type PayPalHostedFieldProps = Record<
-    string,
-    PayPalHostedFieldOptions | string
-> & {
+export interface PayPalHostedFieldProps {
+    /**
+     * Represent the hosted field type: [NUMBER, CVV, EXPIRATION_DATE, EXPIRATION_MONTH, EXPIRATION_YEAR, POSTAL_CODE]
+     */
     hostedFieldType: PAYPAL_HOSTED_FIELDS_TYPES;
+    /**
+     * Options to modify the hosted field input. You can set a placeholder text,
+     * a prefill value or set the maximum length of a field.
+     * Check available options in the this type:
+     */
     options: PayPalHostedFieldOptions;
-};
+    [key: string]: PayPalHostedFieldOptions | string;
+}
 
 export interface PayPalHostedFieldsBillingAddressProps {
     show: boolean;
