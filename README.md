@@ -211,7 +211,7 @@ Checkout the docs page for the [BraintreePayPalButtons](https://paypal.github.io
 
 The JS SDK hosted-fields component provides payment form functionality that you can customize. Read more about this integration in the [PayPal Advanced Card Payments documentation](https://developer.paypal.com/docs/business/checkout/advanced-card-payments/).
 
-There are two components and one custom hook to use for hosted-fields integrations:
+There are 3 parts to hosted-fields integration:
 
 1. The `<PayPalHostedFieldsProvider />` provider component wraps the form field elements and accepts the createOrder prop.
 2. The `<PayPalHostedField>` component is used for the credit card number, expiration, and cvv elements. These are customizable using props and must be children of the `<PayPalHostedFieldsProvider />` component.
