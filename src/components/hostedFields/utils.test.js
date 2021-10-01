@@ -10,11 +10,11 @@ import { DATA_NAMESPACE } from "../../constants";
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types/enums";
 
 const exceptionMessagePayPalNamespace =
-    "Unable to render <HostedFields /> because window.paypal.HostedFields is undefined.\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: <PayPalScriptProvider options={{ components: ',hosted-fields'}}>";
+    "Unable to render <PayPalHostedFieldsProvider /> because window.paypal.HostedFields is undefined.\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: <PayPalScriptProvider options={{ components: ',hosted-fields'}}>";
 
 describe("throwMissingHostedFieldsError", () => {
     const exceptionMessage =
-        "Unable to render <HostedFields /> because window.Braintree.HostedFields is undefined.\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: <PayPalScriptProvider options={{ components: 'marks,hosted-fields'}}>";
+        "Unable to render <PayPalHostedFieldsProvider /> because window.Braintree.HostedFields is undefined.\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: <PayPalScriptProvider options={{ components: 'marks,hosted-fields'}}>";
 
     test("should throw exception with Braintree namespace", () => {
         expect(() => {
@@ -38,7 +38,7 @@ describe("throwMissingHostedFieldsError", () => {
             throwMissingHostedFieldsError({ components: "hosted-fields" });
         }).toThrow(
             new Error(
-                "Unable to render <HostedFields /> because window.paypal.HostedFields is undefined."
+                "Unable to render <PayPalHostedFieldsProvider /> because window.paypal.HostedFields is undefined."
             )
         );
     });
