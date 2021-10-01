@@ -10,7 +10,7 @@ import { DATA_NAMESPACE } from "../../constants";
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types/enums";
 
 const exceptionMessagePayPalNamespace =
-    "Unable to render <PayPalHostedFieldsProvider /> because window.paypal.HostedFields is undefined.\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: <PayPalScriptProvider options={{ components: ',hosted-fields'}}>";
+    "Unable to render <PayPalHostedFieldsProvider /> because window.paypal.HostedFields is undefined.\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: <PayPalScriptProvider options={{ components: 'hosted-fields'}}>";
 
 describe("throwMissingHostedFieldsError", () => {
     const exceptionMessage =
