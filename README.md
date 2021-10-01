@@ -215,7 +215,7 @@ There are 3 parts to hosted-fields integration:
 
 1. The `<PayPalHostedFieldsProvider />` provider component wraps the form field elements and accepts the createOrder prop.
 2. The `<PayPalHostedField>` component is used for the credit card number, expiration, and cvv elements. These are customizable using props and must be children of the `<PayPalHostedFieldsProvider />` component.
-3. The `usePayPalHostedFields` custom hook is useful for submit the form. This hooks return the rendered hosted field instance object. The instance allows calling the submit function, doing all the validations, and calling the declare function inside the createOrder prop in the `<PayPalHostedFieldsProvider />` component.
+3. The `usePayPalHostedFields` hook exposes the `submit()` function for submitting the payment with your own custom button.
 
 ```jsx
 import {
