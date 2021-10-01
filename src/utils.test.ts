@@ -9,6 +9,7 @@ describe("getPayPalWindowNamespace", () => {
     beforeAll(() => {
         window.paypal = {
             Buttons: jest.fn(),
+            version: "1.0.0",
         };
     });
 
@@ -24,8 +25,24 @@ describe("getPayPalWindowNamespace", () => {
 describe("getBraintreeWindowNamespace", () => {
     beforeAll(() => {
         window.braintree = {
-            createPayment: jest.fn(),
-            client: jest.fn(),
+            paypalCheckout: {
+                create: jest.fn(),
+                loadPayPalSDK: jest.fn(),
+                VERSION: "1.0.0",
+                createPayment: jest.fn(),
+                tokenizePayment: jest.fn(),
+                getClientId: jest.fn(),
+                startVaultInitiatedCheckout: jest.fn(),
+                teardown: jest.fn(),
+            },
+            client: {
+                authorization: "token",
+                create: jest.fn(),
+                VERSION: "1.0.0",
+                getConfiguration: jest.fn(),
+                request: jest.fn(),
+                teardown: jest.fn(),
+            },
         };
     });
 
