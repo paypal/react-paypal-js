@@ -209,7 +209,7 @@ Checkout the docs page for the [BraintreePayPalButtons](https://paypal.github.io
 
 ### PayPal Hosted Fields
 
-The JS SDK hosted-fields component provides a secure payment form that you can customize. Read more about this integration in the [PayPal Advanced Card Payments documentation](https://developer.paypal.com/docs/business/checkout/advanced-card-payments/).
+The JS SDK hosted-fields component provides payment form functionality that you can customize. Read more about this integration in the [PayPal Advanced Card Payments documentation](https://developer.paypal.com/docs/business/checkout/advanced-card-payments/).
 
 To integrate your hosted fields in your site you need to use two components. The parent `<PayPalHostedFieldsProvider />`and the `<PayPalHostedField>` children. The first one is similar to the `<PayPalScripProvider>` if you are familiar with that component.
 Below you can see an example:
