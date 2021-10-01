@@ -23,7 +23,7 @@ type PayPalHostedFieldOption = {
 };
 
 /**
- * Throw and exception if the HostedFields is not found in the paypal namespace
+ * Throw an exception if the HostedFields is not found in the paypal namespace
  * Probably cause for this problem is not sending the hosted-fields string
  * as part of the components props in options
  * {@code <PayPalScriptProvider options={{ components: 'hosted-fields'}}>}
