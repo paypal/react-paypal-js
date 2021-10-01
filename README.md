@@ -230,24 +230,24 @@ const SubmitPayment = () => {
     const hostedFields = usePayPalHostedFields();
 
     const submitHandler = () => {
-        if (hostedFields.submit) {
-            // Can be check using (typeof hostedFields.submit === "function")
-            hostedFields
-                .submit({
-                    // The full name as shown in the card and billing address
-                    cardholderName: "Jhon Wick",
-                })
-                .then((order) => {
-                    fetch("capture-payment-info")
-                        .then((response) => response.json())
-                        .then((data) => {
-                            // Inside the data you can find all the information related to the payment
-                        })
-                        .catch((err) => {
-                            // Handle any error
-                        });
-                });
-        }
+        if (!hostedFields.submit) return; // Handle the nonexistence of hosted field instance
+        hostedFields
+            .submit({
+                // The full name as shown in the card and billing address
+                cardholderName: "Jhon Wick",
+            })
+            .then((order) => {
+                fetch(
+                    "/your-server-side-integration-endpoint/capture-payment-info"
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Inside the data you can find all the information related to the payment
+                    })
+                    .catch((err) => {
+                        // Handle any error
+                    });
+            });
     };
 
     return <button onClick={submitHandler}>Pay</button>;
@@ -264,7 +264,9 @@ export default function App() {
             <PayPalHostedFieldsProvider
                 createOrder={() => {
                     // Here define the call to create and order
-                    return fetch("your-server-create-order")
+                    return fetch(
+                        "/your-server-side-integration-endpoint/orders"
+                    )
                         .then((response) => response.json())
                         .then((order) => order.id)
                         .catch((err) => {
