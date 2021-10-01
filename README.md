@@ -299,8 +299,6 @@ export default function App() {
 }
 ```
 
-Notice you need to wrap the `<PayPalHostedFieldsProvider />` component with the `<PayPalScriptProvider />` in the say way we use the PayPal buttons. It is required to define three `<PayPalHostedField />` children or more. One to represent the number card, second to represent the CVV code in the card and third the expiration date. These are required fields, if some of them is missing the component will fail to render the fields.
-
 ### Browser Support
 
 This library supports all popular browsers, including IE 11. It provides the same browser support as the JS SDK. Here's the [full list of supported browsers](https://developer.paypal.com/docs/business/checkout/reference/browser-support/#supported-browsers-by-platform).
