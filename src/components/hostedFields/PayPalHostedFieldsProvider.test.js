@@ -258,7 +258,7 @@ describe("PayPalHostedFieldsProvider", () => {
     });
 
     test("should render hosted fields", async () => {
-        const { container } = render(
+        const { container, rerender } = render(
             <PayPalScriptProvider
                 options={{
                     "client-id": "test-client",
@@ -299,5 +299,46 @@ describe("PayPalHostedFieldsProvider", () => {
             container.querySelector(".expiration") instanceof HTMLDivElement
         ).toBeTruthy();
         expect(container.querySelector(".cvv")).toBeTruthy();
+
+        // Rerender the component with new styles props
+        // Shouldn't set again the hostedFields refs variable in each rerender
+        rerender(
+            <PayPalScriptProvider
+                options={{
+                    "client-id": "test-client",
+                    currency: "USD",
+                    intent: "authorize",
+                    "data-client-token": "test-data-client-token",
+                }}
+            >
+                <PayPalHostedFieldsProvider
+                    styles={{
+                        ".valid": { color: "#28a745" },
+                        ".invalid": { color: "#dc3545" },
+                    }}
+                >
+                    <PayPalHostedField
+                        className="number"
+                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                        options={{ selector: ".number" }}
+                    />
+                    <PayPalHostedField
+                        className="expiration"
+                        hostedFieldType={
+                            PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
+                        }
+                        options={{ selector: ".expiration" }}
+                    />
+                    <PayPalHostedField
+                        className="cvv"
+                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                        options={{ selector: ".cvv" }}
+                    />
+                </PayPalHostedFieldsProvider>
+            </PayPalScriptProvider>
+        );
+        await waitFor(() => {
+            expect(window.paypal.HostedFields.render).toBeCalledTimes(2);
+        });
     });
 });
