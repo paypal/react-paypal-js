@@ -3,7 +3,7 @@ import {
     getBraintreeWindowNamespace,
     hashStr,
 } from "./utils";
-import { DATA_NAMESPACE } from "./constants.ts";
+import { DATA_NAMESPACE } from "./constants";
 
 describe("getPayPalWindowNamespace", () => {
     beforeAll(() => {

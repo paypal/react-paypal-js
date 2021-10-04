@@ -1,8 +1,8 @@
-import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
-
 import { SCRIPT_ID } from "../constants";
 import { BraintreePayPalCheckout } from "./braintree/paypalCheckout";
 import { SCRIPT_PROVIDER_DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "./enums";
+import type { ReactNode, Dispatch } from "react";
+import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
 export interface ReactPayPalScriptOptions extends PayPalScriptOptions {
     [SCRIPT_ID]: string;
@@ -31,7 +31,7 @@ export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
     braintreePayPalCheckoutInstance?: BraintreePayPalCheckout;
-    dispatch?: React.Dispatch<ScriptReducerAction>;
+    dispatch?: Dispatch<ScriptReducerAction>;
 }
 
 export interface ScriptContextDerivedState
@@ -44,6 +44,6 @@ export interface ScriptContextDerivedState
 
 export interface ScriptProviderProps {
     options: PayPalScriptOptions;
-    children?: React.ReactNode;
+    children?: ReactNode;
     deferLoading?: boolean;
 }

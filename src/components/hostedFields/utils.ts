@@ -27,7 +27,7 @@ type PayPalHostedFieldOption = {
 };
 
 /**
- * Throw and exception if the HostedFields is not found in the paypal namespace
+ * Throw an exception if the HostedFields is not found in the paypal namespace
  * Probably cause for this problem is not sending the hosted-fields string
  * as part of the components props in options
  * {@code <PayPalScriptProvider options={{ components: 'hosted-fields'}}>}
@@ -40,10 +40,13 @@ export const throwMissingHostedFieldsError = ({
     components = "",
     [DATA_NAMESPACE]: dataNamespace = DEFAULT_PAYPAL_NAMESPACE,
 }: PayPalHostedFieldsNamespace): never => {
+    const expectedComponents = components
+        ? `${components},hosted-fields`
+        : "hosted-fields";
     let errorMessage = `Unable to render <PayPalHostedFieldsProvider /> because window.${dataNamespace}.HostedFields is undefined.`;
 
     if (!components.includes("hosted-fields")) {
-        errorMessage += `\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: <PayPalScriptProvider options={{ components: '${components},hosted-fields'}}>`;
+        errorMessage += `\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: <PayPalScriptProvider options={{ components: '${expectedComponents}'}}>`;
     }
 
     throw new Error(errorMessage);

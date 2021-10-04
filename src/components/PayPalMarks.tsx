@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState, FunctionComponent } from "react";
-import type { ReactNode } from "react";
-
+import React, { useEffect, useRef, useState, FC, ReactNode } from "react";
 import { usePayPalScriptReducer } from "../hooks/scriptProviderHooks";
 import { getPayPalWindowNamespace } from "../utils";
 import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../constants";
@@ -33,7 +31,7 @@ A `FUNDING` object is exported by this library which has a key for every availab
     </PayPalScriptProvider>
 ```
 */
-export const PayPalMarks: FunctionComponent<PayPalMarksComponentProps> = ({
+export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
     className = "",
     children,
     ...markProps
