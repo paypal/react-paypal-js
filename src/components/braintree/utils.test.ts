@@ -55,9 +55,9 @@ describe("decorateActions", () => {
         );
 
         if (!buttonProps) {
-            fail("buttonProps is undefined");
+            throw new Error("buttonProps is undefined");
         } else if (!buttonProps.createOrder) {
-            fail("buttonProps.createOrder is undefined");
+            throw new Error("buttonProps.createOrder is undefined");
         }
 
         const mockedCreateOrderActions = mock<CreateOrderActions>();
