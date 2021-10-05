@@ -37,6 +37,16 @@ body:
     validations:
       required: false
   - type: textarea
+    id: environment
+    attributes:
+      label: 🌍 Environment
+      placeholder: | Software         | Version(s) |
+| ---------------- | ---------- |
+| react-paypal-js  |
+| Browser          |
+| Operating System |
+
+  - type: textarea
     id: additional-context
     attributes:
       label: ➕ Additional Context
