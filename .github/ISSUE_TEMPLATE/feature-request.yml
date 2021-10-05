@@ -1,0 +1,27 @@
+name: 🚀 Feature request
+description: uggest an idea to us!
+title: "[Feature] Feature request"
+labels: []
+assignees: []
+body:
+  - type: textarea
+    id: feature
+    attributes:
+      label: 🚀 Feature Proposal
+      description: A clear and concise description of what the feature is.
+    validations:
+      required: false
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Please outline the motivation for the proposal.
+    validations:
+      required: false
+  - type: textarea
+    id: example
+    attributes:
+      label: Example
+      description: Please provide an example for how this feature would be used.
+    validations:
+      required: false
