@@ -40,7 +40,7 @@ body:
     id: environment
     attributes:
       label: 🌍 Environment
-      placeholder: | Software | Version(s) | 
+      placeholder: Software / Version(s)
   - type: textarea
     id: additional-context
     attributes:
