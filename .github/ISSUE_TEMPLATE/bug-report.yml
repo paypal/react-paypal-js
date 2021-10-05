@@ -1,0 +1,43 @@
+name: 🐞 Bug report
+description: Report a bug with react-paypal-js. Before you create a new issue, please search for similar issues. It's possible somebody has encountered this bug already.
+title: "[Bug] Bug report"
+labels: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: description
+    attributes:
+      label: 🐞 Describe the Bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: false
+  - type: textarea
+    id: minimal-reporduction
+    attributes:
+      label: 🔬 Minimal Reproduction
+      description: Describe steps to reproduce. If possible, please, share a link with a minimal reproduction.
+    validations:
+      required: false
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: 😕 Actual Behavior
+      description: Describe steps to reproduce. If possible, please, share a link with a minimal reproduction.
+    validations:
+      required: false
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: 🤔 Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: ➕ Additional Context
+      description: Add any other context about the problem here.
