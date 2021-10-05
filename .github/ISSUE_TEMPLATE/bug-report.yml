@@ -40,11 +40,9 @@ body:
     id: environment
     attributes:
       label: 🌍 Environment
-      placeholder: | Software         | Version(s) |
-| ---------------- | ---------- |
-| react-paypal-js  |
-| Browser          |
-| Operating System |
+      placeholder: | Software         | Version(s) | /n
+| ---------------- | ---------- | /n
+| react-paypal-js  | |
 
   - type: textarea
     id: additional-context
