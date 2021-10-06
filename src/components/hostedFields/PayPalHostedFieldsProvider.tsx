@@ -37,15 +37,6 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
         const [, setErrorState] = useState(null);
 
         /**
-         * Clear all the fields before the rerender
-         */
-        const cleanForm = () => {
-            if (hostedFields && cardFields) {
-                cardFields.teardown();
-            }
-        };
-
-        /**
          * Executed on the mount process to validate the children
          */
         useEffect(() => {
@@ -72,6 +63,10 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
             if (!hostedFields?.current?.isEligible()) {
                 return setIsEligible(false);
             }
+            // Clean all the fields before the rerender
+            if (cardFields) {
+                cardFields.teardown();
+            }
 
             hostedFields.current
                 .render({
@@ -90,7 +85,6 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
                         );
                     });
                 });
-            return cleanForm;
         }, [loadingStatus, styles]); // eslint-disable-line react-hooks/exhaustive-deps
 
         return (
