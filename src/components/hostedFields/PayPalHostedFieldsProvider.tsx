@@ -18,12 +18,9 @@ import type {
 } from "@paypal/paypal-js/types/components/hosted-fields";
 
 /**
-This `<PayPalHostedFieldsProvider />` component is use for managing state related to loading the JS SDK script and 
-makes the required validation over the hosted fields define children.
+This `<PayPalHostedFieldsProvider />` provider component wraps the form field elements and accepts props like `createOrder()`.
 
-This component doesn't make sense to use it without PayPalHostedField children
-
-Check the PayPalHostedField component documentation to check how to use it.
+This provider component is designed to be used with the `<PayPalHostedField />` component.
 */
 export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
     ({ styles, createOrder, notEligibleError, children }) => {
