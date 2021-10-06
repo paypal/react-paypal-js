@@ -4,7 +4,7 @@ import type { FC } from "react";
 import type { PayPalHostedFieldProps } from "../../types/payPalHostedFieldTypes";
 
 /**
-This `<PayPalHostedField />` component renders the [Braintree PayPal Hosted Fields](https://developer.paypal.com/braintree/docs/guides/hosted-fields/overview) for Braintree Merchants.
+This `<PayPalHostedField />` component renders individual fields for [Hosted Fields](https://developer.paypal.com/docs/business/checkout/advanced-card-payments/integrate#3-add-javascript-sdk-and-card-form) integrations.
 It relies on the `<PayPalHostedFieldsProvider />` parent component for managing state related to loading the JS SDK script
 and execute some validations before the rendering the fields.
 
@@ -31,25 +31,23 @@ Use props for customizing your hosted fields. For example, here's how you would 
         >
             <PayPalHostedField style={{ color: "red", border: "1px solid" }}
                 id="card-number"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                hostedFieldType="number"
                 options={{ selector: "#card-number", placeholder: "4111 1111 1111 1111" }} />
             <PayPalHostedField id="cvv"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                hostedFieldType="cvv"
                 options={{ selector: "#cvv", placeholder: "CVV", maxlength: 3, maskInput: true }} />
             <PayPalHostedField id="expiration-date"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
+                hostedFieldType="expirationDate"
                 options={{ selector: "#expiration-date", placeholder: "MM/YY" }} />
 
         </PayPalHostedFieldsProvider>
     </PayPalScriptProvider>
 ```
 
-To use the Braintree PayPal hosted fields you need to define at least three children:
+To use the PayPal hosted fields you need to define at least three fields:
     - A card number field
     - The CVV code from the client card
     - The expiration date
-
-If the parent PayPalHostedFieldsProvider component doesn't found those three children will throw an Error
 
 You can define the expiration date as a single field similar to the example above, 
 or you are able to define it in two separate fields. One for the month and second for year.
@@ -64,7 +62,7 @@ You can delete the last children component form the example above and use these:
         options={{ selector: "#expiration-year", placeholder: "YYYY" }} />
 ```
 
-Note: Take care using multiple instances of the Braintree PayPal Hosted Fields.
+Note: Take care when using multiple instances of the PayPal Hosted Fields on the same page.
 In the case multiple instances are used in the same page with the same selector that will cause 
 a failure in the render process.
 */
