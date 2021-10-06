@@ -17,7 +17,7 @@
     "types": "dist/types/index.d.ts",
     "scripts": {
         "build": "rollup --config",
-        "check-node-version": "check-node-version --node $(cat .nvmrc)",
+        "check-node-version": "node scripts/check-node-version.js",
         "format": "prettier --write .",
         "lint": "eslint .",
         "postinstall": "husky install",
@@ -71,6 +71,7 @@
         "@typescript-eslint/parser": "^4.32.0",
         "babel-jest": "^27.2.4",
         "babel-loader": "^8.2.2",
+        "chalk": "^4.1.2",
         "check-node-version": "^4.1.0",
         "eslint": "^7.32.0",
         "eslint-config-prettier": "^8.3.0",
