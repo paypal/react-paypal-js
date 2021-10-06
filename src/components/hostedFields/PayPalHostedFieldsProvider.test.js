@@ -304,7 +304,7 @@ describe("PayPalHostedFieldsProvider", () => {
         expect(container.querySelector(".cvv")).toBeTruthy();
 
         // Rerender the component with new styles props
-        // Shouldn't set again the hostedFields refs variable in each rerender
+        // Shouldn't change the hostedFields refs when rerendering
         rerender(
             <PayPalScriptProvider
                 options={{

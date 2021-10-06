@@ -63,8 +63,7 @@ You can delete the last children component form the example above and use these:
 ```
 
 Note: Take care when using multiple instances of the PayPal Hosted Fields on the same page.
-In the case multiple instances are used in the same page with the same selector that will cause 
-a failure in the render process.
+The component will fail to render when any of the selectors return more than one element.
 */
 export const PayPalHostedField: FC<PayPalHostedFieldProps> = ({
     hostedFieldType, // eslint-disable-line @typescript-eslint/no-unused-vars
