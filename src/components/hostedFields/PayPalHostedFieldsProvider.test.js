@@ -28,7 +28,9 @@ describe("PayPalHostedFieldsProvider", () => {
         window.paypal = {
             HostedFields: {
                 isEligible: isEligible.mockReturnValue(true),
-                render: jest.fn().mockResolvedValue({}),
+                render: jest.fn().mockResolvedValue({
+                    teardown: jest.fn(),
+                }),
             },
         };
 
@@ -265,6 +267,7 @@ describe("PayPalHostedFieldsProvider", () => {
                     currency: "USD",
                     intent: "authorize",
                     "data-client-token": "test-data-client-token",
+                    components: "hosted-fields",
                 }}
             >
                 <PayPalHostedFieldsProvider>

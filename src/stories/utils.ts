@@ -1,5 +1,6 @@
 import { SDK_QUERY_KEYS } from "@paypal/sdk-constants/dist/module";
 
+// FIXME: problem with union on key
 type TokenResponse = {
     [key in "clientToken" | "client_token"]: string;
 } & { success?: boolean };

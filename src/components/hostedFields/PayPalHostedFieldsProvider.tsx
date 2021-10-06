@@ -5,16 +5,17 @@ import { PayPalHostedFieldsContext } from "../../context/payPalHostedFieldsConte
 import { useScriptProviderContext } from "../../hooks/scriptProviderHooks";
 import { DATA_NAMESPACE } from "../../constants";
 import {
-    decorateHostedFields,
     generateHostedFieldsFromChildren,
+    throwMissingHostedFieldsError,
 } from "./utils";
 import { validateHostedFieldChildren } from "./validators";
 import { SCRIPT_LOADING_STATE } from "../../types/enums";
+import { getPayPalWindowNamespace } from "../../utils";
+import type { PayPalHostedFieldsComponentProps } from "../../types/payPalHostedFieldTypes";
 import type {
-    PayPalHostedFieldsComponentProps,
-    DecoratedPayPalHostedFieldsComponent,
-} from "../../types/payPalHostedFieldTypes";
-import type { HostedFieldsHandler } from "@paypal/paypal-js/types/components/hosted-fields";
+    PayPalHostedFieldsComponent,
+    HostedFieldsHandler,
+} from "@paypal/paypal-js/types/components/hosted-fields";
 
 /**
 This `<PayPalHostedFieldsProvider />` component is use for managing state related to loading the JS SDK script and 
@@ -28,14 +29,25 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
     ({ styles, createOrder, notEligibleError, children }) => {
         const childrenList = Children.toArray(children);
         const [{ options, loadingStatus }] = useScriptProviderContext();
+        const [isEligible, setIsEligible] = useState(true);
         const [cardFields, setCardFields] =
             useState<HostedFieldsHandler | null>(null);
-        const [isEligible, setIsEligible] = useState(true);
         const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
-        const hostedFields =
-            useRef<DecoratedPayPalHostedFieldsComponent | null>(null);
+        const hostedFields = useRef<PayPalHostedFieldsComponent>();
         const [, setErrorState] = useState(null);
 
+        /**
+         * Clear all the fields before the rerender
+         */
+        const cleanForm = () => {
+            if (hostedFields && cardFields) {
+                cardFields.teardown();
+            }
+        };
+
+        /**
+         * Executed on the mount process to validate the children
+         */
         useEffect(() => {
             validateHostedFieldChildren(childrenList);
         }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -46,12 +58,18 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
             // Get the hosted fields from the [window.paypal.HostedFields] SDK
             if (!hostedFields.current) {
                 // Set HostedFields SDK in the mount process only
-                hostedFields.current = decorateHostedFields({
-                    components: options.components,
-                    [DATA_NAMESPACE]: options[DATA_NAMESPACE],
-                });
+                hostedFields.current = getPayPalWindowNamespace(
+                    options[DATA_NAMESPACE]
+                ).HostedFields;
+
+                if (!hostedFields.current) {
+                    throwMissingHostedFieldsError({
+                        components: options.components,
+                        [DATA_NAMESPACE]: options[DATA_NAMESPACE],
+                    });
+                }
             }
-            if (!hostedFields.current.isEligible()) {
+            if (!hostedFields?.current?.isEligible()) {
                 return setIsEligible(false);
             }
 
@@ -62,8 +80,8 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
                     styles: styles,
                     fields: generateHostedFieldsFromChildren(childrenList),
                 })
-                .then((cardFields) => {
-                    setCardFields(cardFields);
+                .then((cardFieldsInstance) => {
+                    setCardFields(cardFieldsInstance);
                 })
                 .catch((err) => {
                     setErrorState(() => {
@@ -72,7 +90,7 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
                         );
                     });
                 });
-            return hostedFields.current.close(hostedFieldsContainerRef.current);
+            return cleanForm;
         }, [loadingStatus, styles]); // eslint-disable-line react-hooks/exhaustive-deps
 
         return (

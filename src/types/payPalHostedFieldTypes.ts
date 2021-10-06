@@ -1,6 +1,4 @@
-import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
 import type { ReactNode, HTMLAttributes } from "react";
-
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "./enums";
 
 export type PayPalHostedFieldsNamespace = {
@@ -32,11 +30,6 @@ export type PayPalHostedFieldOptions = {
     // if you only process Visa cards, a customer entering a American Express card would get an invalid card field. This can only be used for the `number` field.
     rejectUnsupportedCards?: boolean;
 };
-
-export interface DecoratedPayPalHostedFieldsComponent
-    extends PayPalHostedFieldsComponent {
-    close(container: HTMLDivElement | null): void;
-}
 
 export interface PayPalHostedFieldProps extends HTMLAttributes<HTMLDivElement> {
     /**

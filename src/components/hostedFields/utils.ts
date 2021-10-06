@@ -1,5 +1,4 @@
 import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../../constants";
-import { getPayPalWindowNamespace } from "../../utils";
 
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types";
 import type {
@@ -9,17 +8,11 @@ import type {
     ReactElement,
     FC,
 } from "react";
-import type { PayPalHostedFieldsComponent } from "@paypal/paypal-js/types/components/hosted-fields";
 import type {
     PayPalHostedFieldsNamespace,
-    DecoratedPayPalHostedFieldsComponent,
     PayPalHostedFieldProps,
     PayPalHostedFieldOptions,
 } from "../../types/payPalHostedFieldTypes";
-
-// This represent the children to remove manually inside the PayPalHostedFieldsProvider
-// The HostedFields SDK manually insert and iframe and a div for each declared field
-const hostedFieldsChildrenSelector = "iframe, div[style='clear: both;']";
 
 // Define the type of the fields object use in the HostedFields.render options
 type PayPalHostedFieldOption = {
@@ -50,33 +43,6 @@ export const throwMissingHostedFieldsError = ({
     }
 
     throw new Error(errorMessage);
-};
-
-/**
- * Decorate the HostedFields object in the window with a close custom method
- *
- * @param options scriptProvider options to get the HostedFields dependency
- * @returns the modified HostedFields object
- */
-export const decorateHostedFields = (
-    options: PayPalHostedFieldsNamespace
-): DecoratedPayPalHostedFieldsComponent => {
-    const hostedFields = getPayPalWindowNamespace(
-        options[DATA_NAMESPACE]
-    ).HostedFields;
-    // check if the hosted fields are available in PayPal namespace
-    if (hostedFields == null) throwMissingHostedFieldsError(options);
-
-    return {
-        ...(hostedFields as PayPalHostedFieldsComponent),
-        close(container, selectors = hostedFieldsChildrenSelector) {
-            if (container) {
-                container.querySelectorAll(selectors).forEach((element) => {
-                    element.remove();
-                });
-            }
-        },
-    };
 };
 
 /**
