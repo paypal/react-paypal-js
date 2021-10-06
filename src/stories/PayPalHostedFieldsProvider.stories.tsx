@@ -101,7 +101,7 @@ export const Default: FC = () => {
         >
             <PayPalHostedField
                 id="card-number"
-                className="card_field"
+                className="card-field"
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
                 options={{
                     selector: "#card-number",
@@ -110,7 +110,7 @@ export const Default: FC = () => {
             />
             <PayPalHostedField
                 id="cvv"
-                className="card_field"
+                className="card-field"
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
                 options={{
                     selector: "#cvv",
@@ -122,7 +122,7 @@ export const Default: FC = () => {
             />
             <PayPalHostedField
                 id="expiration-date"
-                className="card_field"
+                className="card-field"
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
                 options={{
                     selector: "#expiration-date",
