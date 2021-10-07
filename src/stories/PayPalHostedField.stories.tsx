@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, CSSProperties } from "react";
 import type { FC, ReactElement } from "react";
 import type { Story } from "@storybook/react";
 
@@ -29,7 +29,7 @@ const scriptProviderOptions: PayPalScriptOptions = {
 };
 const customBorderFieldStyle = {
     border: "1px solid #606060",
-    boxShadow: "2px 2px 10px 2px #606060",
+    boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
 };
 
 /**
@@ -52,7 +52,7 @@ const NotEligibleError = () => (
 /**
  * Functional component to submit the hosted fields form
  */
-const SubmitPayment = () => {
+const SubmitPayment = ({ customStyle }: { customStyle?: CSSProperties }) => {
     const [paying, setPaying] = useState(false);
     const cardHolderName = useRef<HTMLInputElement>(null);
     const hostedField = usePayPalHostedFields();
@@ -106,6 +106,7 @@ const SubmitPayment = () => {
             <input
                 ref={cardHolderName}
                 className="card-field"
+                style={customStyle}
                 type="text"
                 placeholder="Full name"
             />
@@ -264,7 +265,7 @@ export const Default: FC = () => {
                 }}
             />
             {/* Custom client component to handle hosted fields submit */}
-            <SubmitPayment />
+            <SubmitPayment customStyle={customBorderFieldStyle} />
         </PayPalHostedFieldsProvider>
     );
 };
