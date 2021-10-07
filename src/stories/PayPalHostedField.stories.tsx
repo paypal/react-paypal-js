@@ -384,7 +384,6 @@ export const Default: FC = () => {
                     placeholder: "MM/YYYY",
                 }}
             />
-            {/* Custom client component to handle hosted fields submit */}
             <SubmitPayment />
         </PayPalHostedFieldsProvider>
     );
