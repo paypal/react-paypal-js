@@ -58,15 +58,22 @@ const SubmitPayment = () => {
     const hostedField = usePayPalHostedFields();
 
     const handleClick = () => {
-        if (
-            hostedField &&
-            cardHolderName.current &&
-            cardHolderName.current.value
-        ) {
+        if (hostedField) {
+            if (
+                Object.values(hostedField.getState().fields).some(
+                    (field) => !field.isValid
+                ) ||
+                cardHolderName?.current?.value
+            ) {
+                return alert(
+                    "The payment form is invalid, please check it before execute the payment"
+                );
+            }
+
             setPaying(true);
             hostedField
                 .submit({
-                    cardholderName: cardHolderName.current.value,
+                    cardholderName: cardHolderName?.current?.value,
                 })
                 .then((data) => {
                     console.log("orderId: ", data.orderId);
@@ -86,6 +93,7 @@ const SubmitPayment = () => {
                 })
                 .catch((err) => {
                     alert(JSON.stringify(err));
+                    setPaying(false);
                 });
         }
     };
