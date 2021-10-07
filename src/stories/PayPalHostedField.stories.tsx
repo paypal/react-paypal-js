@@ -106,7 +106,7 @@ const SubmitPayment = ({ customStyle }: { customStyle?: CSSProperties }) => {
             <input
                 ref={cardHolderName}
                 className="card-field"
-                style={customStyle}
+                style={{ ...customStyle, outline: "none" }}
                 type="text"
                 placeholder="Full name"
             />
