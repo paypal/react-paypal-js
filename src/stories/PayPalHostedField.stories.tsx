@@ -21,6 +21,7 @@ import {
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
 const CREATE_ORDER_URL = `${HEROKU_SERVER}/api/paypal/checkout/orders`;
+const RED_COLOR = "#dc3545";
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id":
         "AdOu-W3GPkrfuTbJNuW9dWVijxvhaXHFIRuKrLDwu14UDwTTHWMFkUwuu9D8I1MAQluERl9cFOd7Mfqe",
@@ -124,15 +125,6 @@ const SubmitPayment = ({ customStyle }: { customStyle?: CSSProperties }) => {
 export default {
     title: "Example/PayPalHostedFields",
     component: PayPalHostedField,
-    parameters: {
-        docs: {
-            default: {
-                source: {
-                    code: "djhfhjfh",
-                },
-            },
-        },
-    },
     argTypes: {
         PayPalHostedFieldOptions: {
             control: { type: "null" },
@@ -220,12 +212,12 @@ export const Default: FC = () => {
             notEligibleError={<NotEligibleError />}
             styles={{
                 ".valid": { color: "#28a745" },
-                ".invalid": { color: "#dc3545" },
+                ".invalid": { color: RED_COLOR },
                 input: { "font-family": "monospace", "font-size": "16px" },
             }}
         >
             <label htmlFor="card-number">
-                Card Number<span style={{ color: "#dc3545" }}>*</span>
+                Card Number<span style={{ color: RED_COLOR }}>*</span>
             </label>
             <PayPalHostedField
                 id="card-number"
@@ -238,7 +230,7 @@ export const Default: FC = () => {
                 }}
             />
             <label htmlFor="cvv">
-                CVV<span style={{ color: "#dc3545" }}>*</span>
+                CVV<span style={{ color: RED_COLOR }}>*</span>
             </label>
             <PayPalHostedField
                 id="cvv"
@@ -252,7 +244,7 @@ export const Default: FC = () => {
                 }}
             />
             <label htmlFor="expiration-date">
-                Expiration Date<span style={{ color: "#dc3545" }}>*</span>
+                Expiration Date<span style={{ color: RED_COLOR }}>*</span>
             </label>
             <PayPalHostedField
                 id="expiration-date"
@@ -275,6 +267,7 @@ export const Default: FC = () => {
         source: {
             code: `
             () => {
+    const RED_COLOR_STYLE = { color: "#dc3545" };
     const SubmitPayment = () => {
         const cardHolderName = useRef<HTMLInputElement>(null);
         const hostedField = usePayPalHostedFields();
@@ -361,11 +354,11 @@ export const Default: FC = () => {
             notEligibleError={<NotEligibleError />}
             styles={{
                 ".valid": { color: "#28a745" },
-                ".invalid": { color: "#dc3545" },
+                ".invalid": RED_COLOR_STYLE,
                 "input": { "font-family": "monospace", "font-size": "16px" }
             }}
         >
-            <label htmlFor="card-number">Card Number<span style={{ color: "#dc3545" }}>*</span></label>
+            <label htmlFor="card-number">Card Number<span style={RED_COLOR_STYLE}>*</span></label>
             <PayPalHostedField
                 id="card-number"
                 className="card-field"
@@ -376,7 +369,7 @@ export const Default: FC = () => {
                     placeholder: "4111 1111 1111 1111",
                 }}
             />
-            <label htmlFor="cvv">CVV<span style={{ color: "#dc3545" }}>*</span></label>
+            <label htmlFor="cvv">CVV<span style={RED_COLOR_STYLE}>*</span></label>
             <PayPalHostedField
                 id="cvv"
                 className="card-field"
@@ -388,7 +381,7 @@ export const Default: FC = () => {
                     maskInput: true,
                 }}
             />
-            <label htmlFor="expiration-date">Expiration Date<span style={{ color: "#dc3545" }}>*</span></label>
+            <label htmlFor="expiration-date">Expiration Date<span style={RED_COLOR_STYLE}>*</span></label>
             <PayPalHostedField
                 id="expiration-date"
                 className="card-field"
@@ -438,7 +431,7 @@ export const ExpirationDate: FC = () => {
             notEligibleError={<NotEligibleError />}
             styles={{
                 ".valid": { color: "#28a745" },
-                ".invalid": { color: "#dc3545" },
+                ".invalid": { color: RED_COLOR },
             }}
         >
             <PayPalHostedField
