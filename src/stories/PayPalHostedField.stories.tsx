@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import type { FC, ReactElement } from "react";
+import type { Story } from "@storybook/react";
 
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
@@ -25,6 +26,10 @@ const scriptProviderOptions: PayPalScriptOptions = {
         "AdOu-W3GPkrfuTbJNuW9dWVijxvhaXHFIRuKrLDwu14UDwTTHWMFkUwuu9D8I1MAQluERl9cFOd7Mfqe",
     components: "buttons,hosted-fields",
     ...getOptionsFromQueryString(),
+};
+const customBorderFieldStyle = {
+    border: "1px solid #606060",
+    boxShadow: "2px 2px 10px 2px #606060",
 };
 
 /**
@@ -87,11 +92,14 @@ const SubmitPayment = () => {
 
     return (
         <>
+            <label title="This represents the full name as shown in the card">
+                Card Holder Name
+            </label>
             <input
                 ref={cardHolderName}
                 className="card-field"
                 type="text"
-                placeholder="Card holder name "
+                placeholder="Full name"
             />
             <button
                 className={`btn${paying ? "" : " btn-primary"}`}
@@ -107,6 +115,15 @@ const SubmitPayment = () => {
 export default {
     title: "Example/PayPalHostedFields",
     component: PayPalHostedField,
+    parameters: {
+        docs: {
+            default: {
+                source: {
+                    code: "djhfhjfh",
+                },
+            },
+        },
+    },
     argTypes: {
         PayPalHostedFieldOptions: {
             control: { type: "null" },
@@ -195,20 +212,29 @@ export const Default: FC = () => {
             styles={{
                 ".valid": { color: "#28a745" },
                 ".invalid": { color: "#dc3545" },
+                input: { "font-family": "monospace", "font-size": "16px" },
             }}
         >
+            <label htmlFor="card-number">
+                Card Number<span style={{ color: "#dc3545" }}>*</span>
+            </label>
             <PayPalHostedField
                 id="card-number"
                 className="card-field"
+                style={customBorderFieldStyle}
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
                 options={{
                     selector: "#card-number",
                     placeholder: "4111 1111 1111 1111",
                 }}
             />
+            <label htmlFor="cvv">
+                CVV<span style={{ color: "#dc3545" }}>*</span>
+            </label>
             <PayPalHostedField
                 id="cvv"
                 className="card-field"
+                style={customBorderFieldStyle}
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
                 options={{
                     selector: "#cvv",
@@ -216,9 +242,13 @@ export const Default: FC = () => {
                     maskInput: true,
                 }}
             />
+            <label htmlFor="expiration-date">
+                Expiration Date<span style={{ color: "#dc3545" }}>*</span>
+            </label>
             <PayPalHostedField
                 id="expiration-date"
                 className="card-field"
+                style={customBorderFieldStyle}
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
                 options={{
                     selector: "#expiration-date",
@@ -229,6 +259,139 @@ export const Default: FC = () => {
             <SubmitPayment />
         </PayPalHostedFieldsProvider>
     );
+};
+
+(Default as Story).parameters = {
+    docs: {
+        source: {
+            code: `
+            () => {
+    const SubmitPayment = () => {
+        const cardHolderName = useRef<HTMLInputElement>(null);
+        const hostedField = usePayPalHostedFields();
+
+        const handleClick = () => {
+            if (
+                hostedField &&
+                cardHolderName.current &&
+                cardHolderName.current.value
+            ) {
+                hostedField
+                    .submit({
+                        cardholderName: cardHolderName.current.value,
+                    })
+                    .then((data) => {
+                        console.log("orderId: ", data.orderId);
+                        fetch(captureOrderUrl(data.orderId), {
+                            method: "post",
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                alert(JSON.stringify(data));
+                            })
+                            .catch((err) => {
+                                alert(JSON.stringify(err));
+                            })
+                    })
+                    .catch((err) => {
+                        alert(JSON.stringify(err));
+                    });
+            }
+        };
+
+        return (
+            <>
+                <label title="This represents the full name as shown in the card">Card Holder Name</label>
+                <input
+                    ref={cardHolderName}
+                    className="card-field"
+                    type="text"
+                    placeholder="Full name"
+                />
+                <button
+                    className="btn-primary"
+                    style={{ float: "right" }}
+                    onClick={handleClick}
+                >Pay</button>
+            </>
+        );
+    };
+
+    return (
+        <PayPalHostedFieldsProvider
+            createOrder={() =>
+                fetch(CREATE_ORDER_URL, {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        purchase_units: [
+                            {
+                                amount: {
+                                    value: 50,
+                                    currency_code: "USD",
+                                },
+                            },
+                        ],
+                        intent: "CAPTURE",
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((order) => order.id)
+                    .catch((err) => {
+                        alert(err);
+                    })
+            }
+            notEligibleError={<NotEligibleError />}
+            styles={{
+                ".valid": { color: "#28a745" },
+                ".invalid": { color: "#dc3545" },
+                "input": { "font-family": "monospace", "font-size": "16px" }
+            }}
+        >
+            <label htmlFor="card-number">Card Number<span style={{ color: "#dc3545" }}>*</span></label>
+            <PayPalHostedField
+                id="card-number"
+                className="card-field"
+                style={customBorderFieldStyle}
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                options={{
+                    selector: "#card-number",
+                    placeholder: "4111 1111 1111 1111",
+                }}
+            />
+            <label htmlFor="cvv">CVV<span style={{ color: "#dc3545" }}>*</span></label>
+            <PayPalHostedField
+                id="cvv"
+                className="card-field"
+                style={customBorderFieldStyle}
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                options={{
+                    selector: "#cvv",
+                    placeholder: "123",
+                    maskInput: true,
+                }}
+            />
+            <label htmlFor="expiration-date">Expiration Date<span style={{ color: "#dc3545" }}>*</span></label>
+            <PayPalHostedField
+                id="expiration-date"
+                className="card-field"
+                style={customBorderFieldStyle}
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
+                options={{
+                    selector: "#expiration-date",
+                    placeholder: "MM/YYYY",
+                }}
+            />
+            {/* Custom client component to handle hosted fields submit */}
+            <SubmitPayment />
+        </PayPalHostedFieldsProvider>
+    );
+}
+            `,
+        },
+    },
 };
 
 export const ExpirationDate: FC = () => {
