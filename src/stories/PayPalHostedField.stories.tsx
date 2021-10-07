@@ -63,7 +63,7 @@ const SubmitPayment = () => {
                 Object.values(hostedField.getState().fields).some(
                     (field) => !field.isValid
                 ) ||
-                cardHolderName?.current?.value
+                !cardHolderName?.current?.value
             ) {
                 return alert(
                     "The payment form is invalid, please check it before execute the payment"
@@ -279,11 +279,17 @@ export const Default: FC = () => {
         const hostedField = usePayPalHostedFields();
 
         const handleClick = () => {
-            if (
-                hostedField &&
-                cardHolderName.current &&
-                cardHolderName.current.value
-            ) {
+            if (hostedField) {
+                if (
+                    Object.values(hostedField.getState().fields)
+                    .some((field) => !field.isValid) ||
+                    !cardHolderName?.current?.value
+                ) {
+                    return alert(
+                        "The payment form is invalid, please check it before execute the payment"
+                    );
+                }
+
                 hostedField
                     .submit({
                         cardholderName: cardHolderName.current.value,
