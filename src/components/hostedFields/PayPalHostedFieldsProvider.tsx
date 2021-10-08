@@ -32,7 +32,7 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
         const hostedFieldsContainerRef = useRef<HTMLDivElement>(null);
         const hostedFields = useRef<PayPalHostedFieldsComponent>();
         const [, setErrorState] = useState(null);
-
+        console.log("***", childrenList);
         /**
          * Executed on the mount process to validate the children
          */
