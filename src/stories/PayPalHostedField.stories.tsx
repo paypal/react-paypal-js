@@ -269,7 +269,7 @@ export const Default: FC = () => {
         source: {
             code: `
             () => {
-    const RED_COLOR_STYLE = { color: "#dc3545" };
+    const RED_COLOR_STYLE = { color: "${RED_COLOR}" };
     const SubmitPayment = () => {
         const cardHolderName = useRef<HTMLInputElement>(null);
         const hostedField = usePayPalHostedFields();
