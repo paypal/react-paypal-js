@@ -41,13 +41,11 @@ export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
             ) {
                 setErrorState(() => {
                     throw new Error(
-                        generateErrorMessage({
-                            componentName:
-                                PayPalMessages.displayName || "PayPalMessages",
-                            requiredOption: "messages",
-                            components: options.components,
-                            [DATA_NAMESPACE]: options["data-namespace"],
-                        })
+                        generateErrorMessage(
+                            PayPalMessages.displayName || "PayPalMessages",
+                            "messages",
+                            options
+                        )
                     );
                 });
                 return;

@@ -5,13 +5,7 @@ import {
 } from "./constants";
 import type { PayPalNamespace } from "@paypal/paypal-js";
 import type { BraintreeNamespace } from "./types";
-
-type ErrorMessageParams = {
-    componentName: string;
-    requiredOption: string;
-    components?: string;
-    [DATA_NAMESPACE]?: string;
-};
+import type { ReactPayPalScriptOptions } from "./types/scriptProviderTypes";
 
 /**
  * Get the namespace from the window in the browser
@@ -65,12 +59,14 @@ export function hashStr(str: string): string {
     return hash;
 }
 
-export function generateErrorMessage({
-    componentName,
-    requiredOption,
-    components = "",
-    [DATA_NAMESPACE]: dataNamespace = DEFAULT_PAYPAL_NAMESPACE,
-}: ErrorMessageParams): string {
+export function generateErrorMessage(
+    componentName: string,
+    requiredOption: string,
+    {
+        components = "",
+        [DATA_NAMESPACE]: dataNamespace = DEFAULT_PAYPAL_NAMESPACE,
+    }: ReactPayPalScriptOptions
+): string {
     const requiredOptionCapitalized = requiredOption
         .charAt(0)
         .toUpperCase()

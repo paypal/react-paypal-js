@@ -86,12 +86,11 @@ export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
         ) {
             setErrorState(() => {
                 throw new Error(
-                    generateErrorMessage({
-                        componentName: PayPalMarks.displayName || "PayPalMarks",
-                        requiredOption: "marks",
-                        components: options.components,
-                        [DATA_NAMESPACE]: options["data-namespace"],
-                    })
+                    generateErrorMessage(
+                        PayPalMarks.displayName || "PayPalMarks",
+                        "marks",
+                        options
+                    )
                 );
             });
             return;

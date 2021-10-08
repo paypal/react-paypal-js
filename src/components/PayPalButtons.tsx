@@ -80,13 +80,11 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
         ) {
             setErrorState(() => {
                 throw new Error(
-                    generateErrorMessage({
-                        componentName:
-                            PayPalButtons.displayName || "PayPalButtons",
-                        requiredOption: "buttons",
-                        components: options.components,
-                        [DATA_NAMESPACE]: options["data-namespace"],
-                    })
+                    generateErrorMessage(
+                        PayPalButtons.displayName || "PayPalButtons",
+                        "buttons",
+                        options
+                    )
                 );
             });
             return closeButtonsComponent;
