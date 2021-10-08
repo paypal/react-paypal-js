@@ -1,9 +1,17 @@
 import {
+    DATA_NAMESPACE,
     DEFAULT_PAYPAL_NAMESPACE,
     DEFAULT_BRAINTREE_NAMESPACE,
 } from "./constants";
 import type { PayPalNamespace } from "@paypal/paypal-js";
 import type { BraintreeNamespace } from "./types";
+
+type ErrorMessageParams = {
+    componentName: string;
+    requiredOption: string;
+    components?: string;
+    [DATA_NAMESPACE]?: string;
+};
 
 /**
  * Get the namespace from the window in the browser
@@ -55,4 +63,30 @@ export function hashStr(str: string): string {
     }
 
     return hash;
+}
+
+export function generateErrorMessage({
+    componentName,
+    requiredOption,
+    components = "",
+    [DATA_NAMESPACE]: dataNamespace = DEFAULT_PAYPAL_NAMESPACE,
+}: ErrorMessageParams): string {
+    const requiredOptionCapitalized = requiredOption
+        .charAt(0)
+        .toUpperCase()
+        .concat(requiredOption.substring(1));
+    let errorMessage = `Unable to render <${componentName} /> because window.${dataNamespace}.${requiredOptionCapitalized} is undefined.`;
+
+    // the JS SDK does not load the Messages component by default. It must be passed into the "components" query parameter.
+    if (!components.includes(requiredOption)) {
+        const expectedComponents = [components, requiredOption]
+            .filter(Boolean)
+            .join();
+
+        errorMessage +=
+            `\nTo fix the issue, add '${requiredOption}' to the list of components passed to the parent PayPalScriptProvider:` +
+            `\n\`<PayPalScriptProvider options={{ components: '${expectedComponents}'}}>\`.`;
+    }
+
+    return errorMessage;
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, FC, ReactNode } from "react";
 import { usePayPalScriptReducer } from "../hooks/scriptProviderHooks";
-import { getPayPalWindowNamespace } from "../utils";
-import { DEFAULT_PAYPAL_NAMESPACE, DATA_NAMESPACE } from "../constants";
+import { getPayPalWindowNamespace, generateErrorMessage } from "../utils";
+import { DATA_NAMESPACE } from "../constants";
 import type {
     PayPalMarksComponentOptions,
     PayPalMarksComponent,
@@ -85,7 +85,14 @@ export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
             paypalWindowNamespace.Marks === undefined
         ) {
             setErrorState(() => {
-                throw new Error(getErrorMessage(options));
+                throw new Error(
+                    generateErrorMessage({
+                        componentName: PayPalMarks.displayName || "PayPalMarks",
+                        requiredOption: "marks",
+                        components: options.components,
+                        [DATA_NAMESPACE]: options["data-namespace"],
+                    })
+                );
             });
             return;
         }
@@ -104,21 +111,3 @@ export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
         </>
     );
 };
-
-function getErrorMessage({
-    components = "",
-    [DATA_NAMESPACE]: dataNamespace = DEFAULT_PAYPAL_NAMESPACE,
-}) {
-    let errorMessage = `Unable to render <PayPalMarks /> because window.${dataNamespace}.Marks is undefined.`;
-
-    // the JS SDK does not load the Marks component by default. It must be passed into the "components" query parameter.
-    if (!components.includes("marks")) {
-        const expectedComponents = components ? `${components},marks` : "marks";
-
-        errorMessage +=
-            "\nTo fix the issue, add 'marks' to the list of components passed to the parent PayPalScriptProvider:" +
-            `\n\`<PayPalScriptProvider options={{ components: '${expectedComponents}'}}>\`.`;
-    }
-
-    return errorMessage;
-}
