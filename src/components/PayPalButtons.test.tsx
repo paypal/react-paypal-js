@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import {
     render,
     waitFor,
@@ -11,11 +11,7 @@ import { mock } from "jest-mock-extended";
 
 import { PayPalButtons } from "./PayPalButtons";
 import { FUNDING } from "../index";
-import {
-    loadScript,
-    loadCustomScript,
-    PayPalNamespace,
-} from "@paypal/paypal-js";
+import { loadScript, PayPalNamespace } from "@paypal/paypal-js";
 import { PayPalScriptProvider } from "./PayPalScriptProvider";
 import {
     PayPalButtonsComponent,
@@ -24,11 +20,10 @@ import {
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
-    loadCustomScript: jest.fn(),
 }));
 
 const onError = jest.fn();
-const wrapper = ({ children }: { children: JSX.Element }) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
     <ErrorBoundary fallback={<div>Error</div>} onError={onError}>
         {children}
     </ErrorBoundary>
@@ -115,7 +110,7 @@ describe("<PayPalButtons />", () => {
         };
 
         act(() =>
-            (window.paypal?.Buttons as any).mock.calls[0][0].onInit(
+            (window.paypal?.Buttons as jest.Mock).mock.calls[0][0].onInit(
                 {},
                 onInitActions
             )
@@ -151,7 +146,8 @@ describe("<PayPalButtons />", () => {
         };
 
         act(() =>
-            (window.paypal?.Buttons as any).mock.calls[0][0]?.onInit(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (window.paypal?.Buttons as jest.Mock).mock.calls[0][0]?.onInit(
                 {},
                 onInitActions
             )
@@ -216,7 +212,7 @@ describe("<PayPalButtons />", () => {
             expect(window.paypal?.Buttons).toHaveBeenCalledTimes(3)
         );
     });
-    window.paypal?.Buttons as any;
+    window.paypal?.Buttons as jest.Mock;
     test("should not re-render Buttons from side-effect in props.createOrder function", async () => {
         function ButtonWrapper({ initialOrderID }: { initialOrderID: string }) {
             const [orderID, setOrderID] = useState(initialOrderID);
@@ -242,7 +238,7 @@ describe("<PayPalButtons />", () => {
 
         act(() =>
             // call createOrder() to trigger a state change
-            (window.paypal?.Buttons as any).mock.calls[0][0].createOrder()
+            (window.paypal?.Buttons as jest.Mock).mock.calls[0][0].createOrder()
         );
 
         await waitFor(() =>
@@ -259,6 +255,7 @@ describe("<PayPalButtons />", () => {
                 close: jest.fn().mockResolvedValue(true),
                 isEligible: jest.fn().mockReturnValue(false),
             })),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
 
         render(
@@ -272,11 +269,12 @@ describe("<PayPalButtons />", () => {
             expect(window.paypal?.Buttons).toBeCalled();
         });
         expect(
-            (window.paypal?.Buttons as any).mock.results[0].value.isEligible
+            (window.paypal?.Buttons as jest.Mock).mock.results[0].value
+                .isEligible
         ).toBeCalled();
         expect(
-            (window.paypal?.Buttons as any).mock.results[0].value.isEligible
-                .mock.results[0].value
+            (window.paypal?.Buttons as jest.Mock).mock.results[0].value
+                .isEligible.mock.results[0].value
         ).toBeFalsy();
     });
 
@@ -285,6 +283,7 @@ describe("<PayPalButtons />", () => {
             .spyOn(console, "error")
             .mockImplementation();
         // reset the paypal namespace to trigger the error
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         window.paypal = {} as any;
 
         render(
@@ -304,6 +303,7 @@ describe("<PayPalButtons />", () => {
             .spyOn(console, "error")
             .mockImplementation();
         // reset the paypal namespace to trigger the error
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         window.paypal = {} as any;
 
         render(
