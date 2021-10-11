@@ -1,35 +1,5 @@
 import type { BraintreePayPalCheckout } from "../../types/braintree/paypalCheckout";
-import type {
-    PayPalButtonsComponentProps,
-    BraintreePayPalButtonsComponentProps,
-} from "../../types";
-
-/**
- * Override the callbacks to send the data and Braintree instance as argument
- * to the defined functions from BraintreePayPalButtons component
- *
- * @param functionToDecorate     the name of the function to decorate
- * @param braintreeButtonProps   the BraintreePayPalButtons component declared properties
- * @param payPalCheckoutInstance the Braintree instance to send as argument
- */
-const decorateFunction = (
-    functionToDecorate: "createOrder" | "createBillingAgreement" | "onApprove",
-    braintreeButtonProps: BraintreePayPalButtonsComponentProps,
-    payPalCheckoutInstance: BraintreePayPalCheckout
-) => {
-    const braintreeFunctionReference = braintreeButtonProps[functionToDecorate];
-
-    if (
-        braintreeFunctionReference &&
-        typeof braintreeButtonProps[functionToDecorate] === "function"
-    ) {
-        braintreeButtonProps[functionToDecorate] = (data, actions) =>
-            braintreeFunctionReference(data, {
-                ...actions,
-                braintree: payPalCheckoutInstance,
-            });
-    }
-};
+import type { BraintreePayPalButtonsComponentProps } from "../../types";
 
 /**
  * Use `actions.braintree` to provide an interface for the paypalCheckoutInstance
@@ -41,14 +11,34 @@ const decorateFunction = (
 export const decorateActions = (
     buttonProps: BraintreePayPalButtonsComponentProps,
     payPalCheckoutInstance: BraintreePayPalCheckout
-): PayPalButtonsComponentProps => {
-    decorateFunction("createOrder", buttonProps, payPalCheckoutInstance);
-    decorateFunction(
-        "createBillingAgreement",
-        buttonProps,
-        payPalCheckoutInstance
-    );
-    decorateFunction("onApprove", buttonProps, payPalCheckoutInstance);
+): BraintreePayPalButtonsComponentProps => {
+    const createOrderRef = buttonProps.createOrder;
+    const createBillingAgreementRef = buttonProps.createBillingAgreement;
+    const onApproveRef = buttonProps.onApprove;
 
-    return { ...buttonProps } as PayPalButtonsComponentProps;
+    if (typeof createOrderRef === "function") {
+        buttonProps.createOrder = (data, actions) =>
+            createOrderRef(data, {
+                ...actions,
+                braintree: payPalCheckoutInstance,
+            });
+    }
+
+    if (typeof createBillingAgreementRef === "function") {
+        buttonProps.createBillingAgreement = (data, actions) =>
+            createBillingAgreementRef(data, {
+                ...actions,
+                braintree: payPalCheckoutInstance,
+            });
+    }
+
+    if (typeof onApproveRef === "function") {
+        buttonProps.onApprove = (data, actions) =>
+            onApproveRef(data, {
+                ...actions,
+                braintree: payPalCheckoutInstance,
+            });
+    }
+
+    return { ...buttonProps };
 };
