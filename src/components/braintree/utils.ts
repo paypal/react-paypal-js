@@ -5,43 +5,26 @@ import type {
 } from "../../types";
 
 /**
- * Override the createOrder callback to send the PayPal checkout instance as argument
- * to the defined createOrder function for braintree component button
+ * Override the callbacks to send the data and Braintree instance as argument
+ * to the defined functions from BraintreePayPalButtons component
  *
- * @param braintreeButtonProps the component button options
+ * @param functionToDecorate     the name of the function to decorate
+ * @param braintreeButtonProps   the BraintreePayPalButtons component declared properties
+ * @param payPalCheckoutInstance the Braintree instance to send as argument
  */
-const decorateCreateOrder = (
+const decorateFunction = (
+    functionToDecorate: "createOrder" | "createBillingAgreement" | "onApprove",
     braintreeButtonProps: BraintreePayPalButtonsComponentProps,
     payPalCheckoutInstance: BraintreePayPalCheckout
 ) => {
-    if (typeof braintreeButtonProps.createOrder === "function") {
-        // Keep the createOrder function reference
-        const functionReference = braintreeButtonProps.createOrder;
+    const braintreeFunctionReference = braintreeButtonProps[functionToDecorate];
 
-        braintreeButtonProps.createOrder = (data, actions) =>
-            functionReference(data, {
-                ...actions,
-                braintree: payPalCheckoutInstance,
-            });
-    }
-};
-
-/**
- * Override the onApprove callback to send the payload as argument
- * to the defined onApprove function for braintree component button
- *
- * @param braintreeButtonProps the component button options
- */
-const decorateOnApprove = (
-    braintreeButtonProps: BraintreePayPalButtonsComponentProps,
-    payPalCheckoutInstance: BraintreePayPalCheckout
-) => {
-    if (typeof braintreeButtonProps.onApprove === "function") {
-        // Store the createOrder function reference
-        const braintreeOnApprove = braintreeButtonProps.onApprove;
-
-        braintreeButtonProps.onApprove = (data, actions) =>
-            braintreeOnApprove(data, {
+    if (
+        braintreeFunctionReference &&
+        typeof braintreeButtonProps[functionToDecorate] === "function"
+    ) {
+        braintreeButtonProps[functionToDecorate] = (data, actions) =>
+            braintreeFunctionReference(data, {
                 ...actions,
                 braintree: payPalCheckoutInstance,
             });
@@ -59,8 +42,13 @@ export const decorateActions = (
     buttonProps: BraintreePayPalButtonsComponentProps,
     payPalCheckoutInstance: BraintreePayPalCheckout
 ): PayPalButtonsComponentProps => {
-    decorateCreateOrder(buttonProps, payPalCheckoutInstance);
-    decorateOnApprove(buttonProps, payPalCheckoutInstance);
+    decorateFunction("createOrder", buttonProps, payPalCheckoutInstance);
+    decorateFunction(
+        "createBillingAgreement",
+        buttonProps,
+        payPalCheckoutInstance
+    );
+    decorateFunction("onApprove", buttonProps, payPalCheckoutInstance);
 
     return { ...buttonProps } as PayPalButtonsComponentProps;
 };
