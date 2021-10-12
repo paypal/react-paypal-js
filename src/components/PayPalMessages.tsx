@@ -42,7 +42,7 @@ export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
                 setErrorState(() => {
                     throw new Error(
                         generateErrorMessage(
-                            PayPalMessages.displayName || "PayPalMessages",
+                            PayPalMessages.displayName as string,
                             "messages",
                             options
                         )
@@ -82,3 +82,5 @@ export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
 
         return <div ref={messagesContainerRef} className={className} />;
     };
+
+PayPalMessages.displayName = "PayPalMessages";

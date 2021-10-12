@@ -87,7 +87,7 @@ export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
             setErrorState(() => {
                 throw new Error(
                     generateErrorMessage(
-                        PayPalMarks.displayName || "PayPalMarks",
+                        PayPalMarks.displayName as string,
                         "marks",
                         options
                     )
@@ -110,3 +110,5 @@ export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
         </>
     );
 };
+
+PayPalMarks.displayName = "PayPalMarks";

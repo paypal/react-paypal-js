@@ -81,7 +81,7 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             setErrorState(() => {
                 throw new Error(
                     generateErrorMessage(
-                        PayPalButtons.displayName || "PayPalButtons",
+                        PayPalButtons.displayName as string,
                         "buttons",
                         options
                     )
@@ -175,3 +175,5 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
         </>
     );
 };
+
+PayPalButtons.displayName = "PayPalButtons";
