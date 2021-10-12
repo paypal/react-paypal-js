@@ -3,7 +3,7 @@ import type { BraintreePayPalButtonsComponentProps } from "../../types";
 
 /**
  * Use `actions.braintree` to provide an interface for the paypalCheckoutInstance
- * through the createOrder and onApprove callbacks
+ * through the createOrder, createBillingAgreement and onApprove callbacks
  *
  * @param braintreeButtonProps the component button options
  * @returns a new copy of the component button options casted as {@link PayPalButtonsComponentProps}

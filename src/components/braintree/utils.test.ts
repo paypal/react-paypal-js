@@ -68,7 +68,7 @@ describe("decorateActions", () => {
         ).toBeTruthy();
     });
 
-    test("should modify the createBillingAgreement", () => {
+    test("should decorate the createBillingAgreement callback", () => {
         const buttonPropsWithCreateBillingAgreement = {
             disabled: false,
             children: null,
