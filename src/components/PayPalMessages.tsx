@@ -39,16 +39,18 @@ export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
                 paypalWindowNamespace === undefined ||
                 paypalWindowNamespace.Messages === undefined
             ) {
-                setErrorState(() => {
+                const { components, [DATA_NAMESPACE]: dataNamespace } = options;
+
+                return setErrorState(() => {
                     throw new Error(
-                        generateErrorMessage(
-                            PayPalMessages.displayName as string,
-                            "messages",
-                            options
-                        )
+                        generateErrorMessage({
+                            componentName: PayPalMessages.displayName as string,
+                            requiredOption: "messages",
+                            components,
+                            dataNamespace,
+                        })
                     );
                 });
-                return;
             }
 
             messages.current = paypalWindowNamespace.Messages({

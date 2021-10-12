@@ -84,16 +84,18 @@ export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
             paypalWindowNamespace === undefined ||
             paypalWindowNamespace.Marks === undefined
         ) {
-            setErrorState(() => {
+            const { components, [DATA_NAMESPACE]: dataNamespace } = options;
+
+            return setErrorState(() => {
                 throw new Error(
-                    generateErrorMessage(
-                        PayPalMarks.displayName as string,
-                        "marks",
-                        options
-                    )
+                    generateErrorMessage({
+                        componentName: PayPalMarks.displayName as string,
+                        requiredOption: "marks",
+                        components,
+                        dataNamespace,
+                    })
                 );
             });
-            return;
         }
 
         renderPayPalMark(paypalWindowNamespace.Marks({ ...markProps }));
