@@ -10,8 +10,11 @@ import { PayPalButtons } from "../PayPalButtons";
 import { useScriptProviderContext } from "../../hooks/scriptProviderHooks";
 import { getBraintreeWindowNamespace } from "../../utils";
 import { decorateActions } from "./utils";
-import type { BraintreePayPalButtonsComponentProps } from "../../types";
 import { DISPATCH_ACTION } from "../../types";
+import type {
+    BraintreePayPalButtonsComponentProps,
+    PayPalButtonsComponentProps,
+} from "../../types";
 
 /**
 This `<BraintreePayPalButtons />` component renders the [Braintree PayPal Buttons](https://developer.paypal.com/braintree/docs/guides/paypal/overview) for Braintree Merchants.
@@ -99,10 +102,10 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                         className={className}
                         disabled={disabled}
                         forceReRender={forceReRender}
-                        {...decorateActions(
+                        {...(decorateActions(
                             buttonProps,
                             providerContext.braintreePayPalCheckoutInstance
-                        )}
+                        ) as PayPalButtonsComponentProps)}
                     >
                         {children}
                     </PayPalButtons>
