@@ -8,8 +8,8 @@ import type { BraintreeNamespace } from "./types";
 type ErrorMessageParams = {
     componentName: string;
     requiredOption: string;
-    components?: string;
-    dataNamespace?: string;
+    sdkRequestedComponents?: string;
+    sdkDataNamespace?: string;
 };
 
 /**
@@ -67,18 +67,18 @@ export function hashStr(str: string): string {
 export function generateErrorMessage({
     componentName,
     requiredOption,
-    components = "",
-    dataNamespace = DEFAULT_PAYPAL_NAMESPACE,
+    sdkRequestedComponents = "",
+    sdkDataNamespace = DEFAULT_PAYPAL_NAMESPACE,
 }: ErrorMessageParams): string {
     const requiredOptionCapitalized = requiredOption
         .charAt(0)
         .toUpperCase()
         .concat(requiredOption.substring(1));
-    let errorMessage = `Unable to render <${componentName} /> because window.${dataNamespace}.${requiredOptionCapitalized} is undefined.`;
+    let errorMessage = `Unable to render <${componentName} /> because window.${sdkDataNamespace}.${requiredOptionCapitalized} is undefined.`;
 
     // the JS SDK does not load the Messages component by default. It must be passed into the "components" query parameter.
-    if (!components.includes(requiredOption)) {
-        const expectedComponents = [components, requiredOption]
+    if (!sdkRequestedComponents.includes(requiredOption)) {
+        const expectedComponents = [sdkRequestedComponents, requiredOption]
             .filter(Boolean)
             .join();
 
