@@ -39,18 +39,13 @@ export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
                 paypalWindowNamespace === undefined ||
                 paypalWindowNamespace.Messages === undefined
             ) {
-                const {
-                    components: sdkRequestedComponents,
-                    [DATA_NAMESPACE]: sdkDataNamespace,
-                } = options;
-
                 return setErrorState(() => {
                     throw new Error(
                         generateErrorMessage({
                             componentName: PayPalMessages.displayName as string,
                             requiredOption: "messages",
-                            sdkRequestedComponents,
-                            sdkDataNamespace,
+                            sdkRequestedComponents: options.components,
+                            sdkDataNamespace: options[DATA_NAMESPACE],
                         })
                     );
                 });

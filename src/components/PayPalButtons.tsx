@@ -78,18 +78,13 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             paypalWindowNamespace === undefined ||
             paypalWindowNamespace.Buttons === undefined
         ) {
-            const {
-                components: sdkRequestedComponents,
-                [DATA_NAMESPACE]: sdkDataNamespace,
-            } = options;
-
             setErrorState(() => {
                 throw new Error(
                     generateErrorMessage({
                         componentName: PayPalButtons.displayName as string,
                         requiredOption: "buttons",
-                        sdkRequestedComponents,
-                        sdkDataNamespace,
+                        sdkRequestedComponents: options.components,
+                        sdkDataNamespace: options[DATA_NAMESPACE],
                     })
                 );
             });
