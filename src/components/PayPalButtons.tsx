@@ -81,8 +81,8 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
             setErrorState(() => {
                 throw new Error(
                     generateErrorMessage({
-                        componentName: PayPalButtons.displayName as string,
-                        requiredOption: "buttons",
+                        reactComponentName: PayPalButtons.displayName as string,
+                        sdkComponentKey: "buttons",
                         sdkRequestedComponents: options.components,
                         sdkDataNamespace: options[DATA_NAMESPACE],
                     })

@@ -6,8 +6,8 @@ import type { PayPalNamespace } from "@paypal/paypal-js";
 import type { BraintreeNamespace } from "./types";
 
 type ErrorMessageParams = {
-    componentName: string;
-    requiredOption: string;
+    reactComponentName: string;
+    sdkComponentKey: string;
     sdkRequestedComponents?: string;
     sdkDataNamespace?: string;
 };
@@ -65,25 +65,25 @@ export function hashStr(str: string): string {
 }
 
 export function generateErrorMessage({
-    componentName,
-    requiredOption,
+    reactComponentName,
+    sdkComponentKey,
     sdkRequestedComponents = "",
     sdkDataNamespace = DEFAULT_PAYPAL_NAMESPACE,
 }: ErrorMessageParams): string {
-    const requiredOptionCapitalized = requiredOption
+    const requiredOptionCapitalized = sdkComponentKey
         .charAt(0)
         .toUpperCase()
-        .concat(requiredOption.substring(1));
-    let errorMessage = `Unable to render <${componentName} /> because window.${sdkDataNamespace}.${requiredOptionCapitalized} is undefined.`;
+        .concat(sdkComponentKey.substring(1));
+    let errorMessage = `Unable to render <${reactComponentName} /> because window.${sdkDataNamespace}.${requiredOptionCapitalized} is undefined.`;
 
     // the JS SDK does not load the Messages component by default. It must be passed into the "components" query parameter.
-    if (!sdkRequestedComponents.includes(requiredOption)) {
-        const expectedComponents = [sdkRequestedComponents, requiredOption]
+    if (!sdkRequestedComponents.includes(sdkComponentKey)) {
+        const expectedComponents = [sdkRequestedComponents, sdkComponentKey]
             .filter(Boolean)
             .join();
 
         errorMessage +=
-            `\nTo fix the issue, add '${requiredOption}' to the list of components passed to the parent PayPalScriptProvider:` +
+            `\nTo fix the issue, add '${sdkComponentKey}' to the list of components passed to the parent PayPalScriptProvider:` +
             `\n\`<PayPalScriptProvider options={{ components: '${expectedComponents}'}}>\`.`;
     }
 

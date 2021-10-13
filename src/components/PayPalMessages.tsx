@@ -42,8 +42,9 @@ export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
                 return setErrorState(() => {
                     throw new Error(
                         generateErrorMessage({
-                            componentName: PayPalMessages.displayName as string,
-                            requiredOption: "messages",
+                            reactComponentName:
+                                PayPalMessages.displayName as string,
+                            sdkComponentKey: "messages",
                             sdkRequestedComponents: options.components,
                             sdkDataNamespace: options[DATA_NAMESPACE],
                         })

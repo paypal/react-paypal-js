@@ -87,8 +87,8 @@ export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
             return setErrorState(() => {
                 throw new Error(
                     generateErrorMessage({
-                        componentName: PayPalMarks.displayName as string,
-                        requiredOption: "marks",
+                        reactComponentName: PayPalMarks.displayName as string,
+                        sdkComponentKey: "marks",
                         sdkRequestedComponents: options.components,
                         sdkDataNamespace: options[DATA_NAMESPACE],
                     })
