@@ -76,7 +76,8 @@ export function generateErrorMessage({
         .concat(sdkComponentKey.substring(1));
     let errorMessage = `Unable to render <${reactComponentName} /> because window.${sdkDataNamespace}.${requiredOptionCapitalized} is undefined.`;
 
-    // the JS SDK does not load the Messages component by default. It must be passed into the "components" query parameter.
+    // The JS SDK only loads the buttons component by default.
+    // All other components like messages and marks must be requested using the "components" query parameter
     if (!sdkRequestedComponents.includes(sdkComponentKey)) {
         const expectedComponents = [sdkRequestedComponents, sdkComponentKey]
             .filter(Boolean)
