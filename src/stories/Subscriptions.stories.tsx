@@ -75,7 +75,7 @@ export default {
     },
     args: {
         type: "subscription",
-        amount: "2.00",
+        amount: "2",
     },
     decorators: [
         (Story: FC): ReactElement => {

@@ -55,7 +55,7 @@ export default {
         },
     },
     args: {
-        amount: "2.00",
+        amount: "2",
     },
 };
 

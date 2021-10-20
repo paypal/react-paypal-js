@@ -130,7 +130,7 @@ export default {
         // This turns on the `onShippingChange()` feature which uses the popup experience with the Standard Card button.
         // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
         onShippingChange: null,
-        amount: "2.00",
+        amount: "2",
         currency: "USD",
         size: 750,
         showSpinner: false,
