@@ -7,11 +7,14 @@ import {
     BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
 } from "../../constants";
 import { PayPalButtons } from "../PayPalButtons";
-import { useBraintreeProviderContext } from "../../hooks/braintreeProviderHooks";
+import { useScriptProviderContext } from "../../hooks/scriptProviderHooks";
 import { getBraintreeWindowNamespace } from "../../utils";
 import { decorateActions } from "./utils";
-import type { BraintreePayPalButtonsComponentProps } from "../../types";
 import { DISPATCH_ACTION } from "../../types";
+import type {
+    BraintreePayPalButtonsComponentProps,
+    PayPalButtonsComponentProps,
+} from "../../types";
 
 /**
 This `<BraintreePayPalButtons />` component renders the [Braintree PayPal Buttons](https://developer.paypal.com/braintree/docs/guides/paypal/overview) for Braintree Merchants.
@@ -40,7 +43,7 @@ Use props for customizing your buttons. For example, here's how you would use th
                         // call server-side endpoint to finish the sale
                     })
             }
-        />;
+        />
     </PayPalScriptProvider>
 ```
 
@@ -49,12 +52,12 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
     ({
         className = "",
         disabled = false,
-        children = null,
+        children,
         forceReRender = [],
         ...buttonProps
     }: BraintreePayPalButtonsComponentProps) => {
         const [, setErrorState] = useState(null);
-        const [providerContext, dispatch] = useBraintreeProviderContext();
+        const [providerContext, dispatch] = useScriptProviderContext();
 
         useEffect(() => {
             Promise.all([
@@ -99,10 +102,10 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                         className={className}
                         disabled={disabled}
                         forceReRender={forceReRender}
-                        {...decorateActions(
+                        {...(decorateActions(
                             buttonProps,
                             providerContext.braintreePayPalCheckoutInstance
-                        )}
+                        ) as PayPalButtonsComponentProps)}
                     >
                         {children}
                     </PayPalButtons>

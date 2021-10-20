@@ -1,14 +1,18 @@
+import { mock } from "jest-mock-extended";
 import {
     getPayPalWindowNamespace,
     getBraintreeWindowNamespace,
     hashStr,
 } from "./utils";
+import type { PayPalNamespace } from "@paypal/paypal-js";
+import type { BraintreeNamespace } from "./types";
+import { DATA_NAMESPACE } from "./constants";
 
 describe("getPayPalWindowNamespace", () => {
+    const mockPayPalNamespace = mock<PayPalNamespace>();
+
     beforeAll(() => {
-        window.paypal = {
-            Buttons: jest.fn(),
-        };
+        window.paypal = mockPayPalNamespace;
     });
 
     test("should return the paypal namespace", () => {
@@ -21,16 +25,17 @@ describe("getPayPalWindowNamespace", () => {
 });
 
 describe("getBraintreeWindowNamespace", () => {
+    const mockBraintreeNamespace = mock<BraintreeNamespace>();
+
     beforeAll(() => {
-        window.braintree = {
-            createPayment: jest.fn(),
-            client: jest.fn(),
-        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).braintree = mockBraintreeNamespace;
     });
 
     test("should return the paypal namespace", () => {
         expect(getBraintreeWindowNamespace("braintree")).toEqual(
-            window.braintree
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (window as any).braintree
         );
     });
 
@@ -59,7 +64,7 @@ describe("hashStr", () => {
                     debug: false,
                     vault: false,
                     locale: "US",
-                    "data-namespace": "braintree",
+                    [DATA_NAMESPACE]: "braintree",
                 })
             )
         ).toMatchInlineSnapshot(

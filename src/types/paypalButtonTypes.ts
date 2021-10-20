@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import type { ReactNode } from "react";
 import type { PayPalButtonsComponentOptions } from "@paypal/paypal-js/types/components/buttons";
 
 export interface PayPalButtonsComponentProps
@@ -19,5 +19,5 @@ export interface PayPalButtonsComponentProps
     /**
      * Used to render custom content when ineligible.
      */
-    children?: ReactElement | null;
+    children?: ReactNode;
 }

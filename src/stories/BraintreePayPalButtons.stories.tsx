@@ -23,6 +23,7 @@ import {
     ARG_TYPE_AMOUNT,
 } from "./constants";
 
+const uid = generateRandomString();
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
     components: "buttons",
@@ -109,12 +110,16 @@ export default {
         disabled: false,
     },
     decorators: [
-        (Story: FC, storyArg: { args: { size: number } }): ReactElement => {
+        (
+            Story: FC,
+            storyArg: {
+                args: { size: number };
+                originalStoryFn: { name: string };
+            }
+        ): ReactElement => {
             // Workaround to render the story after got the client token,
             // The new experimental loaders doesn't work in Docs views
             const [clientToken, setClientToken] = useState<string | null>(null);
-
-            const uid = generateRandomString();
 
             useEffect(() => {
                 (async () => {
@@ -132,6 +137,9 @@ export default {
                                     "data-client-token": clientToken,
                                     "data-namespace": uid,
                                     "data-uid": uid,
+                                    vault:
+                                        storyArg.originalStoryFn.name ===
+                                        BillingAgreement.name,
                                 }}
                             >
                                 <Story />
@@ -213,6 +221,63 @@ export const Default: FC<{
             onError={(err: Record<string, unknown>) => {
                 action("onError")(err.toString());
             }}
+        />
+    );
+};
+
+export const BillingAgreement: FC<{
+    style: {
+        color?: "gold" | "blue" | "silver" | "white" | "black";
+        height?: number;
+        label?:
+            | "paypal"
+            | "checkout"
+            | "buynow"
+            | "pay"
+            | "installment"
+            | "subscribe"
+            | "donate";
+        layout?: "vertical" | "horizontal";
+        shape?: "rect" | "pill";
+        tagline?: boolean;
+    };
+    fundingSource: string;
+    disabled: boolean;
+    amount: string;
+}> = ({ style, fundingSource, disabled, amount }) => {
+    return (
+        <BraintreePayPalButtons
+            createBillingAgreement={(data, actions) =>
+                actions.braintree.createPayment({
+                    flow: "vault", // Required
+
+                    // The following are optional params
+                    billingAgreementDescription: "Your agreement description",
+                    enableShippingAddress: true,
+                    shippingAddressEditable: false,
+                    amount: amount,
+                    shippingAddressOverride: {
+                        recipientName: "Scruff McGruff",
+                        line1: "1234 Main St.",
+                        line2: "Unit 1",
+                        city: "Chicago",
+                        countryCode: "US",
+                        postalCode: "60652",
+                        state: "IL",
+                        phone: "123.456.7890",
+                    },
+                })
+            }
+            onApprove={(data, actions) =>
+                actions.braintree
+                    .tokenizePayment(data as OnApproveBraintreeData)
+                    .then((payload) => {
+                        approveSale(payload.nonce, amount).then((data) => {
+                            alert(JSON.stringify(data));
+                            // Call server-side endpoint to finish the sale
+                        });
+                    })
+            }
         />
     );
 };
