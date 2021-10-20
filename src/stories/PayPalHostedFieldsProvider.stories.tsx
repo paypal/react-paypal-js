@@ -49,7 +49,7 @@ const LoadedCardFields = () => {
 };
 
 export default {
-    title: "Example/PayPalHostedFieldsProvider",
+    title: "PayPal/PayPalHostedFieldsProvider",
     component: PayPalHostedFieldsProvider,
     decorators: [
         (Story: FC): ReactElement => {

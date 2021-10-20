@@ -125,7 +125,7 @@ const SubmitPayment = ({ customStyle }: { customStyle?: CSSProperties }) => {
 };
 
 export default {
-    title: "Example/PayPalHostedFields",
+    title: "PayPal/PayPalHostedFields",
     component: PayPalHostedField,
     argTypes: {
         PayPalHostedFieldOptions: {
