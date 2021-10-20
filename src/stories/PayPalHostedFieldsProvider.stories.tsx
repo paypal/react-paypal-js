@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { FC, ReactElement } from "react";
+import { action } from "@storybook/addon-actions";
 
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
@@ -34,6 +35,12 @@ const NotEligibleError = () => (
 const LoadedCardFields = () => {
     const cardFields = usePayPalHostedFields();
 
+    useEffect(() => {
+        if (cardFields) {
+            action("loaded")("Hosted fields provider successfully loaded.");
+        }
+    }, [cardFields]);
+
     return (
         <>
             <p>
@@ -51,6 +58,27 @@ const LoadedCardFields = () => {
 export default {
     title: "PayPal/PayPalHostedFieldsProvider",
     component: PayPalHostedFieldsProvider,
+    parameters: {
+        controls: { expanded: true },
+        docs: { source: { type: "code" } },
+    },
+    argTypes: {
+        styles: {
+            control: { type: "object", expanded: true },
+        },
+        createOrder: {
+            control: false,
+        },
+        notEligibleError: {
+            control: false,
+        },
+    },
+    args: {
+        styles: {
+            ".valid": { color: "#28a745" },
+            ".invalid": { color: "#dc3545" },
+        },
+    },
     decorators: [
         (Story: FC): ReactElement => {
             // Workaround to render the story after got the client token,
@@ -86,7 +114,7 @@ export default {
     ],
 };
 
-export const Default: FC = () => {
+export const Default: FC<{ styles: { [key in string]: unknown } }> = (args) => {
     return (
         <PayPalHostedFieldsProvider
             createOrder={() => {
@@ -94,11 +122,9 @@ export const Default: FC = () => {
                 return Promise.resolve("7NE43326GP4951156");
             }}
             notEligibleError={<NotEligibleError />}
-            styles={{
-                ".valid": { color: "#28a745" },
-                ".invalid": { color: "#dc3545" },
-            }}
+            styles={args.styles}
         >
+            <LoadedCardFields />
             <PayPalHostedField
                 id="card-number"
                 className="card-field"
@@ -129,7 +155,6 @@ export const Default: FC = () => {
                     placeholder: "MM/YYYY",
                 }}
             />
-            <LoadedCardFields />
         </PayPalHostedFieldsProvider>
     );
 };
