@@ -17,6 +17,7 @@ import {
     getClientToken,
     HEROKU_SERVER,
 } from "./utils";
+import { COMPONENT_PROPS } from "./constants";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -65,12 +66,15 @@ export default {
     argTypes: {
         styles: {
             control: { type: "object", expanded: true },
+            table: { category: COMPONENT_PROPS },
         },
         createOrder: {
             control: false,
+            table: { category: COMPONENT_PROPS },
         },
         notEligibleError: {
             control: false,
+            table: { category: COMPONENT_PROPS },
         },
     },
     args: {
