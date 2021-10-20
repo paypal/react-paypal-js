@@ -23,6 +23,27 @@ import {
     ARG_TYPE_AMOUNT,
 } from "./constants";
 
+type StoryProps = {
+    style: {
+        color?: "gold" | "blue" | "silver" | "white" | "black";
+        height?: number;
+        label?:
+            | "paypal"
+            | "checkout"
+            | "buynow"
+            | "pay"
+            | "installment"
+            | "subscribe"
+            | "donate";
+        layout?: "vertical" | "horizontal";
+        shape?: "rect" | "pill";
+        tagline?: boolean;
+    };
+    fundingSource: string;
+    disabled: boolean;
+    amount: string;
+};
+
 const uid = generateRandomString();
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -100,7 +121,7 @@ export default {
         // This turns on the `onShippingChange()` feature which uses the popup experience with the Standard Card button.
         // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
         onShippingChange: null,
-        amount: "2.00",
+        amount: "2",
         size: 100,
         style: {
             color: "gold",
@@ -120,6 +141,8 @@ export default {
             // Workaround to render the story after got the client token,
             // The new experimental loaders doesn't work in Docs views
             const [clientToken, setClientToken] = useState<string | null>(null);
+            const isBillingAggrement =
+                storyArg.originalStoryFn.name === BillingAgreement.name;
 
             useEffect(() => {
                 (async () => {
@@ -137,9 +160,10 @@ export default {
                                     "data-client-token": clientToken,
                                     "data-namespace": uid,
                                     "data-uid": uid,
-                                    vault:
-                                        storyArg.originalStoryFn.name ===
-                                        BillingAgreement.name,
+                                    intent: isBillingAggrement
+                                        ? "tokenize"
+                                        : "capture",
+                                    vault: isBillingAggrement,
                                 }}
                             >
                                 <Story />
@@ -152,26 +176,12 @@ export default {
     ],
 };
 
-export const Default: FC<{
-    style: {
-        color?: "gold" | "blue" | "silver" | "white" | "black";
-        height?: number;
-        label?:
-            | "paypal"
-            | "checkout"
-            | "buynow"
-            | "pay"
-            | "installment"
-            | "subscribe"
-            | "donate";
-        layout?: "vertical" | "horizontal";
-        shape?: "rect" | "pill";
-        tagline?: boolean;
-    };
-    fundingSource: string;
-    disabled: boolean;
-    amount: string;
-}> = ({ style, fundingSource, disabled, amount }) => {
+export const Default: FC<StoryProps> = ({
+    style,
+    fundingSource,
+    disabled,
+    amount,
+}) => {
     // Remember all the arguments props are received from the control panel below
     return (
         <BraintreePayPalButtons
@@ -225,28 +235,18 @@ export const Default: FC<{
     );
 };
 
-export const BillingAgreement: FC<{
-    style: {
-        color?: "gold" | "blue" | "silver" | "white" | "black";
-        height?: number;
-        label?:
-            | "paypal"
-            | "checkout"
-            | "buynow"
-            | "pay"
-            | "installment"
-            | "subscribe"
-            | "donate";
-        layout?: "vertical" | "horizontal";
-        shape?: "rect" | "pill";
-        tagline?: boolean;
-    };
-    fundingSource: string;
-    disabled: boolean;
-    amount: string;
-}> = ({ style, fundingSource, disabled, amount }) => {
+export const BillingAgreement: FC<StoryProps> = ({
+    style,
+    fundingSource,
+    disabled,
+    amount,
+}) => {
     return (
         <BraintreePayPalButtons
+            style={style}
+            disabled={disabled}
+            fundingSource={fundingSource}
+            forceReRender={[style, amount]}
             createBillingAgreement={(data, actions) =>
                 actions.braintree.createPayment({
                     flow: "vault", // Required
@@ -255,7 +255,6 @@ export const BillingAgreement: FC<{
                     billingAgreementDescription: "Your agreement description",
                     enableShippingAddress: true,
                     shippingAddressEditable: false,
-                    amount: amount,
                     shippingAddressOverride: {
                         recipientName: "Scruff McGruff",
                         line1: "1234 Main St.",
@@ -273,7 +272,7 @@ export const BillingAgreement: FC<{
                     .tokenizePayment(data as OnApproveBraintreeData)
                     .then((payload) => {
                         approveSale(payload.nonce, amount).then((data) => {
-                            alert(JSON.stringify(data));
+                            action("onApprove")(data);
                             // Call server-side endpoint to finish the sale
                         });
                     })
