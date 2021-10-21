@@ -8,6 +8,7 @@ import type {
     OnApproveBraintreeActions,
     OnApproveBraintreeData,
 } from "../types";
+import type { Story } from "@storybook/react";
 
 import { PayPalScriptProvider, FUNDING } from "../index";
 import { BraintreePayPalButtons } from "../components/braintree/BraintreePayPalButtons";
@@ -124,7 +125,6 @@ export default {
         amount: "2",
         size: 100,
         style: {
-            color: "gold",
             label: "paypal",
             layout: "vertical",
         },
@@ -279,4 +279,11 @@ export const BillingAgreement: FC<StoryProps> = ({
             }
         />
     );
+};
+
+// Override Funding options on billing agreement example
+(BillingAgreement as Story).argTypes = {
+    fundingSource: {
+        options: [FUNDING.PAYPAL, FUNDING.CARD, FUNDING.CREDIT, undefined],
+    },
 };

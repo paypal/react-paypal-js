@@ -39,15 +39,29 @@ export interface PayPalHostedFieldProps {
     /**
      * Options to modify the hosted field input. You can set a placeholder text,
      * a prefill value or set the maximum length of a field.
-     * Check available options in the this type:
      */
     options: PayPalHostedFieldOptions;
+    /**
+     * Defines a unique identifier (ID) which must be unique in the whole document
+     */
     id?: string;
+    /**
+     * A space-separated list of the classes of the element
+     */
     className?: string;
+    /**
+     * Helps define the language of an element: the language that non-editable elements are in,
+     * or the language that editable elements should be written in by the user
+     */
     lang?: string;
+    /**
+     * Contains a text representing advisory information related to the element it belongs to
+     */
     title?: string;
+    /**
+     * Contains CSS styling declarations to be applied to the element
+     */
     style?: CSSProperties;
-    align?: string;
 }
 export interface PayPalHostedFieldsBillingAddressProps {
     show: boolean;

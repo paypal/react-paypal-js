@@ -38,7 +38,13 @@ const LoadedCardFields = () => {
 
     useEffect(() => {
         if (cardFields) {
-            action("loaded")("Hosted fields provider successfully loaded.");
+            action("hostedFields SDK")(
+                "Hosted fields provider successfully loaded."
+            );
+        } else {
+            action("hostedFields SDK")(
+                "Starting loading Hosted fields provider."
+            );
         }
     }, [cardFields]);
 

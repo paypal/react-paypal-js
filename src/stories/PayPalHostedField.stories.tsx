@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, CSSProperties } from "react";
+import { action } from "@storybook/addon-actions";
 import type { FC, ReactElement } from "react";
 import type { Story } from "@storybook/react";
 
@@ -17,6 +18,7 @@ import {
     getClientToken,
     HEROKU_SERVER,
 } from "./utils";
+import { COMPONENT_PROPS, ARG_TYPE_AMOUNT } from "./constants";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -33,6 +35,10 @@ const customBorderFieldStyle = {
     border: "1px solid #606060",
     boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
 };
+const CREATE_ORDER = "createOrder";
+const SUBMIT_FORM = "submitForm";
+const CAPTURE_ORDER = "captureOrder";
+const ERROR = "Error";
 
 /**
  * Get dynamically the capture order URL to fetch the payment info
@@ -71,30 +77,34 @@ const SubmitPayment = ({ customStyle }: { customStyle?: CSSProperties }) => {
                     "The payment form is invalid, please check it before execute the payment"
                 );
             }
-
+            action(SUBMIT_FORM)("Form is valid and submitted");
             setPaying(true);
             hostedField
                 .submit({
                     cardholderName: cardHolderName?.current?.value,
                 })
                 .then((data) => {
-                    console.log("orderId: ", data.orderId);
+                    action("Received orderId")(data.orderId);
+                    action(CAPTURE_ORDER)(
+                        "Sending oderId to custom endpoint to capture the payment information"
+                    );
                     fetch(captureOrderUrl(data.orderId), {
                         method: "post",
                     })
                         .then((response) => response.json())
                         .then((data) => {
-                            alert(JSON.stringify(data));
+                            action(CAPTURE_ORDER)(data);
                         })
                         .catch((err) => {
-                            alert(JSON.stringify(err));
+                            action(ERROR)(err.message);
+                            console.error(err);
                         })
                         .finally(() => {
                             setPaying(false);
                         });
                 })
                 .catch((err) => {
-                    alert(JSON.stringify(err));
+                    action(ERROR)(err.message);
                     setPaying(false);
                 });
         }
@@ -127,9 +137,24 @@ const SubmitPayment = ({ customStyle }: { customStyle?: CSSProperties }) => {
 export default {
     title: "PayPal/PayPalHostedFields",
     component: PayPalHostedField,
+    parameters: {
+        controls: { expanded: true, sort: "requiredFirst" },
+    },
     argTypes: {
+        hostedFieldType: {
+            control: false,
+            table: { category: COMPONENT_PROPS },
+        },
+        options: { control: false, table: { category: COMPONENT_PROPS } },
+        align: { control: false, table: { category: COMPONENT_PROPS } },
+        className: { control: false, table: { category: COMPONENT_PROPS } },
+        id: { control: false, table: { category: COMPONENT_PROPS } },
+        lang: { control: false, table: { category: COMPONENT_PROPS } },
+        style: { control: false, table: { category: COMPONENT_PROPS } },
+        title: { control: false, table: { category: COMPONENT_PROPS } },
+        amount: ARG_TYPE_AMOUNT,
         PayPalHostedFieldOptions: {
-            control: { type: "null" },
+            control: false,
             type: { required: true },
             description: `<code>{<br>
                 <b class="code-json">selector</b>: The string element selector (#id, .class). Represent the field identifier.<br>
@@ -148,6 +173,9 @@ export default {
                 category: "Types",
             },
         },
+    },
+    args: {
+        amount: "2",
     },
     decorators: [
         (Story: FC): ReactElement => {
@@ -184,11 +212,14 @@ export default {
     ],
 };
 
-export const Default: FC = () => {
+export const Default: FC<{ amount: string }> = ({ amount }) => {
     return (
         <PayPalHostedFieldsProvider
-            createOrder={() =>
-                fetch(CREATE_ORDER_URL, {
+            createOrder={() => {
+                action(CREATE_ORDER)(
+                    "Start creating the order in custom endpoint"
+                );
+                return fetch(CREATE_ORDER_URL, {
                     method: "post",
                     headers: {
                         "Content-Type": "application/json",
@@ -197,7 +228,7 @@ export const Default: FC = () => {
                         purchase_units: [
                             {
                                 amount: {
-                                    value: 50,
+                                    value: amount,
                                     currency_code: "USD",
                                 },
                             },
@@ -206,11 +237,15 @@ export const Default: FC = () => {
                     }),
                 })
                     .then((response) => response.json())
-                    .then((order) => order.id)
-                    .catch((err) => {
-                        alert(err);
+                    .then((order) => {
+                        action(CREATE_ORDER)(order);
+                        return order.id;
                     })
-            }
+                    .catch((err) => {
+                        action(ERROR)(err.message);
+                        console.error(err);
+                    });
+            }}
             notEligibleError={<NotEligibleError />}
             styles={{
                 ".valid": { color: GREEN_COLOR },
@@ -264,6 +299,81 @@ export const Default: FC = () => {
     );
 };
 
+export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
+    return (
+        <PayPalHostedFieldsProvider
+            createOrder={() =>
+                fetch(CREATE_ORDER_URL, {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        purchase_units: [
+                            {
+                                amount: {
+                                    value: amount,
+                                    currency_code: "USD",
+                                },
+                            },
+                        ],
+                        intent: "CAPTURE",
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((order) => order.id)
+                    .catch((err) => {
+                        action(ERROR)(err.message);
+                        console.error(err);
+                    })
+            }
+            notEligibleError={<NotEligibleError />}
+            styles={{
+                ".valid": { color: GREEN_COLOR },
+                ".invalid": { color: RED_COLOR },
+            }}
+        >
+            <PayPalHostedField
+                id="card-number-1"
+                className="card-field"
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                options={{
+                    selector: "#card-number-1",
+                    placeholder: "4111 1111 1111 1111",
+                }}
+            />
+            <PayPalHostedField
+                id="cvv-1"
+                className="card-field"
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                options={{
+                    selector: "#cvv-1",
+                    placeholder: "123",
+                    maskInput: true,
+                }}
+            />
+            <PayPalHostedField
+                id="expiration-month-1"
+                className="card-field"
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH}
+                options={{ selector: "#expiration-month-1", placeholder: "MM" }}
+            />
+            <PayPalHostedField
+                id="expiration-year-1"
+                className="card-field"
+                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR}
+                options={{
+                    selector: "#expiration-year-1",
+                    placeholder: "YYYY",
+                }}
+            />
+            {/* Custom client component to handle hosted fields submit */}
+            <SubmitPayment />
+        </PayPalHostedFieldsProvider>
+    );
+};
+
+// Override the code section
 (Default as Story).parameters = {
     docs: {
         source: {
@@ -401,77 +511,4 @@ export const Default: FC = () => {
             `,
         },
     },
-};
-
-export const ExpirationDate: FC = () => {
-    return (
-        <PayPalHostedFieldsProvider
-            createOrder={() =>
-                fetch(CREATE_ORDER_URL, {
-                    method: "post",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        purchase_units: [
-                            {
-                                amount: {
-                                    value: 50,
-                                    currency_code: "USD",
-                                },
-                            },
-                        ],
-                        intent: "CAPTURE",
-                    }),
-                })
-                    .then((response) => response.json())
-                    .then((order) => order.id)
-                    .catch((err) => {
-                        alert(err);
-                    })
-            }
-            notEligibleError={<NotEligibleError />}
-            styles={{
-                ".valid": { color: GREEN_COLOR },
-                ".invalid": { color: RED_COLOR },
-            }}
-        >
-            <PayPalHostedField
-                id="card-number-1"
-                className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                options={{
-                    selector: "#card-number-1",
-                    placeholder: "4111 1111 1111 1111",
-                }}
-            />
-            <PayPalHostedField
-                id="cvv-1"
-                className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                options={{
-                    selector: "#cvv-1",
-                    placeholder: "123",
-                    maskInput: true,
-                }}
-            />
-            <PayPalHostedField
-                id="expiration-month-1"
-                className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH}
-                options={{ selector: "#expiration-month-1", placeholder: "MM" }}
-            />
-            <PayPalHostedField
-                id="expiration-year-1"
-                className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR}
-                options={{
-                    selector: "#expiration-year-1",
-                    placeholder: "YYYY",
-                }}
-            />
-            {/* Custom client component to handle hosted fields submit */}
-            <SubmitPayment />
-        </PayPalHostedFieldsProvider>
-    );
 };
