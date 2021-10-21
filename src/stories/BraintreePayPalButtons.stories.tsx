@@ -8,7 +8,6 @@ import type {
     OnApproveBraintreeActions,
     OnApproveBraintreeData,
 } from "../types";
-import type { Story } from "@storybook/react";
 
 import { PayPalScriptProvider, FUNDING } from "../index";
 import { BraintreePayPalButtons } from "../components/braintree/BraintreePayPalButtons";
@@ -22,6 +21,9 @@ import {
     COMPONENT_PROPS,
     COMPONENT_EVENTS,
     ARG_TYPE_AMOUNT,
+    ORDER_ID,
+    CONTAINER_SIZE,
+    InEligibleError,
 } from "./constants";
 
 type StoryProps = {
@@ -61,18 +63,7 @@ export default {
     },
     argTypes: {
         amount: ARG_TYPE_AMOUNT,
-        size: {
-            name: "container size",
-            description:
-                "This is not a property from PayPalButtons. It is custom control to change the size of the PayPal buttons container",
-            control: { type: "range", min: 20, max: 100, step: 5 },
-            table: {
-                defaultValue: {
-                    summary: "100%",
-                },
-                category: "Custom",
-            },
-        },
+        size: CONTAINER_SIZE,
         style: {
             control: { type: "object", expanded: true },
             table: { category: COMPONENT_PROPS },
@@ -123,7 +114,7 @@ export default {
         // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
         onShippingChange: null,
         amount: "2",
-        size: 100,
+        size: 750,
         style: {
             label: "paypal",
             layout: "vertical",
@@ -153,7 +144,7 @@ export default {
             return (
                 <div style={{ maxWidth: `${storyArg.args.size}%` }}>
                     {clientToken != null && (
-                        <>
+                        <div style={{ maxWidth: `${storyArg.args.size}px` }}>
                             <PayPalScriptProvider
                                 options={{
                                     ...scriptProviderOptions,
@@ -168,7 +159,7 @@ export default {
                             >
                                 <Story />
                             </PayPalScriptProvider>
-                        </>
+                        </div>
                     )}
                 </div>
             );
@@ -213,7 +204,7 @@ export const Default: FC<StoryProps> = ({
                         },
                     })
                     .then((orderId) => {
-                        action("orderId")(orderId);
+                        action(ORDER_ID)(orderId);
                         return orderId;
                     })
             }
@@ -231,7 +222,9 @@ export const Default: FC<StoryProps> = ({
             onError={(err: Record<string, unknown>) => {
                 action("onError")(err.toString());
             }}
-        />
+        >
+            <InEligibleError />
+        </BraintreePayPalButtons>
     );
 };
 
@@ -277,13 +270,8 @@ export const BillingAgreement: FC<StoryProps> = ({
                         });
                     })
             }
-        />
+        >
+            <InEligibleError />
+        </BraintreePayPalButtons>
     );
-};
-
-// Override Funding options on billing agreement example
-(BillingAgreement as Story).argTypes = {
-    fundingSource: {
-        options: [FUNDING.PAYPAL, FUNDING.CARD, FUNDING.CREDIT, undefined],
-    },
 };

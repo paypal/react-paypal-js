@@ -14,7 +14,12 @@ import {
     FUNDING,
 } from "../index";
 import { getOptionsFromQueryString } from "./utils";
-import { COMPONENT_PROPS, ARG_TYPE_AMOUNT } from "./constants";
+import {
+    COMPONENT_PROPS,
+    ARG_TYPE_AMOUNT,
+    ORDER_ID,
+    InEligibleError,
+} from "./constants";
 import type { Story } from "@storybook/react/types-6-0";
 
 const scriptProviderOptions: PayPalScriptOptions = {
@@ -113,7 +118,7 @@ export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
                             ],
                         })
                         .then((orderId) => {
-                            action("orderId")(orderId);
+                            action(ORDER_ID)(orderId);
                             return orderId;
                         });
                 }}
@@ -125,7 +130,9 @@ export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
                 onError={(err: Record<string, unknown>) => {
                     action("onError")(err.toString());
                 }}
-            />
+            >
+                <InEligibleError />
+            </PayPalButtons>
         </PayPalScriptProvider>
     );
 };

@@ -3,6 +3,7 @@ import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options
 
 import { PayPalScriptProvider, FUNDING, PayPalButtons } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
+import { InEligibleError } from "./constants";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id":
@@ -89,7 +90,7 @@ export const Default: FC<{
                 style={style}
                 forceReRender={[style]}
             >
-                <p>You are not eligible to pay with Venmo.</p>
+                <InEligibleError text="You are not eligible to pay with Venmo." />
             </PayPalButtons>
         </PayPalScriptProvider>
     );

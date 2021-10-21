@@ -18,7 +18,12 @@ import {
     getClientToken,
     HEROKU_SERVER,
 } from "./utils";
-import { COMPONENT_PROPS, ARG_TYPE_AMOUNT } from "./constants";
+import {
+    COMPONENT_PROPS,
+    ARG_TYPE_AMOUNT,
+    ORDER_ID,
+    InEligibleError,
+} from "./constants";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -52,13 +57,6 @@ function captureOrderUrl(orderId: string): string {
 }
 
 /**
- * Functional component to render a custom ineligible error UI
- */
-const NotEligibleError = () => (
-    <h3>Your client is not able to use hosted fields</h3>
-);
-
-/**
  * Functional component to submit the hosted fields form
  */
 const SubmitPayment = ({ customStyle }: { customStyle?: CSSProperties }) => {
@@ -85,9 +83,9 @@ const SubmitPayment = ({ customStyle }: { customStyle?: CSSProperties }) => {
                     cardholderName: cardHolderName?.current?.value,
                 })
                 .then((data) => {
-                    action("Received orderId")(data.orderId);
+                    action(`Received ${ORDER_ID}`)(data.orderId);
                     action(CAPTURE_ORDER)(
-                        "Sending oderId to custom endpoint to capture the payment information"
+                        `Sending ${ORDER_ID} to custom endpoint to capture the payment information`
                     );
                     fetch(captureOrderUrl(data.orderId), {
                         method: "post",
@@ -252,7 +250,7 @@ export const Default: FC<{ amount: string }> = ({ amount }) => {
                         console.error(err);
                     });
             }}
-            notEligibleError={<NotEligibleError />}
+            notEligibleError={<InEligibleError />}
             styles={{
                 ".valid": { color: GREEN_COLOR },
                 ".invalid": { color: RED_COLOR },
@@ -333,7 +331,7 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
                         console.error(err);
                     })
             }
-            notEligibleError={<NotEligibleError />}
+            notEligibleError={<InEligibleError />}
             styles={{
                 ".valid": { color: GREEN_COLOR },
                 ".invalid": { color: RED_COLOR },
@@ -407,7 +405,6 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
                         cardholderName: cardHolderName.current.value,
                     })
                     .then((data) => {
-                        console.log("orderId: ", data.orderId);
                         fetch(captureOrderUrl(data.orderId), {
                             method: "post",
                         })
@@ -469,7 +466,7 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
                         alert(err);
                     })
             }
-            notEligibleError={<NotEligibleError />}
+            notEligibleError={<InEligibleError />}
             styles={{
                 ".valid": { color: "${GREEN_COLOR}" },
                 ".invalid": RED_COLOR_STYLE,

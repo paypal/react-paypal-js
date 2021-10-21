@@ -16,7 +16,7 @@ import {
     DISPATCH_ACTION,
 } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
-import { ARG_TYPE_AMOUNT } from "./constants";
+import { ARG_TYPE_AMOUNT, ORDER_ID, InEligibleError } from "./constants";
 import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
 
 const subscriptionOptions: PayPalScriptOptions = {
@@ -125,7 +125,7 @@ export const Default: FC<{ type: string; amount: string }> = ({
                               ],
                           })
                           .then((orderId) => {
-                              action("orderId")(orderId);
+                              action(ORDER_ID)(orderId);
                               return orderId;
                           });
                   },
@@ -150,6 +150,8 @@ export const Default: FC<{ type: string; amount: string }> = ({
         <PayPalButtons
             forceReRender={[type, amount]}
             {...(buttonOptions as PayPalButtonsComponentProps)}
-        />
+        >
+            <InEligibleError />
+        </PayPalButtons>
     );
 };

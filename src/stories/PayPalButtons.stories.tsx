@@ -14,6 +14,9 @@ import {
     COMPONENT_PROPS,
     COMPONENT_EVENTS,
     ARG_TYPE_AMOUNT,
+    ORDER_ID,
+    CONTAINER_SIZE,
+    InEligibleError,
 } from "./constants";
 
 const scriptProviderOptions: PayPalScriptOptions = {
@@ -55,19 +58,7 @@ export default {
             },
         },
         amount: ARG_TYPE_AMOUNT,
-        size: {
-            name: "container size",
-            description:
-                "This is not a property from PayPalButtons. It is custom control to change the size of the PayPal buttons container in pixels.",
-            control: { type: "range", min: 200, max: 750, step: 5 },
-            table: {
-                defaultValue: {
-                    summary: "750px",
-                },
-                category: "Custom",
-                type: { summary: "number" },
-            },
-        },
+        size: CONTAINER_SIZE,
         showSpinner: {
             description:
                 "This is not a property from PayPalButtons. It is custom control to show or not a spinner when PayPal SDK is loading.",
@@ -232,7 +223,7 @@ export const Default: FC<{
                             ],
                         })
                         .then((orderId) => {
-                            action("orderId")(orderId);
+                            action(ORDER_ID)(orderId);
                             return orderId;
                         });
                 }}
@@ -244,7 +235,9 @@ export const Default: FC<{
                 onError={(err: Record<string, unknown>) => {
                     action("onError")(err.toString());
                 }}
-            />
+            >
+                <InEligibleError />
+            </PayPalButtons>
         </>
     );
 };
@@ -283,9 +276,11 @@ export const Donate: FC<{ amount: string }> = ({ amount }) => (
                     ],
                 })
                 .then((orderId) => {
-                    action("orderId")(orderId);
+                    action(ORDER_ID)(orderId);
                     return orderId;
                 });
         }}
-    />
+    >
+        <InEligibleError />
+    </PayPalButtons>
 );

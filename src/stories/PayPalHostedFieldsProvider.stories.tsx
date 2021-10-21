@@ -17,7 +17,11 @@ import {
     getClientToken,
     HEROKU_SERVER,
 } from "./utils";
-import { COMPONENT_PROPS, COMPONENT_EVENTS } from "./constants";
+import {
+    COMPONENT_PROPS,
+    COMPONENT_EVENTS,
+    InEligibleError,
+} from "./constants";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -27,11 +31,6 @@ const scriptProviderOptions: PayPalScriptOptions = {
     components: "buttons,hosted-fields",
     ...getOptionsFromQueryString(),
 };
-
-// Component to show the client isn't eligible to use hosted fields
-const NotEligibleError = () => (
-    <h3>Your client is not able to use hosted fields</h3>
-);
 
 const LoadedCardFields = () => {
     const cardFields = usePayPalHostedFields();
@@ -131,7 +130,7 @@ export const Default: FC<{ styles: { [key in string]: unknown } }> = (args) => {
                 // Server call to create the order
                 return Promise.resolve("7NE43326GP4951156");
             }}
-            notEligibleError={<NotEligibleError />}
+            notEligibleError={<InEligibleError />}
             styles={args.styles}
         >
             <LoadedCardFields />
