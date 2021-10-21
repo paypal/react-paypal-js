@@ -33,7 +33,7 @@ export type PayPalHostedFieldOptions = {
 
 export interface PayPalHostedFieldProps {
     /**
-     * Represent the hosted field type: [NUMBER, CVV, EXPIRATION_DATE, EXPIRATION_MONTH, EXPIRATION_YEAR, POSTAL_CODE]
+     * Represent the hosted field type
      */
     hostedFieldType: PAYPAL_HOSTED_FIELDS_TYPES;
     /**

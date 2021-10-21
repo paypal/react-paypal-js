@@ -39,6 +39,7 @@ const CREATE_ORDER = "createOrder";
 const SUBMIT_FORM = "submitForm";
 const CAPTURE_ORDER = "captureOrder";
 const ERROR = "Error";
+const CATEGORY_TYPES = "Types";
 
 /**
  * Get dynamically the capture order URL to fetch the payment info
@@ -153,6 +154,13 @@ export default {
         style: { control: false, table: { category: COMPONENT_PROPS } },
         title: { control: false, table: { category: COMPONENT_PROPS } },
         amount: ARG_TYPE_AMOUNT,
+        PAYPAL_HOSTED_FIELDS_TYPES: {
+            control: false,
+            type: { required: true },
+            description: `<code>NUMBER | CVV | EXPIRATION_DATE | EXPIRATION_MONTH | EXPIRATION_YEAR | POSTAL_CODE</code>
+            `,
+            table: { category: CATEGORY_TYPES },
+        },
         PayPalHostedFieldOptions: {
             control: false,
             type: { required: true },
@@ -169,9 +177,7 @@ export default {
                 <b class="code-json">rejectUnsupportedCards</b>: Only allow card types that your merchant account is able to process.<br><span class="code-json">Unsupported card types will invalidate the card form.</span><br>
             }</code>
             `,
-            table: {
-                category: "Types",
-            },
+            table: { category: CATEGORY_TYPES },
         },
     },
     args: {
