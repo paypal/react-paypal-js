@@ -1,4 +1,4 @@
-export const COMPONENT_PROPS = "Props";
+export const COMPONENT_PROPS_CATEGORY = { table: { category: "Props" } };
 export const COMPONENT_EVENTS = "Events";
 export const COMPONENT_TYPES = "Types";
 export const ORDER_ID = "orderID";

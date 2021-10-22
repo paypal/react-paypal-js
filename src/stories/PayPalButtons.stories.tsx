@@ -11,7 +11,7 @@ import { action } from "@storybook/addon-actions";
 import { PayPalScriptProvider, PayPalButtons, FUNDING } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
 import {
-    COMPONENT_PROPS,
+    COMPONENT_PROPS_CATEGORY,
     COMPONENT_EVENTS,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
@@ -75,15 +75,15 @@ export default {
         },
         style: {
             control: { type: "object" },
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
         disabled: {
             options: [true, false],
             control: { type: "select" },
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
-        forceReRender: { control: false, table: { category: COMPONENT_PROPS } },
-        className: { control: false, table: { category: COMPONENT_PROPS } },
+        forceReRender: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        className: { control: false, ...COMPONENT_PROPS_CATEGORY },
         children: { table: { disable: true } },
         fundingSource: {
             options: [
@@ -105,7 +105,7 @@ export default {
                     undefined: "all",
                 },
             },
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
         createOrder: { table: { category: COMPONENT_EVENTS } },
         createBillingAgreement: { table: { category: COMPONENT_EVENTS } },

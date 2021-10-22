@@ -15,7 +15,7 @@ import {
 } from "../index";
 import { getOptionsFromQueryString } from "./utils";
 import {
-    COMPONENT_PROPS,
+    COMPONENT_PROPS_CATEGORY,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
     APPROVE,
@@ -58,7 +58,7 @@ export default {
                     undefined: "all",
                 },
             },
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
     },
     args: {

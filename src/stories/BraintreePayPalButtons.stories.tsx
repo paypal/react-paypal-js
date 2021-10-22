@@ -18,7 +18,7 @@ import {
     approveSale,
 } from "./utils";
 import {
-    COMPONENT_PROPS,
+    COMPONENT_PROPS_CATEGORY,
     COMPONENT_EVENTS,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
@@ -67,16 +67,16 @@ export default {
         size: CONTAINER_SIZE,
         style: {
             control: { type: "object", expanded: true },
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
         disabled: {
             options: [true, false],
             control: { type: "select" },
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
-        forceReRender: { control: false, table: { category: COMPONENT_PROPS } },
-        className: { control: false, table: { category: COMPONENT_PROPS } },
-        children: { control: false, table: { category: COMPONENT_PROPS } },
+        forceReRender: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        className: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        children: { control: false, ...COMPONENT_PROPS_CATEGORY },
         fundingSource: {
             options: [
                 FUNDING.PAYPAL,
@@ -97,7 +97,7 @@ export default {
                     undefined: "all",
                 },
             },
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
         createOrder: { table: { category: COMPONENT_EVENTS } },
         createBillingAgreement: { table: { category: COMPONENT_EVENTS } },

@@ -17,7 +17,7 @@ import {
     getClientToken,
     HEROKU_SERVER,
 } from "./utils";
-import { COMPONENT_PROPS, COMPONENT_EVENTS, SDK } from "./constants";
+import { COMPONENT_PROPS_CATEGORY, COMPONENT_EVENTS, SDK } from "./constants";
 import { InEligibleError } from "./commons";
 
 const uid = generateRandomString();
@@ -64,7 +64,7 @@ export default {
     argTypes: {
         styles: {
             control: { type: "object", expanded: true },
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
         createOrder: {
             control: false,
@@ -72,7 +72,7 @@ export default {
         },
         notEligibleError: {
             control: false,
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
     },
     args: {

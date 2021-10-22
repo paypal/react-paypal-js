@@ -19,7 +19,7 @@ import {
     HEROKU_SERVER,
 } from "./utils";
 import {
-    COMPONENT_PROPS,
+    COMPONENT_PROPS_CATEGORY,
     COMPONENT_TYPES,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
@@ -142,15 +142,15 @@ export default {
     argTypes: {
         hostedFieldType: {
             control: false,
-            table: { category: COMPONENT_PROPS },
+            ...COMPONENT_PROPS_CATEGORY,
         },
-        options: { control: false, table: { category: COMPONENT_PROPS } },
-        align: { control: false, table: { category: COMPONENT_PROPS } },
-        className: { control: false, table: { category: COMPONENT_PROPS } },
-        id: { control: false, table: { category: COMPONENT_PROPS } },
-        lang: { control: false, table: { category: COMPONENT_PROPS } },
-        style: { control: false, table: { category: COMPONENT_PROPS } },
-        title: { control: false, table: { category: COMPONENT_PROPS } },
+        options: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        align: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        className: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        id: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        lang: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        style: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        title: { control: false, ...COMPONENT_PROPS_CATEGORY },
         amount: ARG_TYPE_AMOUNT,
         PAYPAL_HOSTED_FIELDS_TYPES: {
             control: false,
