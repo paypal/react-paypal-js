@@ -3,7 +3,7 @@ import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options
 
 import { PayPalScriptProvider, FUNDING, PayPalButtons } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
-import { InEligibleError } from "./constants";
+import { InEligibleError } from "./commons";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id":

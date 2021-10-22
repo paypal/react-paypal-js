@@ -18,8 +18,10 @@ import {
     COMPONENT_PROPS,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
-    InEligibleError,
+    APPROVE,
+    ERROR,
 } from "./constants";
+import { InEligibleError } from "./commons";
 import type { Story } from "@storybook/react/types-6-0";
 
 const scriptProviderOptions: PayPalScriptOptions = {
@@ -124,11 +126,11 @@ export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
                 }}
                 onApprove={(data: OnApproveData, actions: OnApproveActions) => {
                     return actions.order.capture().then(function (details) {
-                        action("onApprove")(details);
+                        action(APPROVE)(details);
                     });
                 }}
                 onError={(err: Record<string, unknown>) => {
-                    action("onError")(err.toString());
+                    action(ERROR)(err.toString());
                 }}
             >
                 <InEligibleError />

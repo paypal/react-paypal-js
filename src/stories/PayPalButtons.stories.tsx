@@ -16,8 +16,9 @@ import {
     ARG_TYPE_AMOUNT,
     ORDER_ID,
     CONTAINER_SIZE,
-    InEligibleError,
+    APPROVE,
 } from "./constants";
+import { InEligibleError, defaultProps } from "./commons";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -229,12 +230,10 @@ export const Default: FC<{
                 }}
                 onApprove={(data: OnApproveData, actions: OnApproveActions) => {
                     return actions.order.capture().then(function (details) {
-                        action("onApprove")(details);
+                        action(APPROVE)(details);
                     });
                 }}
-                onError={(err: Record<string, unknown>) => {
-                    action("onError")(err.toString());
-                }}
+                {...defaultProps}
             >
                 <InEligibleError />
             </PayPalButtons>

@@ -20,10 +20,12 @@ import {
 } from "./utils";
 import {
     COMPONENT_PROPS,
+    COMPONENT_TYPES,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
-    InEligibleError,
+    ERROR,
 } from "./constants";
+import { InEligibleError } from "./commons";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -43,8 +45,6 @@ const customBorderFieldStyle = {
 const CREATE_ORDER = "createOrder";
 const SUBMIT_FORM = "submitForm";
 const CAPTURE_ORDER = "captureOrder";
-const ERROR = "Error";
-const CATEGORY_TYPES = "Types";
 
 /**
  * Get dynamically the capture order URL to fetch the payment info
@@ -157,7 +157,7 @@ export default {
             type: { required: true },
             description: `<code>NUMBER | CVV | EXPIRATION_DATE | EXPIRATION_MONTH | EXPIRATION_YEAR | POSTAL_CODE</code>
             `,
-            table: { category: CATEGORY_TYPES },
+            table: { category: COMPONENT_TYPES },
         },
         PayPalHostedFieldOptions: {
             control: false,
@@ -175,7 +175,7 @@ export default {
                 <b class="code-json">rejectUnsupportedCards</b>: Only allow card types that your merchant account is able to process.<br><span class="code-json">Unsupported card types will invalidate the card form.</span><br>
             }</code>
             `,
-            table: { category: CATEGORY_TYPES },
+            table: { category: COMPONENT_TYPES },
         },
     },
     args: {

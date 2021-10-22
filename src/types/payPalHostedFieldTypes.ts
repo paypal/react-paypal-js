@@ -105,7 +105,7 @@ export interface PayPalHostedFieldsComponentProps {
     createOrder: () => Promise<string>;
     children: ReactNode;
     /**
-     * Custom styles for hosted fields.
+     * [Styling options](https://developer.paypal.com/braintree/docs/guides/hosted-fields/styling/javascript/v3) for customizing the fields appearance
      *
      * ```
      *   {

@@ -17,11 +17,8 @@ import {
     getClientToken,
     HEROKU_SERVER,
 } from "./utils";
-import {
-    COMPONENT_PROPS,
-    COMPONENT_EVENTS,
-    InEligibleError,
-} from "./constants";
+import { COMPONENT_PROPS, COMPONENT_EVENTS, SDK } from "./constants";
+import { InEligibleError } from "./commons";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -37,13 +34,9 @@ const LoadedCardFields = () => {
 
     useEffect(() => {
         if (cardFields) {
-            action("hostedFields SDK")(
-                "Hosted fields provider successfully loaded."
-            );
+            action(SDK)("Hosted fields provider successfully loaded.");
         } else {
-            action("hostedFields SDK")(
-                "Starting loading Hosted fields provider."
-            );
+            action(SDK)("Starting loading Hosted fields provider.");
         }
     }, [cardFields]);
 

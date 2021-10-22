@@ -16,7 +16,8 @@ import {
     DISPATCH_ACTION,
 } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
-import { ARG_TYPE_AMOUNT, ORDER_ID, InEligibleError } from "./constants";
+import { ARG_TYPE_AMOUNT, ORDER_ID, APPROVE, ERROR } from "./constants";
+import { InEligibleError } from "./commons";
 import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
 
 const subscriptionOptions: PayPalScriptOptions = {
@@ -131,11 +132,11 @@ export const Default: FC<{ type: string; amount: string }> = ({
                   },
                   onApprove(data: OnApproveData, actions: OnApproveActions) {
                       return actions.order.capture().then(function (details) {
-                          action("onApprove")(details);
+                          action(APPROVE)(details);
                       });
                   },
                   onError(err: Record<string, unknown>) {
-                      action("onError")(err.toString());
+                      action(ERROR)(err.toString());
                   },
               };
 

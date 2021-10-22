@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-
 export const COMPONENT_PROPS = "Props";
-
 export const COMPONENT_EVENTS = "Events";
-
+export const COMPONENT_TYPES = "Types";
 export const ORDER_ID = "orderID";
+export const ERROR = "Error";
+export const SDK = "SDK";
+export const APPROVE = "approve";
 
 export const CONTAINER_SIZE = {
     name: "container width",
@@ -35,12 +35,3 @@ export const ARG_TYPE_AMOUNT = {
         type: { summary: "number|string" },
     },
 };
-
-/**
- * Functional component to render a custom ineligible error UI
- */
-export const InEligibleError: FC<{ text?: string }> = ({ text }) => (
-    <h3 style={{ color: "#dc3545", textTransform: "capitalize" }}>
-        {text || "The component is ineligible to render"}
-    </h3>
-);

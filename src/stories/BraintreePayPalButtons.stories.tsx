@@ -23,8 +23,9 @@ import {
     ARG_TYPE_AMOUNT,
     ORDER_ID,
     CONTAINER_SIZE,
-    InEligibleError,
+    APPROVE,
 } from "./constants";
+import { InEligibleError, defaultProps } from "./commons";
 
 type StoryProps = {
     style: {
@@ -214,14 +215,12 @@ export const Default: FC<StoryProps> = ({
             ) =>
                 actions.braintree.tokenizePayment(data).then((payload) => {
                     approveSale(payload.nonce, amount).then((data) => {
-                        action("onApprove")(data);
+                        action(APPROVE)(data);
                         // Call server-side endpoint to finish the sale
                     });
                 })
             }
-            onError={(err: Record<string, unknown>) => {
-                action("onError")(err.toString());
-            }}
+            {...defaultProps}
         >
             <InEligibleError />
         </BraintreePayPalButtons>
@@ -265,11 +264,12 @@ export const BillingAgreement: FC<StoryProps> = ({
                     .tokenizePayment(data as OnApproveBraintreeData)
                     .then((payload) => {
                         approveSale(payload.nonce, amount).then((data) => {
-                            action("onApprove")(data);
+                            action(APPROVE)(data);
                             // Call server-side endpoint to finish the sale
                         });
                     })
             }
+            {...defaultProps}
         >
             <InEligibleError />
         </BraintreePayPalButtons>
