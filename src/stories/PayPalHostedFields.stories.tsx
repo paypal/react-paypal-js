@@ -377,11 +377,10 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
     );
 };
 
-// Override the code section
 (Default as Story).parameters = {
     docs: {
-        source: {
-            code: `
+        transformSource: (_: string, snippet: Story) => {
+            return `
             () => {
     const RED_COLOR_STYLE = { color: "${RED_COLOR}" };
     const SubmitPayment = () => {
@@ -452,7 +451,7 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
                         purchase_units: [
                             {
                                 amount: {
-                                    value: 50,
+                                    value: ${snippet?.args?.amount},
                                     currency_code: "USD",
                                 },
                             },
@@ -511,7 +510,7 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
         </PayPalHostedFieldsProvider>
     );
 }
-            `,
+            `;
         },
     },
 };

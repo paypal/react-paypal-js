@@ -1,10 +1,12 @@
 import React, { FC, ReactElement, useEffect } from "react";
+import type { Story } from "@storybook/react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import type {
     CreateOrderActions,
     OnApproveData,
     OnApproveActions,
 } from "@paypal/paypal-js/types/components/buttons";
+import type { PayPalButtonsComponentOptions } from "@paypal/paypal-js/types/components/buttons";
 import { usePayPalScriptReducer, DISPATCH_ACTION } from "../index";
 import { action } from "@storybook/addon-actions";
 
@@ -18,7 +20,20 @@ import {
     CONTAINER_SIZE,
     APPROVE,
 } from "./constants";
-import { InEligibleError, defaultProps } from "./commons";
+import {
+    InEligibleError,
+    defaultProps,
+    generateDocPageStructure,
+} from "./commons";
+
+type StoryProps = {
+    style: PayPalButtonsComponentOptions["style"];
+    fundingSource: string;
+    disabled: boolean;
+    currency: string;
+    amount: string;
+    showSpinner: boolean;
+};
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -37,7 +52,6 @@ export default {
     component: PayPalButtons,
     parameters: {
         controls: { expanded: true, sort: "requiredFirst" },
-        docs: { source: { type: "code" } },
     },
     argTypes: {
         currency: {
@@ -136,7 +150,12 @@ export default {
             const uid = generateRandomString();
 
             return (
-                <div style={{ maxWidth: `${storyArg.args.size}px` }}>
+                <div
+                    style={{
+                        maxWidth: `${storyArg.args.size}px`,
+                        minHeight: "200px",
+                    }}
+                >
                     <PayPalScriptProvider
                         options={{
                             ...scriptProviderOptions,
@@ -144,9 +163,7 @@ export default {
                             "data-uid": uid,
                         }}
                     >
-                        <div style={{ minHeight: "200px" }}>
-                            <Story />
-                        </div>
+                        <Story />
                     </PayPalScriptProvider>
                 </div>
             );
@@ -154,28 +171,14 @@ export default {
     ],
 };
 
-export const Default: FC<{
-    style: {
-        color?: "gold" | "blue" | "silver" | "white" | "black";
-        height?: number;
-        label?:
-            | "paypal"
-            | "checkout"
-            | "buynow"
-            | "pay"
-            | "installment"
-            | "subscribe"
-            | "donate";
-        layout?: "vertical" | "horizontal";
-        shape?: "rect" | "pill";
-        tagline?: boolean;
-    };
-    fundingSource: string;
-    disabled: boolean;
-    currency: string;
-    amount: string;
-    showSpinner: boolean;
-}> = ({ style, fundingSource, disabled, currency, amount, showSpinner }) => {
+export const Default: FC<StoryProps> = ({
+    style,
+    fundingSource,
+    disabled,
+    currency,
+    amount,
+    showSpinner,
+}) => {
     const [{ options }, dispatch] = usePayPalScriptReducer();
 
     useEffect(() => {
@@ -241,11 +244,17 @@ export const Default: FC<{
     );
 };
 
-export const Donate: FC<{ amount: string }> = ({ amount }) => (
+export const Donate: FC<Omit<StoryProps, "showSpinner" | "fundingSource">> = ({
+    style,
+    disabled,
+    currency,
+    amount,
+}) => (
     <PayPalButtons
         fundingSource={FUNDING.PAYPAL}
-        forceReRender={[amount]}
-        style={{ label: "donate" }}
+        forceReRender={[style, currency, amount]}
+        disabled={disabled}
+        style={{ ...style, label: "donate" }}
         createOrder={(data, actions) => {
             return actions.order
                 .create({
@@ -255,7 +264,7 @@ export const Donate: FC<{ amount: string }> = ({ amount }) => (
                                 value: amount,
                                 breakdown: {
                                     item_total: {
-                                        currency_code: "USD",
+                                        currency_code: currency,
                                         value: amount,
                                     },
                                 },
@@ -265,7 +274,7 @@ export const Donate: FC<{ amount: string }> = ({ amount }) => (
                                     name: "donation-example",
                                     quantity: "1",
                                     unit_amount: {
-                                        currency_code: "USD",
+                                        currency_code: currency,
                                         value: amount,
                                     },
                                     category: "DONATION",
@@ -283,3 +292,121 @@ export const Donate: FC<{ amount: string }> = ({ amount }) => (
         <InEligibleError />
     </PayPalButtons>
 );
+
+// Override the Default story code snippet
+(Default as Story).parameters = {
+    docs: {
+        page: () => generateDocPageStructure(Default.name),
+        transformSource: (_: string, snippet: Story) => `
+<div style={{ maxWidth: "${snippet?.args?.size}px", minHeight: "200px" }}>
+    <PayPalScriptProvider
+    options={{
+        'client-id': 'test',
+        components: 'buttons',
+        'data-namespace': 'set_unique_identifier_here',
+        'data-uid': 'set_unique_identifier_here'
+    }}
+    >
+    <PayPalButtons
+        style={${JSON.stringify(snippet?.args?.style)}}
+        disabled={${snippet?.args?.disabled}}
+        fundingSource="${snippet?.args?.fundingSource || ""}"
+        forceReRender={[style, currency, amount]}
+        createOrder={(
+            data: Record<string, unknown>,
+            actions: CreateOrderActions
+        ) => {
+            return actions.order
+                .create({
+                    purchase_units: [
+                        {
+                            amount: {
+                                currency_code: "${snippet?.args?.currency}",
+                                value: "${snippet?.args?.amount}",
+                            },
+                        },
+                    ],
+                })
+                .then((orderId) => {
+                    // Your code here after create the order
+                    return orderId;
+                });
+        }}
+        onApprove={(data: OnApproveData, actions: OnApproveActions) => {
+            return actions.order.capture().then(function (details) {
+                // Your code here after capture the order
+            });
+        }}
+    />
+    </PayPalScriptProvider>
+<div>`,
+    },
+};
+
+// Override the Donate story code snippet
+(Donate as Story).parameters = {
+    docs: {
+        page: () => generateDocPageStructure(Donate.name),
+        transformSource: (_: string, snippet: Story) => `
+<div style={{ maxWidth: "${snippet?.args?.size}px", minHeight: "200px" }}>
+    <PayPalScriptProvider
+    options={{
+        'client-id': 'test',
+        components: 'buttons',
+        'data-namespace': 'set_unique_identifier_here',
+        'data-uid': 'set_unique_identifier_here'
+    }}
+    >
+    <PayPalButtons
+        fundingSource="paypal"
+        forceReRender={[style, currency, amount]}
+        disabled={${snippet?.args?.disabled}}
+        style={${JSON.stringify({ ...snippet?.args?.style, label: "donate" })}}
+        createOrder={(data, actions) => {
+            return actions.order
+                .create({
+                    purchase_units: [
+                        {
+                            amount: {
+                                value: "${snippet?.args?.amount}",
+                                breakdown: {
+                                    item_total: {
+                                        currency_code: "${
+                                            snippet?.args?.currency
+                                        }",
+                                        value: "${snippet?.args?.amount}",
+                                    },
+                                },
+                            },
+                            items: [
+                                {
+                                    name: "donation-example",
+                                    quantity: "1",
+                                    unit_amount: {
+                                        currency_code: "${
+                                            snippet?.args?.currency
+                                        }",
+                                        value: "${snippet?.args?.amount}",
+                                    },
+                                    category: "DONATION",
+                                },
+                            ],
+                        },
+                    ],
+                })
+                .then((orderId) => {
+                    // Your code here after create the donation
+                    return orderId;
+                });
+        }}
+    >
+    </PayPalScriptProvider>
+<div>`,
+    },
+};
+
+// Override the Donate story controls table props
+(Donate as Story).argTypes = {
+    fundingSource: { control: false },
+    showSpinner: { table: { disable: true } },
+};

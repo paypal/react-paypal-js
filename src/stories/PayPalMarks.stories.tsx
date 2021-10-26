@@ -21,7 +21,7 @@ import {
     APPROVE,
     ERROR,
 } from "./constants";
-import { InEligibleError } from "./commons";
+import { InEligibleError, generateDocPageStructure } from "./commons";
 import type { Story } from "@storybook/react/types-6-0";
 
 const scriptProviderOptions: PayPalScriptOptions = {
@@ -139,14 +139,28 @@ export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
     );
 };
 
+// Override the Default story doc page
 (Default as Story).parameters = {
-    docs: { source: { type: "dynamic" } },
+    docs: {
+        source: { type: "dynamic" },
+        page: () => generateDocPageStructure(Default.name),
+    },
 };
 
+// Override the Default story controls table props
 (Default as Story).argTypes = {
-    amount: { control: false },
+    amount: { table: { disable: true } },
 };
 
+// Override the Default story doc page
+(RadioButtons as Story).parameters = {
+    docs: {
+        source: { type: "dynamic" },
+        page: () => generateDocPageStructure("Radio Buttons"),
+    },
+};
+
+// Override the RadioButtons story controls table props
 (RadioButtons as Story).argTypes = {
-    fundingSource: { control: false },
+    fundingSource: { table: { disable: true } },
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect, ReactElement } from "react";
 import type { FC } from "react";
 
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
+import type { PayPalButtonsComponentOptions } from "@paypal/paypal-js/types/components/buttons";
 import { action } from "@storybook/addon-actions";
 import type {
     CreateOrderBraintreeActions,
@@ -28,21 +29,7 @@ import {
 import { InEligibleError, defaultProps } from "./commons";
 
 type StoryProps = {
-    style: {
-        color?: "gold" | "blue" | "silver" | "white" | "black";
-        height?: number;
-        label?:
-            | "paypal"
-            | "checkout"
-            | "buynow"
-            | "pay"
-            | "installment"
-            | "subscribe"
-            | "donate";
-        layout?: "vertical" | "horizontal";
-        shape?: "rect" | "pill";
-        tagline?: boolean;
-    };
+    style: PayPalButtonsComponentOptions["style"];
     fundingSource: string;
     disabled: boolean;
     amount: string;

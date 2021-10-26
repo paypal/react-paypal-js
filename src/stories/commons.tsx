@@ -1,5 +1,13 @@
-import React, { FC } from "react";
+import React, { FC, ReactElement, ReactNode } from "react";
 import { action } from "@storybook/addon-actions";
+import {
+    Title,
+    Subtitle,
+    Description,
+    Primary,
+    ArgsTable,
+    CURRENT_SELECTION,
+} from "@storybook/addon-docs";
 
 import { ERROR, SDK } from "./constants";
 
@@ -28,3 +36,13 @@ export const defaultProps = {
         action("payment")("The payment process was cancel");
     },
 };
+
+export const generateDocPageStructure = (name: string): JSX.Element => (
+    <>
+        <Title />
+        <Subtitle />
+        <Description />
+        <Primary name={name} />
+        <ArgsTable story={CURRENT_SELECTION} />
+    </>
+);
