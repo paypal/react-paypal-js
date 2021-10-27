@@ -192,15 +192,16 @@ export default function App() {
                         flow: "checkout",
                         amount: "10.0",
                         currency: "USD",
-                        intent: "capture"
+                        intent: "capture",
                     });
                 }}
                 onApprove={(data, actions) => {
-                    return actions.braintree.tokenizePayment(data)
+                    return actions.braintree
+                        .tokenizePayment(data)
                         .then((payload) => {
                             // call server-side endpoint to finish the sale
-                        })
-                }
+                        });
+                }}
             />
         </PayPalScriptProvider>
     );
@@ -236,7 +237,7 @@ const SubmitPayment = () => {
         hostedFields
             .submit({
                 // The full name as shown in the card and billing address
-                cardholderName: "Jhon Wick",
+                cardholderName: "John Wick",
             })
             .then((order) => {
                 fetch(
