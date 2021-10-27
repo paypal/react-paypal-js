@@ -4,7 +4,7 @@ import reactElementToJSXString from "react-element-to-jsx-string";
 import { PayPalScriptProvider, BraintreePayPalButtons } from "../../index";
 import type { Story } from "@storybook/react";
 
-export const getBillingAggrementCode = (snippet: Story): string =>
+export const getBillingAgreementCode = (snippet: Story): string =>
     reactElementToJSXString(
         <div
             style={{ maxWidth: "${snippet?.args?.size}px", minHeight: "200px" }}

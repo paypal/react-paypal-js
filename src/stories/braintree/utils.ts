@@ -2,7 +2,7 @@ import type { Story } from "@storybook/react";
 import { generateDocPageStructure } from "../commons";
 
 import { Default, BillingAgreement } from "./BraintreePayPalButtons.stories";
-import { getBillingAggrementCode } from "./code";
+import { getBillingAgreementCode } from "./code";
 
 const providerScript = (
     intent = "capture",
@@ -73,7 +73,7 @@ const overrideStories = (): void => {
         docs: {
             page: () => generateDocPageStructure("Billing Agreement"),
             transformSource: (_: string, snippet: Story) =>
-                getBillingAggrementCode(snippet),
+                getBillingAgreementCode(snippet),
         },
     };
 };
