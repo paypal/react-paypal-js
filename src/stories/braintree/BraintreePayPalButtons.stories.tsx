@@ -8,31 +8,34 @@ import type {
     CreateOrderBraintreeActions,
     OnApproveBraintreeActions,
     OnApproveBraintreeData,
-} from "../types";
+} from "../../types";
 
-import { PayPalScriptProvider, FUNDING } from "../index";
-import { BraintreePayPalButtons } from "../components/braintree/BraintreePayPalButtons";
+import { PayPalScriptProvider, FUNDING } from "../../index";
+import { BraintreePayPalButtons } from "../../components/braintree/BraintreePayPalButtons";
 import {
     getOptionsFromQueryString,
     generateRandomString,
     getClientToken,
     approveSale,
-} from "./utils";
+} from "../utils";
 import {
     COMPONENT_PROPS_CATEGORY,
     COMPONENT_EVENTS,
     ARG_TYPE_AMOUNT,
+    ARG_TYPE_CURRENCY,
     ORDER_ID,
     CONTAINER_SIZE,
     APPROVE,
-} from "./constants";
-import { InEligibleError, defaultProps } from "./commons";
+} from "../constants";
+import { InEligibleError, defaultProps } from "../commons";
+import overrideStories from "./utils";
 
 type StoryProps = {
     style: PayPalButtonsComponentOptions["style"];
     fundingSource: string;
     disabled: boolean;
     amount: string;
+    currency: string;
 };
 
 const uid = generateRandomString();
@@ -47,10 +50,10 @@ export default {
     component: BraintreePayPalButtons,
     parameters: {
         controls: { expanded: true, sort: "requiredFirst" },
-        docs: { source: { type: "code" } },
     },
     argTypes: {
         amount: ARG_TYPE_AMOUNT,
+        currency: ARG_TYPE_CURRENCY,
         size: CONTAINER_SIZE,
         style: {
             control: { type: "object", expanded: true },
@@ -102,6 +105,7 @@ export default {
         // We pass null to opt-out so the inline guest feature works as expected with the Standard Card button.
         onShippingChange: null,
         amount: "2",
+        currency: "USD",
         size: 750,
         style: {
             label: "paypal",
@@ -160,6 +164,7 @@ export const Default: FC<StoryProps> = ({
     fundingSource,
     disabled,
     amount,
+    currency,
 }) => {
     // Remember all the arguments props are received from the control panel below
     return (
@@ -167,7 +172,7 @@ export const Default: FC<StoryProps> = ({
             style={style}
             disabled={disabled}
             fundingSource={fundingSource}
-            forceReRender={[style, amount]}
+            forceReRender={[style, amount, currency]}
             createOrder={(
                 data: Record<string, unknown>,
                 actions: CreateOrderBraintreeActions
@@ -262,3 +267,5 @@ export const BillingAgreement: FC<StoryProps> = ({
         </BraintreePayPalButtons>
     );
 };
+
+overrideStories();
