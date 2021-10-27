@@ -1,5 +1,4 @@
 import type { CSSProperties, ReactNode } from "react";
-import { PAYPAL_HOSTED_FIELDS_TYPES } from "./enums";
 
 export type PayPalHostedFieldsNamespace = {
     components: string | undefined;
@@ -35,7 +34,7 @@ export interface PayPalHostedFieldProps {
     /**
      * Represent the hosted field type
      */
-    hostedFieldType: PAYPAL_HOSTED_FIELDS_TYPES | string;
+    hostedFieldType: string;
     /**
      * Options to modify the hosted field input. You can set a placeholder text,
      * a prefill value or set the maximum length of a field.

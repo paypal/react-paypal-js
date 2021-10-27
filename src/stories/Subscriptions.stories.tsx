@@ -17,7 +17,7 @@ import {
     DISPATCH_ACTION,
 } from "../index";
 import { getOptionsFromQueryString, generateRandomString } from "./utils";
-import { ARG_TYPE_AMOUNT, ORDER_ID, APPROVE, ERROR } from "./constants";
+import { ARG_TYPE_AMOUNT, ORDER_ID, APPROVE } from "./constants";
 import { InEligibleError, defaultProps } from "./commons";
 import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
 

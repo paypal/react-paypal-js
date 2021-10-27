@@ -8,7 +8,6 @@ import {
     PayPalScriptProvider,
     PayPalHostedFieldsProvider,
     PayPalHostedField,
-    PAYPAL_HOSTED_FIELDS_TYPES,
     usePayPalHostedFields,
 } from "../../index";
 import {
@@ -292,7 +291,7 @@ export const Default: FC<StoryProps> = ({
                 id="card-number"
                 className="card-field"
                 style={fieldStyle}
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                hostedFieldType="number"
                 options={{
                     selector: "#card-number",
                     placeholder: "4111 1111 1111 1111",
@@ -305,7 +304,7 @@ export const Default: FC<StoryProps> = ({
                 id="cvv"
                 className="card-field"
                 style={fieldStyle}
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                hostedFieldType="cvv"
                 options={{
                     selector: "#cvv",
                     placeholder: "123",
@@ -319,7 +318,7 @@ export const Default: FC<StoryProps> = ({
                 id="expiration-date"
                 className="card-field"
                 style={fieldStyle}
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
+                hostedFieldType="expirationDate"
                 options={{
                     selector: "#expiration-date",
                     placeholder: "MM/YYYY",
@@ -368,7 +367,7 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
             <PayPalHostedField
                 id="card-number-1"
                 className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                hostedFieldType="number"
                 options={{
                     selector: "#card-number-1",
                     placeholder: "4111 1111 1111 1111",
@@ -377,7 +376,7 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
             <PayPalHostedField
                 id="cvv-1"
                 className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                hostedFieldType="cvv"
                 options={{
                     selector: "#cvv-1",
                     placeholder: "123",
@@ -387,13 +386,13 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
             <PayPalHostedField
                 id="expiration-month-1"
                 className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_MONTH}
+                hostedFieldType="expirationMonth"
                 options={{ selector: "#expiration-month-1", placeholder: "MM" }}
             />
             <PayPalHostedField
                 id="expiration-year-1"
                 className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_YEAR}
+                hostedFieldType="expirationYear"
                 options={{
                     selector: "#expiration-year-1",
                     placeholder: "YYYY",
