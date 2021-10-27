@@ -2,6 +2,7 @@ import type { Story } from "@storybook/react";
 import { generateDocPageStructure } from "../commons";
 
 import { Default, BillingAgreement } from "./BraintreePayPalButtons.stories";
+import { getBillingAggrementCode } from "./code";
 
 const providerScript = (
     intent = "capture",
@@ -63,7 +64,6 @@ const overrideStories = (): void => {
             }
             ${ON_APPROVE_DECLARATION}
         />
-        </PayPalScriptProvider>
     </PayPalScriptProvider>
 <div>`,
         },
@@ -72,39 +72,8 @@ const overrideStories = (): void => {
     (BillingAgreement as Story).parameters = {
         docs: {
             page: () => generateDocPageStructure("Billing Agreement"),
-            transformSource: (_: string, snippet: Story) => `
-<div style={{ maxWidth: "${snippet?.args?.size}px", minHeight: "200px" }}>
-    ${providerScript("tokenize", true)}
-        <BraintreePayPalButtons
-            style={${JSON.stringify(snippet?.args?.style)}}
-            disabled={${snippet?.args?.disabled}}
-            fundingSource={${snippet?.args?.fundingSource}}
-            forceReRender={[style, amount, currency]}
-            createBillingAgreement={(data, actions) =>
-                actions.braintree.createPayment({
-                    flow: "vault", // Required
-
-                    // The following are optional params
-                    billingAgreementDescription: "Your agreement description",
-                    enableShippingAddress: true,
-                    shippingAddressEditable: false,
-                    shippingAddressOverride: {
-                        recipientName: "Scruff McGruff",
-                        line1: "1234 Main St.",
-                        line2: "Unit 1",
-                        city: "Chicago",
-                        countryCode: "US",
-                        postalCode: "60652",
-                        state: "IL",
-                        phone: "123.456.7890",
-                    },
-                })
-            }
-            ${ON_APPROVE_DECLARATION}
-        />
-        </PayPalScriptProvider>
-    </PayPalScriptProvider>
-<div>`,
+            transformSource: (_: string, snippet: Story) =>
+                getBillingAggrementCode(snippet),
         },
     };
 };
