@@ -5,6 +5,7 @@ import type {
     OnApproveData,
     OnApproveActions,
 } from "@paypal/paypal-js/types/components/buttons";
+import type { PayPalButtonsComponentOptions } from "@paypal/paypal-js/types/components/buttons";
 import { action } from "@storybook/addon-actions";
 
 import {
@@ -12,17 +13,16 @@ import {
     PayPalMarks,
     PayPalButtons,
     FUNDING,
-} from "../index";
-import { getOptionsFromQueryString } from "./utils";
+} from "../../index";
+import { getOptionsFromQueryString } from "../utils";
 import {
     COMPONENT_PROPS_CATEGORY,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
     APPROVE,
-    ERROR,
-} from "./constants";
-import { InEligibleError, generateDocPageStructure } from "./commons";
-import type { Story } from "@storybook/react/types-6-0";
+} from "../constants";
+import { InEligibleError, defaultProps } from "../commons";
+import overrideStories from "./utils";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -37,10 +37,13 @@ export default {
     parameters: {
         options: { showFunctions: true },
         controls: { expanded: true },
-        docs: { source: { type: "code" } },
     },
     argTypes: {
         amount: ARG_TYPE_AMOUNT,
+        style: {
+            control: { type: "object" },
+            ...COMPONENT_PROPS_CATEGORY,
+        },
         className: { control: null, table: { category: "Props" } },
         fundingSource: {
             options: [
@@ -63,6 +66,9 @@ export default {
     },
     args: {
         amount: "2",
+        style: {
+            color: "white",
+        },
     },
 };
 
@@ -72,7 +78,10 @@ export const Default: FC<{ fundingSource: string }> = ({ fundingSource }) => (
     </PayPalScriptProvider>
 );
 
-export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
+export const RadioButtons: FC<{
+    amount: string;
+    style: PayPalButtonsComponentOptions["style"];
+}> = ({ amount, style }) => {
     // Remember the amount props is received from the control panel
     const [selectedFundingSource, setSelectedFundingSource] = useState(
         fundingSources[0]
@@ -104,7 +113,7 @@ export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
             <PayPalButtons
                 fundingSource={selectedFundingSource}
                 forceReRender={[selectedFundingSource, amount]}
-                style={{ color: "white" }}
+                style={style}
                 createOrder={(
                     data: Record<string, unknown>,
                     actions: CreateOrderActions
@@ -129,9 +138,7 @@ export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
                         action(APPROVE)(details);
                     });
                 }}
-                onError={(err: Record<string, unknown>) => {
-                    action(ERROR)(err.toString());
-                }}
+                {...defaultProps}
             >
                 <InEligibleError />
             </PayPalButtons>
@@ -139,28 +146,4 @@ export const RadioButtons: FC<{ amount: string }> = ({ amount }) => {
     );
 };
 
-// Override the Default story doc page
-(Default as Story).parameters = {
-    docs: {
-        source: { type: "dynamic" },
-        page: () => generateDocPageStructure(Default.name),
-    },
-};
-
-// Override the Default story controls table props
-(Default as Story).argTypes = {
-    amount: { table: { disable: true } },
-};
-
-// Override the Default story doc page
-(RadioButtons as Story).parameters = {
-    docs: {
-        source: { type: "dynamic" },
-        page: () => generateDocPageStructure("Radio Buttons"),
-    },
-};
-
-// Override the RadioButtons story controls table props
-(RadioButtons as Story).argTypes = {
-    fundingSource: { table: { disable: true } },
-};
+overrideStories();
