@@ -14,6 +14,7 @@ import { getOptionsFromQueryString, generateRandomString } from "../utils";
 import {
     COMPONENT_PROPS_CATEGORY,
     COMPONENT_EVENTS,
+    ARG_TYPE_CURRENCY,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
     CONTAINER_SIZE,
@@ -50,24 +51,7 @@ export default {
         controls: { expanded: true, sort: "requiredFirst" },
     },
     argTypes: {
-        currency: {
-            options: ["USD", "EUR", "CAD"],
-            description:
-                "This is not a property from PayPalButtons. It is custom control to change the currency create create a PayPal order.",
-            control: {
-                type: "select",
-                labels: {
-                    USD: "United State Dollar",
-                    EUR: "Euro",
-                    CAD: "Canadian Dollar",
-                },
-            },
-            table: {
-                category: "Custom",
-                type: { summary: "string" },
-                defaultValue: { summary: "USD" },
-            },
-        },
+        currency: ARG_TYPE_CURRENCY,
         amount: ARG_TYPE_AMOUNT,
         size: CONTAINER_SIZE,
         showSpinner: {

@@ -10,15 +10,15 @@ import {
     PayPalHostedField,
     PAYPAL_HOSTED_FIELDS_TYPES,
     usePayPalHostedFields,
-} from "../index";
+} from "../../index";
 import {
     getOptionsFromQueryString,
     generateRandomString,
     getClientToken,
     HEROKU_SERVER,
-} from "./utils";
-import { COMPONENT_PROPS_CATEGORY, COMPONENT_EVENTS, SDK } from "./constants";
-import { InEligibleError } from "./commons";
+} from "../utils";
+import { COMPONENT_PROPS_CATEGORY, COMPONENT_EVENTS, SDK } from "../constants";
+import { InEligibleError } from "../commons";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;

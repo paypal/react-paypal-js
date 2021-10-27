@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, CSSProperties } from "react";
 import { action } from "@storybook/addon-actions";
 import type { FC, ReactElement } from "react";
-import type { Story } from "@storybook/react";
 
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
@@ -11,21 +10,30 @@ import {
     PayPalHostedField,
     PAYPAL_HOSTED_FIELDS_TYPES,
     usePayPalHostedFields,
-} from "../index";
+} from "../../index";
 import {
     getOptionsFromQueryString,
     generateRandomString,
     getClientToken,
     HEROKU_SERVER,
-} from "./utils";
+} from "../utils";
 import {
     COMPONENT_PROPS_CATEGORY,
     COMPONENT_TYPES,
+    ARG_TYPE_CURRENCY,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
     ERROR,
-} from "./constants";
-import { InEligibleError } from "./commons";
+} from "../constants";
+import { InEligibleError } from "../commons";
+import overrideStories from "./utils";
+
+type StoryProps = {
+    amount: string;
+    currency: string;
+    styles: Record<string, unknown>;
+    fieldStyle: CSSProperties;
+};
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -37,10 +45,6 @@ const scriptProviderOptions: PayPalScriptOptions = {
         "AdOu-W3GPkrfuTbJNuW9dWVijxvhaXHFIRuKrLDwu14UDwTTHWMFkUwuu9D8I1MAQluERl9cFOd7Mfqe",
     components: "buttons,hosted-fields",
     ...getOptionsFromQueryString(),
-};
-const customBorderFieldStyle = {
-    border: "1px solid #606060",
-    boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
 };
 const CREATE_ORDER = "createOrder";
 const SUBMIT_FORM = "submitForm";
@@ -149,9 +153,22 @@ export default {
         className: { control: false, ...COMPONENT_PROPS_CATEGORY },
         id: { control: false, ...COMPONENT_PROPS_CATEGORY },
         lang: { control: false, ...COMPONENT_PROPS_CATEGORY },
-        style: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        styles: {
+            control: { type: "object" },
+            ...COMPONENT_PROPS_CATEGORY,
+        },
         title: { control: false, ...COMPONENT_PROPS_CATEGORY },
+        currency: ARG_TYPE_CURRENCY,
         amount: ARG_TYPE_AMOUNT,
+        fieldStyle: {
+            description:
+                "This is not a property from PayPalButtons. It is custom control for testing the fields style",
+            control: { type: "object" },
+            table: {
+                category: "Custom",
+                type: { summary: "CSSProperties" },
+            },
+        },
         PAYPAL_HOSTED_FIELDS_TYPES: {
             control: false,
             type: { required: true },
@@ -180,6 +197,16 @@ export default {
     },
     args: {
         amount: "2",
+        currency: "USD",
+        styles: {
+            ".valid": { color: GREEN_COLOR },
+            ".invalid": { color: RED_COLOR },
+            input: { "font-family": "monospace", "font-size": "16px" },
+        },
+        fieldStyle: {
+            border: "1px solid #606060",
+            boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
+        },
     },
     decorators: [
         (Story: FC): ReactElement => {
@@ -216,7 +243,12 @@ export default {
     ],
 };
 
-export const Default: FC<{ amount: string }> = ({ amount }) => {
+export const Default: FC<StoryProps> = ({
+    amount,
+    currency,
+    styles,
+    fieldStyle,
+}) => {
     return (
         <PayPalHostedFieldsProvider
             createOrder={() => {
@@ -233,7 +265,7 @@ export const Default: FC<{ amount: string }> = ({ amount }) => {
                             {
                                 amount: {
                                     value: amount,
-                                    currency_code: "USD",
+                                    currency_code: currency,
                                 },
                             },
                         ],
@@ -251,11 +283,7 @@ export const Default: FC<{ amount: string }> = ({ amount }) => {
                     });
             }}
             notEligibleError={<InEligibleError />}
-            styles={{
-                ".valid": { color: GREEN_COLOR },
-                ".invalid": { color: RED_COLOR },
-                input: { "font-family": "monospace", "font-size": "16px" },
-            }}
+            styles={styles}
         >
             <label htmlFor="card-number">
                 Card Number<span style={{ color: RED_COLOR }}>*</span>
@@ -263,7 +291,7 @@ export const Default: FC<{ amount: string }> = ({ amount }) => {
             <PayPalHostedField
                 id="card-number"
                 className="card-field"
-                style={customBorderFieldStyle}
+                style={fieldStyle}
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
                 options={{
                     selector: "#card-number",
@@ -276,7 +304,7 @@ export const Default: FC<{ amount: string }> = ({ amount }) => {
             <PayPalHostedField
                 id="cvv"
                 className="card-field"
-                style={customBorderFieldStyle}
+                style={fieldStyle}
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
                 options={{
                     selector: "#cvv",
@@ -290,7 +318,7 @@ export const Default: FC<{ amount: string }> = ({ amount }) => {
             <PayPalHostedField
                 id="expiration-date"
                 className="card-field"
-                style={customBorderFieldStyle}
+                style={fieldStyle}
                 hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
                 options={{
                     selector: "#expiration-date",
@@ -298,7 +326,7 @@ export const Default: FC<{ amount: string }> = ({ amount }) => {
                 }}
             />
             {/* Custom client component to handle hosted fields submit */}
-            <SubmitPayment customStyle={customBorderFieldStyle} />
+            <SubmitPayment customStyle={fieldStyle} />
         </PayPalHostedFieldsProvider>
     );
 };
@@ -377,140 +405,4 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
     );
 };
 
-(Default as Story).parameters = {
-    docs: {
-        transformSource: (_: string, snippet: Story) => {
-            return `
-            () => {
-    const RED_COLOR_STYLE = { color: "${RED_COLOR}" };
-    const SubmitPayment = () => {
-        const cardHolderName = useRef<HTMLInputElement>(null);
-        const hostedField = usePayPalHostedFields();
-
-        const handleClick = () => {
-            if (hostedField) {
-                if (
-                    Object.values(hostedField.getState().fields)
-                    .some((field) => !field.isValid) ||
-                    !cardHolderName?.current?.value
-                ) {
-                    return alert(
-                        "The payment form is invalid, please check it before execute the payment"
-                    );
-                }
-
-                hostedField
-                    .submit({
-                        cardholderName: cardHolderName.current.value,
-                    })
-                    .then((data) => {
-                        fetch(captureOrderUrl(data.orderId), {
-                            method: "post",
-                        })
-                            .then((response) => response.json())
-                            .then((data) => {
-                                alert(JSON.stringify(data));
-                            })
-                            .catch((err) => {
-                                alert(JSON.stringify(err));
-                            })
-                    })
-                    .catch((err) => {
-                        alert(JSON.stringify(err));
-                    });
-            }
-        };
-
-        return (
-            <>
-                <label title="This represents the full name as shown in the card">Card Holder Name</label>
-                <input
-                    ref={cardHolderName}
-                    className="card-field"
-                    type="text"
-                    placeholder="Full name"
-                />
-                <button
-                    className="btn-primary"
-                    style={{ float: "right" }}
-                    onClick={handleClick}
-                >Pay</button>
-            </>
-        );
-    };
-
-    return (
-        <PayPalHostedFieldsProvider
-            createOrder={() =>
-                fetch(CREATE_ORDER_URL, {
-                    method: "post",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        purchase_units: [
-                            {
-                                amount: {
-                                    value: ${snippet?.args?.amount},
-                                    currency_code: "USD",
-                                },
-                            },
-                        ],
-                        intent: "CAPTURE",
-                    }),
-                })
-                    .then((response) => response.json())
-                    .then((order) => order.id)
-                    .catch((err) => {
-                        alert(err);
-                    })
-            }
-            notEligibleError={<InEligibleError />}
-            styles={{
-                ".valid": { color: "${GREEN_COLOR}" },
-                ".invalid": RED_COLOR_STYLE,
-                "input": { "font-family": "monospace", "font-size": "16px" }
-            }}
-        >
-            <label htmlFor="card-number">Card Number<span style={RED_COLOR_STYLE}>*</span></label>
-            <PayPalHostedField
-                id="card-number"
-                className="card-field"
-                style={customBorderFieldStyle}
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                options={{
-                    selector: "#card-number",
-                    placeholder: "4111 1111 1111 1111",
-                }}
-            />
-            <label htmlFor="cvv">CVV<span style={RED_COLOR_STYLE}>*</span></label>
-            <PayPalHostedField
-                id="cvv"
-                className="card-field"
-                style={customBorderFieldStyle}
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                options={{
-                    selector: "#cvv",
-                    placeholder: "123",
-                    maskInput: true,
-                }}
-            />
-            <label htmlFor="expiration-date">Expiration Date<span style={RED_COLOR_STYLE}>*</span></label>
-            <PayPalHostedField
-                id="expiration-date"
-                className="card-field"
-                style={customBorderFieldStyle}
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
-                options={{
-                    selector: "#expiration-date",
-                    placeholder: "MM/YYYY",
-                }}
-            />
-            <SubmitPayment />
-        </PayPalHostedFieldsProvider>
-    );
-}
-            `;
-        },
-    },
-};
+overrideStories(RED_COLOR, GREEN_COLOR);

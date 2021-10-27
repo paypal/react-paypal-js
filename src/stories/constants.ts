@@ -35,3 +35,22 @@ export const ARG_TYPE_AMOUNT = {
         type: { summary: "number|string" },
     },
 };
+
+export const ARG_TYPE_CURRENCY = {
+    options: ["USD", "EUR", "CAD"],
+    description:
+        "This is not a property from PayPalButtons. It is custom control to change the currency create create a PayPal order.",
+    control: {
+        type: "select",
+        labels: {
+            USD: "United State Dollar",
+            EUR: "Euro",
+            CAD: "Canadian Dollar",
+        },
+    },
+    table: {
+        category: "Custom",
+        type: { summary: "string" },
+        defaultValue: { summary: "USD" },
+    },
+};
