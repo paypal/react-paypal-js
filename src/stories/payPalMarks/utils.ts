@@ -36,7 +36,7 @@ const overrideStories = (): void => {
             page: () => generateDocPageStructure("Radio Buttons"),
             transformSource: (_: string, snippet: Story) => `
 ({ amount }) => {
-    const fundingSources = [FUNDING.PAYPAL, FUNDING.CARD, FUNDING.PAYLATER];
+    const fundingSources = ["paypal", "card", "paylater"];
     // Remember the amount props is received from the control panel
     const [selectedFundingSource, setSelectedFundingSource] = useState(
         fundingSources[0]

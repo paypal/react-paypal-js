@@ -35,7 +35,7 @@ export interface PayPalHostedFieldProps {
     /**
      * Represent the hosted field type
      */
-    hostedFieldType: PAYPAL_HOSTED_FIELDS_TYPES;
+    hostedFieldType: PAYPAL_HOSTED_FIELDS_TYPES | string;
     /**
      * Options to modify the hosted field input. You can set a placeholder text,
      * a prefill value or set the maximum length of a field.

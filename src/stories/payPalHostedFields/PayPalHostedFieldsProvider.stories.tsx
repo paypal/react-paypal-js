@@ -8,7 +8,6 @@ import {
     PayPalScriptProvider,
     PayPalHostedFieldsProvider,
     PayPalHostedField,
-    PAYPAL_HOSTED_FIELDS_TYPES,
     usePayPalHostedFields,
 } from "../../index";
 import {
@@ -59,7 +58,6 @@ export default {
     component: PayPalHostedFieldsProvider,
     parameters: {
         controls: { expanded: true },
-        docs: { source: { type: "code" } },
     },
     argTypes: {
         styles: {
@@ -130,7 +128,7 @@ export const Default: FC<{ styles: { [key in string]: unknown } }> = (args) => {
             <PayPalHostedField
                 id="card-number"
                 className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                hostedFieldType="number"
                 options={{
                     selector: "#card-number",
                     placeholder: "4111 1111 1111 1111",
@@ -139,7 +137,7 @@ export const Default: FC<{ styles: { [key in string]: unknown } }> = (args) => {
             <PayPalHostedField
                 id="cvv"
                 className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                hostedFieldType="cvv"
                 options={{
                     selector: "#cvv",
                     placeholder: "123",
@@ -151,7 +149,7 @@ export const Default: FC<{ styles: { [key in string]: unknown } }> = (args) => {
             <PayPalHostedField
                 id="expiration-date"
                 className="card-field"
-                hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE}
+                hostedFieldType="expirationDate"
                 options={{
                     selector: "#expiration-date",
                     placeholder: "MM/YYYY",

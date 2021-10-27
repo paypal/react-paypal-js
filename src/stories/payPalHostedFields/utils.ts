@@ -2,6 +2,7 @@ import type { Story } from "@storybook/react";
 import { generateDocPageStructure } from "../commons";
 
 import { Default, ExpirationDate } from "./PayPalHostedFields.stories";
+import { Default as Provider } from "./PayPalHostedFieldsProvider.stories";
 
 const stylesProps = (styles: string) => `styles={${styles}}`;
 const SUBMIT_PAYMENT_DECLARATION = `// This is a custom component to submit the form
@@ -200,6 +201,52 @@ const overrideStories = (redColor: string, greenColor: string): void => {
             </PayPalHostedFieldsProvider>
         );
     }`,
+        },
+    };
+    (Provider as Story).parameters = {
+        docs: {
+            transformSource: (
+                _: string,
+                snippet: Story
+            ) => `<PayPalHostedFieldsProvider
+    createOrder={() => {
+            // Server call to create the order
+            // Mock response below
+            return Promise.resolve("7NE43326GP4951156");
+        }}
+        styles={${JSON.stringify(snippet?.args?.styles)}}
+    >
+    <PayPalHostedField
+        id="card-number"
+        className="card-field"
+        hostedFieldType="number"
+        options={{
+            selector: "#card-number",
+            placeholder: "4111 1111 1111 1111",
+        }}
+    />
+    <PayPalHostedField
+        id="cvv"
+        className="card-field"
+        hostedFieldType="cvv"
+        options={{
+            selector: "#cvv",
+            placeholder: "123",
+            maskInput: {
+                character: "#",
+            },
+        }}
+    />
+    <PayPalHostedField
+        id="expiration-date"
+        className="card-field"
+        hostedFieldType="expirationDate"
+        options={{
+            selector: "#expiration-date",
+            placeholder: "MM/YYYY",
+        }}
+    />
+</PayPalHostedFieldsProvider>`,
         },
     };
 };
