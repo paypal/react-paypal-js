@@ -63,6 +63,7 @@ export function generateRandomString(): string {
 export function reactElementToString(source: ReactNode, ctx?: unknown): string {
     return reactElementToJSXString(source, {
         showFunctions: true,
+        sortProps: false,
         functionValue: (fn) => format(fn.toString(), ctx),
     });
 }

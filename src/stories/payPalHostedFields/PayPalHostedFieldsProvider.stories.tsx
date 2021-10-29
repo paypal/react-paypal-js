@@ -18,6 +18,7 @@ import {
 } from "../utils";
 import { COMPONENT_PROPS_CATEGORY, COMPONENT_EVENTS, SDK } from "../constants";
 import { InEligibleError } from "../commons";
+import { overrideStories } from "./codeProvider";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -158,3 +159,5 @@ export const Default: FC<{ styles: { [key in string]: unknown } }> = (args) => {
         </PayPalHostedFieldsProvider>
     );
 };
+
+overrideStories();

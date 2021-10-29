@@ -25,13 +25,13 @@ import {
     ERROR,
 } from "../constants";
 import { InEligibleError } from "../commons";
-import overrideStories from "./utils";
+import { overrideStories } from "./codeHostedFields";
 
 type StoryProps = {
     amount: string;
     currency: string;
     styles: Record<string, unknown>;
-    fieldStyle: CSSProperties;
+    style: CSSProperties;
 };
 
 const uid = generateRandomString();
@@ -153,18 +153,23 @@ export default {
         id: { control: false, ...COMPONENT_PROPS_CATEGORY },
         lang: { control: false, ...COMPONENT_PROPS_CATEGORY },
         styles: {
+            description:
+                "Custom CSS properties to customize the <code>PayPalHostedFieldsProvider</code> component",
             control: { type: "object" },
-            ...COMPONENT_PROPS_CATEGORY,
+            ...{
+                ...COMPONENT_PROPS_CATEGORY,
+                type: { summary: "CSSProperties" },
+            },
         },
         title: { control: false, ...COMPONENT_PROPS_CATEGORY },
         currency: ARG_TYPE_CURRENCY,
         amount: ARG_TYPE_AMOUNT,
-        fieldStyle: {
+        style: {
             description:
-                "This is not a property from PayPalButtons. It is custom control for testing the fields style",
+                "Custom CSS properties to customize the <code>PayPalHostedField</code> component",
             control: { type: "object" },
-            table: {
-                category: "Custom",
+            ...{
+                ...COMPONENT_PROPS_CATEGORY,
                 type: { summary: "CSSProperties" },
             },
         },
@@ -202,7 +207,7 @@ export default {
             ".invalid": { color: RED_COLOR },
             input: { "font-family": "monospace", "font-size": "16px" },
         },
-        fieldStyle: {
+        style: {
             border: "1px solid #606060",
             boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
         },
@@ -246,7 +251,7 @@ export const Default: FC<StoryProps> = ({
     amount,
     currency,
     styles,
-    fieldStyle,
+    style,
 }) => {
     return (
         <PayPalHostedFieldsProvider
@@ -290,7 +295,7 @@ export const Default: FC<StoryProps> = ({
             <PayPalHostedField
                 id="card-number"
                 className="card-field"
-                style={fieldStyle}
+                style={style}
                 hostedFieldType="number"
                 options={{
                     selector: "#card-number",
@@ -303,7 +308,7 @@ export const Default: FC<StoryProps> = ({
             <PayPalHostedField
                 id="cvv"
                 className="card-field"
-                style={fieldStyle}
+                style={style}
                 hostedFieldType="cvv"
                 options={{
                     selector: "#cvv",
@@ -317,7 +322,7 @@ export const Default: FC<StoryProps> = ({
             <PayPalHostedField
                 id="expiration-date"
                 className="card-field"
-                style={fieldStyle}
+                style={style}
                 hostedFieldType="expirationDate"
                 options={{
                     selector: "#expiration-date",
@@ -325,7 +330,7 @@ export const Default: FC<StoryProps> = ({
                 }}
             />
             {/* Custom client component to handle hosted fields submit */}
-            <SubmitPayment customStyle={fieldStyle} />
+            <SubmitPayment customStyle={style} />
         </PayPalHostedFieldsProvider>
     );
 };
@@ -404,4 +409,4 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
     );
 };
 
-overrideStories(RED_COLOR, GREEN_COLOR);
+overrideStories();
