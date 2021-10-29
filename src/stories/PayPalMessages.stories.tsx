@@ -1,9 +1,11 @@
 import React, { FC } from "react";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
+import type { Story } from "@storybook/react";
 
 import { PayPalScriptProvider, PayPalMessages } from "../index";
 import { getOptionsFromQueryString } from "./utils";
 import { COMPONENT_PROPS_CATEGORY } from "./constants";
+import { generateDocPageStructure } from "./commons";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -63,3 +65,29 @@ export const Default: FC<{
         <PayPalMessages style={style} forceReRender={[style]} />
     </PayPalScriptProvider>
 );
+
+const getDefaultCode = (): string =>
+    `import { PayPalScriptProvider, PayPalMessages } from "@paypal/react-paypal-js";
+
+export default function App() {
+	return (
+		<PayPalScriptProvider
+			options={{
+				"client-id": "test",
+				components: "messages",
+			}}
+		>
+			<PayPalMessages
+				style={{
+					layout: "text",
+				}}
+			/>
+		</PayPalScriptProvider>
+	);
+}`;
+
+(Default as Story).parameters = {
+    docs: {
+        page: () => generateDocPageStructure(getDefaultCode()),
+    },
+};

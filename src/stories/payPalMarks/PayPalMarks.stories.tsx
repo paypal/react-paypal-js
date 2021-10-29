@@ -22,7 +22,7 @@ import {
     APPROVE,
 } from "../constants";
 import { InEligibleError, defaultProps } from "../commons";
-import overrideStories from "./utils";
+import overrideStories from "./code";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",

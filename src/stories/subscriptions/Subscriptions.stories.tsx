@@ -15,11 +15,12 @@ import {
     PayPalButtons,
     usePayPalScriptReducer,
     DISPATCH_ACTION,
-} from "../index";
-import { getOptionsFromQueryString, generateRandomString } from "./utils";
-import { ARG_TYPE_AMOUNT, ORDER_ID, APPROVE } from "./constants";
-import { InEligibleError, defaultProps } from "./commons";
-import type { PayPalButtonsComponentProps } from "../types/paypalButtonTypes";
+} from "../../index";
+import { getOptionsFromQueryString, generateRandomString } from "../utils";
+import { ARG_TYPE_AMOUNT, ORDER_ID, APPROVE } from "../constants";
+import { InEligibleError, defaultProps } from "../commons";
+import type { PayPalButtonsComponentProps } from "../../types/paypalButtonTypes";
+import overrideStories from "./code";
 
 const SUBSCRIPTION = "subscription";
 const subscriptionOptions: PayPalScriptOptions = {
@@ -156,65 +157,4 @@ export const Default: FC<{ type: string; amount: string }> = ({
     );
 };
 
-// Override the Default story code snippet
-(Default as Story).parameters = {
-    docs: {
-        transformSource: (_: string, snippet: Story) => {
-            const props =
-                snippet?.args?.type === SUBSCRIPTION
-                    ? `createSubscription={(data, actions) => {
-            return actions.subscription
-                .create({
-                    plan_id: "set_your_plan_identifier_here",
-                })
-                .then((orderId) => {
-                    // Your code here after create the order
-                    return orderId;
-                })
-            }
-        },
-        style: {
-            label: "subscribe",
-        }}`
-                    : `createOrder={(data, actions) => {
-            return actions.order
-                .create({
-                    purchase_units: [
-                        {
-                            amount: {
-                                value: ${snippet?.args?.amount || ""},
-                            },
-                        },
-                    ],
-                })
-                .then((orderId) => {
-                    // Your code here after create the order
-                    return orderId;
-                });
-            }
-        },
-        onApprove(data: OnApproveData, actions: OnApproveActions) {
-            return actions.order.capture().then(function (details) {
-                // Your code here after capture the order
-            });
-        }`;
-
-            return `
-<PayPalScriptProvider
-    options={{
-    "client-id": "test",
-    components: 'buttons',
-    "data-namespace": "set_unique_identifier_here",
-    "data-uid": "set_unique_identifier_here",
-    intent: ${snippet?.args?.type},
-    vault: true
-    }}
->
-    <PayPalButtons
-        forceReRender={[type, amount]}
-        ${props}
-    />
-</PayPalScriptProvider>`;
-        },
-    },
-};
+overrideStories();
