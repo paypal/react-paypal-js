@@ -81,6 +81,7 @@ function PrintLoadingState(): ReactElement | null {
 }
 
 export default {
+    id: "example/PayPalScriptProvider",
     title: "PayPal/PayPalScriptProvider",
     component: PayPalScriptProvider,
     parameters: {

@@ -32,6 +32,7 @@ const scriptProviderOptions: PayPalScriptOptions = {
 const fundingSources = [FUNDING.PAYPAL, FUNDING.CARD, FUNDING.PAYLATER];
 
 export default {
+    id: "example/PayPalMarks",
     title: "PayPal/PayPalMarks",
     component: PayPalMarks,
     parameters: {

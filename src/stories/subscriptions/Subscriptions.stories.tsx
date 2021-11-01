@@ -82,6 +82,7 @@ const orderOptions: PayPalScriptOptions = {
 };
 
 export default {
+    id: "example/Subscriptions",
     title: "PayPal/Subscriptions",
     parameters: {
         controls: { expanded: true },

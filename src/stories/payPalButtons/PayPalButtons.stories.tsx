@@ -45,6 +45,7 @@ const LoadingSpinner: FC = () => {
 };
 
 export default {
+    id: "example/PayPalButtons",
     title: "PayPal/PayPalButtons",
     component: PayPalButtons,
     parameters: {

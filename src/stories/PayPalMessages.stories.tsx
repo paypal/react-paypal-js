@@ -14,6 +14,7 @@ const scriptProviderOptions: PayPalScriptOptions = {
 };
 
 export default {
+    id: "example/PayPalMessages",
     title: "PayPal/PayPalMessages",
     component: PayPalMessages,
     parameters: {
