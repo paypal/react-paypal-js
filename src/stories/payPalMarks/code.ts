@@ -26,6 +26,11 @@ import {
 	PayPalMarks,
 } from "@paypal/react-paypal-js";
 
+// This values are the props in the UI
+const amount = "${args.amount}";
+const currency = "${args.currency}";
+const style = ${JSON.stringify(args.style)};
+
 export default function App() {
 	const fundingSources = ["paypal", "card", "paylater"];
 	// Remember the amount props is received from the control panel
@@ -63,16 +68,16 @@ export default function App() {
 			<br />
 			<PayPalButtons
 				fundingSource={selectedFundingSource}
-				style={${JSON.stringify(args.style)}}
-				forceReRender={[selectedFundingSource,${JSON.stringify(args.style)}, "${args.amount}", "${args.currency}"]}
+				style={style}
+				forceReRender={[selectedFundingSource, style, amount, currency]}
 				createOrder={(data, actions) => {
 					return actions.order
 						.create({
 							purchase_units: [
 								{
 									amount: {
-										currency_code: "${args.currency}", // Here change the currency if needed
-										value: "${args.amount}", // Here change the amount if needed
+										currency_code: currency, // Here change the currency if needed
+										value: amount, // Here change the amount if needed
 									},
 								},
 							],

@@ -2,16 +2,14 @@ import { generateFundingSource } from "../utils";
 
 import type { Args } from "@storybook/addons/dist/ts3.9/types";
 
-const IMPORT_STATEMENT = 
-`import { useEffect } from "react";
+const IMPORT_STATEMENT = `import { useEffect } from "react";
 import {
     PayPalScriptProvider,
     PayPalButtons,
     usePayPalScriptReducer
 } from "@paypal/react-paypal-js";`;
 
-const SPINNER_EFFECT =
-`useEffect(() => {
+const SPINNER_EFFECT = `useEffect(() => {
         dispatch({
             type: "resetOptions",
             value: {
@@ -22,8 +20,7 @@ const SPINNER_EFFECT =
     }, [showSpinner]);
 `;
 
-const BUTTON_WRAPPER_EFFECT =
-`// usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
+const BUTTON_WRAPPER_EFFECT = `// usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
     // This is the main reason to wrap the PayPalButtons in a new component
     const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
 
@@ -39,7 +36,12 @@ const BUTTON_WRAPPER_EFFECT =
 `;
 
 export const getDefaultCode = (args: Args): string =>
-`${IMPORT_STATEMENT}
+    `${IMPORT_STATEMENT}
+
+// This values are the props in the UI
+const amount = "${args.amount}";
+const currency = "${args.currency}";
+const style = ${JSON.stringify(args.style)};
 
 // Custom component to wrap the PayPalButtons and handle currency changes
 const ButtonWrapper = ({ currency, showSpinner }) => {
@@ -49,9 +51,9 @@ const ButtonWrapper = ({ currency, showSpinner }) => {
     return (<>
             { (showSpinner && isPending) && <div className="spinner" /> }
             <PayPalButtons
-                style={${JSON.stringify(args.style)}}
+                style={style}
                 disabled={${args.disabled}}
-                forceReRender={["${args.amount}", "${args.currency}", ${JSON.stringify(args.style)}]}
+                forceReRender={[amount, currency, style]}
                 ${generateFundingSource(args.fundingSource as string)}
                 createOrder={(data, actions) => {
                     return actions.order
@@ -59,8 +61,8 @@ const ButtonWrapper = ({ currency, showSpinner }) => {
                             purchase_units: [
                                 {
                                     amount: {
-                                        currency_code: "${args.currency}", // Here change the currency if needed
-                                        value: "${args.amount}", // Here change the amount if needed
+                                        currency_code: currency, // Here change the currency if needed
+                                        value: amount, // Here change the amount if needed
                                     },
                                 },
                             ],
@@ -87,11 +89,11 @@ export default function App() {
 				options={{
 					"client-id": "test",
 					components: "buttons",
-                    currency: "${args.currency}"
+                    currency: currency
 				}}
 			>
 				<ButtonWrapper
-                    currency={"${args.currency}"}
+                    currency={currency}
                     showSpinner={${args.showSpinner}}
                 />
 			</PayPalScriptProvider>
@@ -100,14 +102,17 @@ export default function App() {
 }`;
 
 export const getDonateCode = (args: Args): string =>
-`${IMPORT_STATEMENT}
+    `${IMPORT_STATEMENT}
 
 const ButtonWrapper = ({ currency }) => {
     ${BUTTON_WRAPPER_EFFECT}
  
      return (<PayPalButtons
         fundingSource="paypal"
-        style={${JSON.stringify({ ...args.style as Record<string, unknown>, label: "donate" })}}
+        style={${JSON.stringify({
+            ...(args.style as Record<string, unknown>),
+            label: "donate",
+        })}}
         disabled={${args.disabled}}
         createOrder={(data, actions) => {
             return actions.order
@@ -115,11 +120,17 @@ const ButtonWrapper = ({ currency }) => {
                     purchase_units: [
                         {
                             amount: {
-                                value: "${args.amount}", // Here change the amount if needed
+                                value: "${
+                                    args.amount
+                                }", // Here change the amount if needed
                                 breakdown: {
                                     item_total: {
-                                        currency_code: "${args.currency}", // Here change the currency if needed
-                                        value: "${args.amount}", // Here change the amount if needed
+                                        currency_code: "${
+                                            args.currency
+                                        }", // Here change the currency if needed
+                                        value: "${
+                                            args.amount
+                                        }", // Here change the amount if needed
                                     },
                                 },
                             },
@@ -128,8 +139,12 @@ const ButtonWrapper = ({ currency }) => {
                                     name: "donation-example",
                                     quantity: "1",
                                     unit_amount: {
-                                        currency_code: "${args.currency}", // Here change the currency if needed
-                                        value: "${args.amount}", // Here change the amount if needed
+                                        currency_code: "${
+                                            args.currency
+                                        }", // Here change the currency if needed
+                                        value: "${
+                                            args.amount
+                                        }", // Here change the amount if needed
                                     },
                                     category: "DONATION",
                                 },
