@@ -1,9 +1,6 @@
-import type { Story } from "@storybook/react";
+import type { Args } from "@storybook/addons/dist/ts3.9/types";
 
-import { Default } from "./VenmoButton.stories";
-import { generateDocPageStructure } from "../commons";
-
-const getDefaultCode = (): string =>
+export const getDefaultCode = (style: Args): string =>
     `import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 // Custom error component
@@ -25,22 +22,10 @@ export default function App() {
 		>
 			<PayPalButtons
 				fundingSource="venmo"
-				style={{
-					color: "blue",
-				}}
+				style={${JSON.stringify(style)}}
 			>
 				<InEligibleError text="You are not eligible to pay with Venmo." />
 			</PayPalButtons>
 		</PayPalScriptProvider>
 	);
 }`;
-
-const overrideStories = (): void => {
-    (Default as Story).parameters = {
-        docs: {
-            page: () => generateDocPageStructure(getDefaultCode()),
-        },
-    };
-};
-
-export default overrideStories;

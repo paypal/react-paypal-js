@@ -1,9 +1,4 @@
-import type { Story } from "@storybook/react";
-
-import { Default as Provider } from "./PayPalHostedFieldsProvider.stories";
-import { generateDocPageStructure } from "../commons";
-
-const getProviderCode = (): string =>
+export const getDefaultCode = (styles: Record<string, unknown>): string =>
     `import { useState, useEffect } from "react";
 import {
 	PayPalScriptProvider,
@@ -44,14 +39,7 @@ export default function App() {
 							// Mock response below 1
 							return Promise.resolve("7NE43326GP4951156");
 						}}
-						styles={{
-							".valid": {
-								color: "#28a745",
-							},
-							".invalid": {
-								color: "#dc3545",
-							},
-						}}
+						styles={${JSON.stringify(styles)}}
 					>
 						<PayPalHostedField
 							id="card-number"
@@ -91,11 +79,3 @@ export default function App() {
 		</>
 	);
 }`;
-
-export const overrideStories = (): void => {
-    (Provider as Story).parameters = {
-        docs: {
-            page: () => generateDocPageStructure(getProviderCode()),
-        },
-    };
-};

@@ -1,6 +1,9 @@
 import React, { FC, ReactElement } from "react";
-import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 import { action } from "@storybook/addon-actions";
+
+import type { Story } from "@storybook/react";
+import type { StoryContext } from "@storybook/addons/dist/ts3.9/types";
+import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
 import { getOptionsFromQueryString } from "../utils";
 import {
@@ -13,7 +16,8 @@ import {
     destroySDKScript,
 } from "../../context/scriptProviderContext";
 import { usePayPalScriptReducer } from "../../hooks/scriptProviderHooks";
-import overrideStories from "./code";
+import DocPageStructure from "../components/DocPageStructure";
+import { getDefaultCode } from "./code";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -120,4 +124,16 @@ export const Default: FC<{ deferLoading: boolean }> = ({ deferLoading }) => {
     );
 };
 
-overrideStories();
+/********************
+ * OVERRIDE STORIES *
+ *******************/
+(Default as Story).parameters = {
+    docs: {
+        container: ({ context }: { context: StoryContext }) => (
+            <DocPageStructure
+                context={context}
+                code={getDefaultCode(context.args.deferLoading)}
+            />
+        )
+    },
+}

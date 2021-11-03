@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import type { FC, ReactElement } from "react";
 import { action } from "@storybook/addon-actions";
 
+import type { StoryContext } from "@storybook/addons/dist/ts3.9/types";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
 import {
@@ -17,8 +18,9 @@ import {
     HEROKU_SERVER,
 } from "../utils";
 import { COMPONENT_PROPS_CATEGORY, COMPONENT_EVENTS, SDK } from "../constants";
+import DocPageStructure from "../components/DocPageStructure";
 import { InEligibleError } from "../commons";
-import { overrideStories } from "./codeProvider";
+import { getDefaultCode } from "./codeProvider";
 
 const uid = generateRandomString();
 const TOKEN_URL = `${HEROKU_SERVER}/api/paypal/hosted-fields/auth`;
@@ -59,6 +61,14 @@ export default {
     component: PayPalHostedFieldsProvider,
     parameters: {
         controls: { expanded: true },
+        docs: {
+            container: ({ context }: { context: StoryContext }): ReactElement => (
+                <DocPageStructure
+                    context={context}
+                    code={getDefaultCode(context.args.styles)}
+                />
+            )
+        }
     },
     argTypes: {
         styles: {
@@ -159,5 +169,3 @@ export const Default: FC<{ styles: { [key in string]: unknown } }> = (args) => {
         </PayPalHostedFieldsProvider>
     );
 };
-
-overrideStories();

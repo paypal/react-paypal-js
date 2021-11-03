@@ -5,9 +5,11 @@ import type {
     OnApproveData,
     OnApproveActions,
 } from "@paypal/paypal-js/types/components/buttons";
-import type { PayPalButtonsComponentOptions } from "@paypal/paypal-js/types/components/buttons";
 import { action } from "@storybook/addon-actions";
 
+import type { PayPalButtonsComponentOptions } from "@paypal/paypal-js/types/components/buttons";
+import type { Story } from "@storybook/react";
+import type { StoryContext } from "@storybook/addons/dist/ts3.9/types";
 import {
     PayPalScriptProvider,
     PayPalMarks,
@@ -18,11 +20,13 @@ import { getOptionsFromQueryString } from "../utils";
 import {
     COMPONENT_PROPS_CATEGORY,
     ARG_TYPE_AMOUNT,
+    ARG_TYPE_CURRENCY,
     ORDER_ID,
     APPROVE,
 } from "../constants";
 import { InEligibleError, defaultProps } from "../commons";
-import overrideStories from "./code";
+import DocPageStructure from "../components/DocPageStructure";
+import { getDefaultCode, getRadioButtonsCode } from "./code";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
@@ -41,6 +45,7 @@ export default {
     },
     argTypes: {
         amount: ARG_TYPE_AMOUNT,
+        currency: ARG_TYPE_CURRENCY,
         style: {
             control: { type: "object" },
             ...COMPONENT_PROPS_CATEGORY,
@@ -67,6 +72,7 @@ export default {
     },
     args: {
         amount: "2",
+        currency: "USD",
         style: {
             color: "white",
         },
@@ -147,4 +153,37 @@ export const RadioButtons: FC<{
     );
 };
 
-overrideStories();
+/********************
+ * OVERRIDE STORIES *
+ *******************/
+(Default as Story).parameters = {
+    docs: {
+        container: ({ context }: { context: StoryContext }) => (
+            <DocPageStructure
+                context={context}
+                code={getDefaultCode(context.args.fundingSource)}
+            />
+        ),
+    },
+};
+
+(Default as Story).argTypes = {
+    amount: { table: { disable: true } },
+    currency: { table: { disable: true } },
+    style: { table: { disable: true } },
+};
+
+(RadioButtons as Story).parameters = {
+    docs: {
+        container: ({ context }: { context: StoryContext }) => (
+            <DocPageStructure
+                context={context}
+                code={getRadioButtonsCode(context.args)}
+            />
+        ),
+    },
+};
+
+(RadioButtons as Story).argTypes = {
+    fundingSource: { control: false },
+};

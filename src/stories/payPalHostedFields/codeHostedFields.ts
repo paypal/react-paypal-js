@@ -1,7 +1,4 @@
-import type { Story } from "@storybook/react";
-
-import { Default, ExpirationDate } from "./PayPalHostedFields.stories";
-import { generateDocPageStructure } from "../commons";
+import type { Args } from "@storybook/addons/dist/ts3.9/types";
 
 const EXPIRATION_DATE_SINGLE_FIELD = `<label htmlFor="card-number">
                             Card Number
@@ -49,6 +46,7 @@ const EXPIRATION_DATE_SINGLE_FIELD = `<label htmlFor="card-number">
 const EXPIRATION_DATE_MULTI_FIELD = `<PayPalHostedField
                             id="card-number"
                             className="card-field"
+							style={CUSTOM_FIELD_STYLE}
                             hostedFieldType="number"
                             options={{
                                 selector: "#card-number",
@@ -58,6 +56,7 @@ const EXPIRATION_DATE_MULTI_FIELD = `<PayPalHostedField
                         <PayPalHostedField
                             id="cvv"
                             className="card-field"
+							style={CUSTOM_FIELD_STYLE}
                             hostedFieldType="cvv"
                             options={{
                                 selector: "#cvv",
@@ -67,6 +66,7 @@ const EXPIRATION_DATE_MULTI_FIELD = `<PayPalHostedField
                         />
                         <PayPalHostedField
 							id="expiration-month-1"
+							style={CUSTOM_FIELD_STYLE}
 							className="card-field"
 							hostedFieldType="expirationMonth"
 							options={{
@@ -76,6 +76,7 @@ const EXPIRATION_DATE_MULTI_FIELD = `<PayPalHostedField
 						/>
 						<PayPalHostedField
 							id="expiration-year-1"
+							style={CUSTOM_FIELD_STYLE}
                             className="card-field"
 							hostedFieldType="expirationYear"
 							options={{
@@ -109,7 +110,7 @@ const customInput = (includeLabel: boolean) => {
         : inputField;
 };
 
-const getDefaultCode = (fields: string, includeLabel: boolean): string =>
+const getCode = (singleField: boolean, includeLabel: boolean, args: Args): string =>
     `import { useState, useEffect, useRef } from "react";
 import {
 	PayPalScriptProvider,
@@ -118,10 +119,7 @@ import {
 	usePayPalHostedFields,
 } from "@paypal/react-paypal-js";
 
-const CUSTOM_FIELD_STYLE = {
-	border: "1px solid #606060",
-	boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
-};
+const CUSTOM_FIELD_STYLE = ${JSON.stringify(args.style)};
 const INVALID_COLOR = {
 	color: "#dc3545",
 };
@@ -214,12 +212,7 @@ export default function App() {
 					}}
 				>
 					<PayPalHostedFieldsProvider
-						styles={{
-							".valid": {
-								color: "#28a745",
-							},
-							".invalid": INVALID_COLOR,
-						}}
+						styles={${JSON.stringify(args.styles)}}
 						createOrder={function () {
 							return fetch(
 								"your_custom_server_to_create_orders",
@@ -232,8 +225,8 @@ export default function App() {
 										purchase_units: [
 											{
 												amount: {
-													value: "2", // Here change the amount if needed
-													currency_code: "USD", // Here change the currency if needed
+													value: "${args.amount}", // Here change the amount if needed
+													currency_code: "${args.currency}", // Here change the currency if needed
 												},
 											},
 										],
@@ -251,8 +244,8 @@ export default function App() {
 								});
 						}}
 					>
-                        ${fields}
-						<SubmitPayment />
+                        ${singleField ? EXPIRATION_DATE_SINGLE_FIELD : EXPIRATION_DATE_MULTI_FIELD}
+						<SubmitPayment customStyle={${JSON.stringify(args.style)}} />
 					</PayPalHostedFieldsProvider>
 				</PayPalScriptProvider>
 			) : (
@@ -262,22 +255,5 @@ export default function App() {
 	);
 }`;
 
-export const overrideStories = (): void => {
-    (Default as Story).parameters = {
-        docs: {
-            page: () =>
-                generateDocPageStructure(
-                    getDefaultCode(EXPIRATION_DATE_SINGLE_FIELD, true)
-                ),
-        },
-    };
-
-    (ExpirationDate as Story).parameters = {
-        docs: {
-            page: () =>
-                generateDocPageStructure(
-                    getDefaultCode(EXPIRATION_DATE_MULTI_FIELD, false)
-                ),
-        },
-    };
-};
+export const getDefaultCode = (args: Args): string => getCode(true, true, args);
+export const getExpirationDateCode = (args: Args): string => getCode(false, false, args);

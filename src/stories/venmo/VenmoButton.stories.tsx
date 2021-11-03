@@ -1,10 +1,14 @@
 import React, { FC } from "react";
+
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
+import type { Story } from "@storybook/react";
+import type { StoryContext } from "@storybook/addons/dist/ts3.9/types";
 
 import { PayPalScriptProvider, FUNDING, PayPalButtons } from "../../index";
 import { getOptionsFromQueryString, generateRandomString } from "../utils";
+import DocPageStructure from "../components/DocPageStructure";
 import { InEligibleError } from "../commons";
-import overrideStories from "./code";
+import { getDefaultCode } from "./code";
 
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id":
@@ -98,4 +102,17 @@ export const Default: FC<{
     );
 };
 
-overrideStories();
+
+/********************
+ * OVERRIDE STORIES *
+ *******************/
+ (Default as Story).parameters = {
+    docs: {
+        container: ({ context }: { context: StoryContext }) => (
+            <DocPageStructure
+                context={context}
+                code={getDefaultCode(context.args.style)}
+            />
+        ),
+    },
+};

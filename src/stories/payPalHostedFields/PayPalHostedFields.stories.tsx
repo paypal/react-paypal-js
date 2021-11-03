@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, CSSProperties } from "react";
 import { action } from "@storybook/addon-actions";
 import type { FC, ReactElement } from "react";
 
+import type { Story } from "@storybook/react";
+import type { StoryContext } from "@storybook/addons/dist/ts3.9/types";
 import type { PayPalScriptOptions } from "@paypal/paypal-js/types/script-options";
 
 import {
@@ -19,13 +21,13 @@ import {
 import {
     COMPONENT_PROPS_CATEGORY,
     COMPONENT_TYPES,
-    ARG_TYPE_CURRENCY,
     ARG_TYPE_AMOUNT,
     ORDER_ID,
     ERROR,
 } from "../constants";
+import DocPageStructure from "../components/DocPageStructure";
 import { InEligibleError } from "../commons";
-import { overrideStories } from "./codeHostedFields";
+import { getDefaultCode, getExpirationDateCode } from "./codeHostedFields";
 
 type StoryProps = {
     amount: string;
@@ -162,7 +164,6 @@ export default {
             },
         },
         title: { control: false, ...COMPONENT_PROPS_CATEGORY },
-        currency: ARG_TYPE_CURRENCY,
         amount: ARG_TYPE_AMOUNT,
         style: {
             description:
@@ -201,7 +202,6 @@ export default {
     },
     args: {
         amount: "2",
-        currency: "USD",
         styles: {
             ".valid": { color: GREEN_COLOR },
             ".invalid": { color: RED_COLOR },
@@ -409,4 +409,31 @@ export const ExpirationDate: FC<{ amount: string }> = ({ amount }) => {
     );
 };
 
-overrideStories();
+/********************
+ * OVERRIDE STORIES *
+ *******************/
+(Default as Story).parameters = {
+    docs: {
+        container: ({ context }: { context: StoryContext }): ReactElement => (
+            <DocPageStructure
+                context={context}
+                code={getDefaultCode(context.args)}
+            />
+        )
+    },
+};
+
+(ExpirationDate as Story).parameters = {
+    docs: {
+        container: ({ context }: { context: StoryContext }): ReactElement => (
+            <DocPageStructure
+                context={context}
+                code={getExpirationDateCode(context.args)}
+            />
+        )
+    },
+};
+
+(ExpirationDate as Story).args = {
+    style: {}
+};

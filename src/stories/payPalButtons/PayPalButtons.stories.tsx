@@ -6,9 +6,11 @@ import type {
     OnApproveActions,
 } from "@paypal/paypal-js/types/components/buttons";
 import type { PayPalButtonsComponentOptions } from "@paypal/paypal-js/types/components/buttons";
+import type { Story } from "@storybook/react";
+import type { StoryContext } from "@storybook/addons/dist/ts3.9/types";
+
 import { usePayPalScriptReducer, DISPATCH_ACTION } from "../../index";
 import { action } from "@storybook/addon-actions";
-
 import { PayPalScriptProvider, PayPalButtons, FUNDING } from "../../index";
 import { getOptionsFromQueryString, generateRandomString } from "../utils";
 import {
@@ -20,8 +22,9 @@ import {
     CONTAINER_SIZE,
     APPROVE,
 } from "../constants";
+import DocPageStructure from "../components/DocPageStructure";
 import { InEligibleError, defaultProps } from "../commons";
-import overrideStories from "./code";
+import { getDefaultCode, getDonateCode  } from "./code";
 
 type StoryProps = {
     style: PayPalButtonsComponentOptions["style"];
@@ -274,4 +277,34 @@ export const Donate: FC<Omit<StoryProps, "showSpinner" | "fundingSource">> = ({
     </PayPalButtons>
 );
 
-overrideStories();
+/********************
+ * OVERRIDE STORIES *
+ *******************/
+(Default as Story).parameters = {
+    docs: {
+        container: ({ context }: { context: StoryContext }) => (
+            <DocPageStructure
+                context={context}
+                code={getDefaultCode(context.args)}
+            />
+        )
+    },
+};
+
+// Override the Donate story code snippet
+(Donate as Story).parameters = {
+    docs: {
+        container: ({ context }: { context: StoryContext }) => (
+            <DocPageStructure
+                context={context}
+                code={getDonateCode(context.args)}
+            />
+        )
+    },
+};
+
+// Override the Donate story controls table props
+(Donate as Story).argTypes = {
+    fundingSource: { control: false },
+    showSpinner: { table: { disable: true } },
+};

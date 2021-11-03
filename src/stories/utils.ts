@@ -67,3 +67,9 @@ export function reactElementToString(source: ReactNode, ctx?: unknown): string {
         functionValue: (fn) => format(fn.toString(), ctx),
     });
 }
+
+export function generateFundingSource(fundingSource?: string): string {
+    return fundingSource
+        ? `fundingSource="${fundingSource}" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]`
+        : "";
+}

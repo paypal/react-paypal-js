@@ -1,14 +1,80 @@
-import type { Story } from "@storybook/react";
+import type { Args } from "@storybook/addons/dist/ts3.9/types";
 
-import { Default, BillingAgreement } from "./BraintreePayPalButtons.stories";
-import { generateDocPageStructure } from "../commons";
-
-const getDefaultCode = (): string =>
-    `import { useState, useEffect } from "react";
+const IMPORT_STATEMENT =
+`import { useState, useEffect } from "react";
 import {
 	PayPalScriptProvider,
 	BraintreePayPalButtons,
-} from "@paypal/react-paypal-js";
+	usePayPalScriptReducer
+} from "@paypal/react-paypal-js";`;
+
+const getButtonWrapper = (isOrder: boolean, args: Args) =>
+`// Custom component to wrap the PayPalButtons and handle currency changes
+const ButtonWrapper = ({ currency }) => {
+	// usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
+    // This is the main reason to wrap the PayPalButtons in a new component
+    const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+
+    useEffect(() => {
+        dispatch({
+            type: "resetOptions",
+            value: {
+                ...options,
+                currency: currency,
+            },
+        });
+    }, [currency]);
+
+	return (<BraintreePayPalButtons
+		style={style}
+		disabled={${args.disabled}}
+		fundingSource="${args.fundingSource || ""}" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]
+		forceReRender={[style, amount]}
+		createOrder={function (data, actions) {
+			return actions.braintree
+				.createPayment({
+					flow: "checkout",
+					amount: amount, // Here change the amount if needed
+					currency: "${args.currency}", // Here change the currency if needed
+					intent: "capture",
+					enableShippingAddress: true,
+					shippingAddressEditable: false,
+					shippingAddressOverride: {
+						recipientName: "Scruff McGruff",
+						line1: "1234 Main St.",
+						line2: "Unit 1",
+						city: "Chicago",
+						countryCode: "US",
+						postalCode: "60652",
+						state: "IL",
+						phone: "123.456.7890",
+					},
+				})
+				.then((orderId) => {
+					// Your code here after create the order
+					return orderId;
+				});
+		}}
+		onApprove={function (data, actions) {
+			return actions.braintree
+				.tokenizePayment(data)
+				.then((payload) => {
+					// Your code here after capture the order
+					alert(JSON.stringify(payload));
+				});
+			}
+		}
+	/>);
+};`
+
+export const getDefaultCode = (args: Args): string =>
+    `${IMPORT_STATEMENT}
+
+// This values are the props in the UI
+const style = ${JSON.stringify(args.style)};
+const amount = "${args.amount}";
+
+${getButtonWrapper(true, args)}
 
 export default function App() {
 	const [clientToken, setClientToken] = useState(null);
@@ -27,7 +93,7 @@ export default function App() {
 	return (
 		<>
 			{clientToken ? (
-				<div style={{ maxWidth: "750px", minHeight: "200px" }}>
+				<div style={{ maxWidth: "${args.size}px", minHeight: "200px" }}>
 					<PayPalScriptProvider
 						options={{
 							"client-id": "test",
@@ -37,47 +103,7 @@ export default function App() {
 							vault: false,
 						}}
 					>
-						<BraintreePayPalButtons
-							style={{
-								label: "paypal",
-								layout: "vertical",
-							}}
-							disabled={false}
-							fundingSource="" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]
-							createOrder={function (data, actions) {
-								return actions.braintree
-									.createPayment({
-										flow: "checkout",
-										amount: "2", // Here change the amount if needed
-										currency: "USD", // Here change the currency if needed
-										intent: "capture",
-										enableShippingAddress: true,
-										shippingAddressEditable: false,
-										shippingAddressOverride: {
-											recipientName: "Scruff McGruff",
-											line1: "1234 Main St.",
-											line2: "Unit 1",
-											city: "Chicago",
-											countryCode: "US",
-											postalCode: "60652",
-											state: "IL",
-											phone: "123.456.7890",
-										},
-									})
-									.then((orderId) => {
-										// Your code here after create the order
-										return orderId;
-									});
-							}}
-							onApprove={(data, actions) =>
-								actions.braintree
-									.tokenizePayment(data)
-									.then((payload) => {
-										// Your code here after capture the order
-										alert(JSON.stringify(payload));
-									})
-							}
-						/>
+						<ButtonWrapper currency={"${args.currency}"} />
 					</PayPalScriptProvider>
 				</div>
 			) : (
@@ -87,12 +113,13 @@ export default function App() {
 	);
 }`;
 
-const getBillingAgreementCode = (): string =>
-    `import { useState, useEffect } from "react";
-import {
-	PayPalScriptProvider,
-	BraintreePayPalButtons,
-} from "@paypal/react-paypal-js";
+export const getBillingAgreementCode = (args: Args): string =>
+    `${IMPORT_STATEMENT}
+
+// This values are the props in the UI
+const style = ${JSON.stringify(args.style)};
+
+${getButtonWrapper(false, args)}
 
 export default function App() {
 	const [clientToken, setClientToken] = useState(null);
@@ -122,17 +149,15 @@ export default function App() {
 						}}
 					>
 						<BraintreePayPalButtons
-							style={{
-								label: "paypal",
-								layout: "vertical",
-							}}
-							disabled={false}
-							fundingSource="" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]
+							style={style}
+							disabled={${args.disabled}}
+							fundingSource="${args.fundingSource || ""}" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]
+							forceReRender={[style]}
 							createBillingAgreement={function (data, actions) {
 								return actions.braintree.createPayment({
 									// Required
 									flow: "vault",
-
+					
 									// The following are optional params
 									billingAgreementDescription:
 										"Your agreement description",
@@ -150,13 +175,14 @@ export default function App() {
 									},
 								});
 							}}
-							onApprove={(data, actions) =>
-								actions.braintree
+							onApprove={function (data, actions) {
+								return actions.braintree
 									.tokenizePayment(data)
 									.then((payload) => {
 										// Your code here after capture the order
 										alert(JSON.stringify(payload));
-									})
+									});
+								}
 							}
 						/>
 					</PayPalScriptProvider>
@@ -167,19 +193,3 @@ export default function App() {
 		</>
 	);
 }`;
-
-const overrideStories = (): void => {
-    (Default as Story).parameters = {
-        docs: {
-            page: () => generateDocPageStructure(getDefaultCode()),
-        },
-    };
-
-    (BillingAgreement as Story).parameters = {
-        docs: {
-            page: () => generateDocPageStructure(getBillingAgreementCode()),
-        },
-    };
-};
-
-export default overrideStories;

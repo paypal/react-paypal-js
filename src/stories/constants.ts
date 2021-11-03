@@ -5,6 +5,7 @@ export const ORDER_ID = "orderID";
 export const ERROR = "Error";
 export const SDK = "SDK";
 export const APPROVE = "approve";
+export const SUBSCRIPTION = "subscription";
 
 export const CONTAINER_SIZE = {
     name: "container width",

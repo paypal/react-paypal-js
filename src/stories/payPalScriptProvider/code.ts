@@ -1,9 +1,4 @@
-import type { Story } from "@storybook/react";
-
-import { Default } from "./PayPalScriptProvider.stories";
-import { generateDocPageStructure } from "../commons";
-
-const getDefaultCode = (): string =>
+export const getDefaultCode = (deferLoading: boolean): string =>
     `import {
 	PayPalScriptProvider,
 	usePayPalScriptReducer,
@@ -78,7 +73,7 @@ export default function App() {
 	return (
 		<PayPalScriptProvider
 			options={SCRIPT_PROVIDER_OPTIONS}
-			deferLoading={true}
+			deferLoading={${deferLoading}}
 		>
 			<LoadScriptButton />
 			<PrintLoadingState />
@@ -86,13 +81,3 @@ export default function App() {
 		</PayPalScriptProvider>
 	);
 }`;
-
-const overrideStories = (): void => {
-    (Default as Story).parameters = {
-        docs: {
-            page: () => generateDocPageStructure(getDefaultCode()),
-        },
-    };
-};
-
-export default overrideStories;

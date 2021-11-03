@@ -1,9 +1,8 @@
-import type { Story } from "@storybook/react";
+import { generateFundingSource } from "../utils";
 
-import { Default, RadioButtons } from "./PayPalMarks.stories";
-import { generateDocPageStructure } from "../commons";
+import type { Args } from "@storybook/addons/dist/ts3.9/types";
 
-const getDefaultCode = (): string =>
+export const getDefaultCode = (fundingSource?: string): string =>
     `import { PayPalScriptProvider, PayPalMarks } from "@paypal/react-paypal-js";
 
 export default function App() {
@@ -14,12 +13,12 @@ export default function App() {
 				components: "buttons,marks,funding-eligibility",
 			}}
 		>
-			<PayPalMarks />
+			<PayPalMarks ${generateFundingSource(fundingSource)}/>
 		</PayPalScriptProvider>
 	);
 }`;
 
-const getRadioButtonsCode = (): string =>
+export const getRadioButtonsCode = (args: Args): string =>
     `import { useState } from "react";
 import {
 	PayPalScriptProvider,
@@ -64,14 +63,16 @@ export default function App() {
 			<br />
 			<PayPalButtons
 				fundingSource={selectedFundingSource}
-				style={{ color: "white" }}
+				style={${JSON.stringify(args.style)}}
+				forceReRender={[selectedFundingSource,${JSON.stringify(args.style)}, "${args.amount}", "${args.currency}"]}
 				createOrder={(data, actions) => {
 					return actions.order
 						.create({
 							purchase_units: [
 								{
 									amount: {
-										value: "2", // Here change the amount if needed
+										currency_code: "${args.currency}", // Here change the currency if needed
+										value: "${args.amount}", // Here change the amount if needed
 									},
 								},
 							],
@@ -90,20 +91,3 @@ export default function App() {
 		</PayPalScriptProvider>
 	);
 }`;
-
-const overrideStories = (): void => {
-    (Default as Story).parameters = {
-        docs: {
-            page: () => generateDocPageStructure(getDefaultCode()),
-        },
-    };
-
-    // Override the Donate story code snippet
-    (RadioButtons as Story).parameters = {
-        docs: {
-            page: () => generateDocPageStructure(getRadioButtonsCode()),
-        },
-    };
-};
-
-export default overrideStories;
