@@ -57,6 +57,10 @@ export const PayPalHostedFieldsProvider: FC<PayPalHostedFieldsComponentProps> =
                 );
             }
             if (!hostedFields.current.isEligible()) {
+                console.warn(
+                    "Your client is ineligible for use Hosted Fields.",
+                    "Please, check this link for more information: https://developer.paypal.com/docs/checkout/advanced/integrate/"
+                );
                 return setIsEligible(false);
             }
             // Clean all the fields before the rerender
