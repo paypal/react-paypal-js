@@ -18,13 +18,14 @@ import {
     COMPONENT_EVENTS,
     ARG_TYPE_CURRENCY,
     ARG_TYPE_AMOUNT,
+    FUNDING_SOURCE_ARG,
     ORDER_ID,
     CONTAINER_SIZE,
     APPROVE,
 } from "../constants";
 import DocPageStructure from "../components/DocPageStructure";
 import { InEligibleError, defaultProps } from "../commons";
-import { getDefaultCode, getDonateCode  } from "./code";
+import { getDefaultCode, getDonateCode } from "./code";
 
 type StoryProps = {
     style: PayPalButtonsComponentOptions["style"];
@@ -83,28 +84,7 @@ export default {
         forceReRender: { control: false, ...COMPONENT_PROPS_CATEGORY },
         className: { control: false, ...COMPONENT_PROPS_CATEGORY },
         children: { table: { disable: true } },
-        fundingSource: {
-            options: [
-                FUNDING.PAYPAL,
-                FUNDING.CARD,
-                FUNDING.CREDIT,
-                FUNDING.PAYLATER,
-                FUNDING.VENMO,
-                undefined,
-            ],
-            control: {
-                type: "select",
-                labels: {
-                    [FUNDING.PAYPAL]: "paypal",
-                    [FUNDING.CARD]: "card",
-                    [FUNDING.CREDIT]: "credit",
-                    [FUNDING.PAYLATER]: "paylater",
-                    [FUNDING.VENMO]: "venmo",
-                    undefined: "all",
-                },
-            },
-            ...COMPONENT_PROPS_CATEGORY,
-        },
+        fundingSource: FUNDING_SOURCE_ARG,
         createOrder: { table: { category: COMPONENT_EVENTS } },
         createBillingAgreement: { table: { category: COMPONENT_EVENTS } },
         createSubscription: { table: { category: COMPONENT_EVENTS } },
@@ -287,7 +267,7 @@ export const Donate: FC<Omit<StoryProps, "showSpinner" | "fundingSource">> = ({
                 context={context}
                 code={getDefaultCode(context.args)}
             />
-        )
+        ),
     },
 };
 
@@ -299,7 +279,7 @@ export const Donate: FC<Omit<StoryProps, "showSpinner" | "fundingSource">> = ({
                 context={context}
                 code={getDonateCode(context.args)}
             />
-        )
+        ),
     },
 };
 

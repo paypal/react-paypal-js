@@ -12,7 +12,7 @@ import type {
     OnApproveBraintreeData,
 } from "../../types";
 
-import { PayPalScriptProvider, FUNDING } from "../../index";
+import { PayPalScriptProvider } from "../../index";
 import { BraintreePayPalButtons } from "../../components/braintree/BraintreePayPalButtons";
 import {
     getOptionsFromQueryString,
@@ -25,6 +25,7 @@ import {
     COMPONENT_EVENTS,
     ARG_TYPE_AMOUNT,
     ARG_TYPE_CURRENCY,
+    FUNDING_SOURCE_ARG,
     ORDER_ID,
     CONTAINER_SIZE,
     APPROVE,
@@ -70,28 +71,7 @@ export default {
         forceReRender: { control: false, ...COMPONENT_PROPS_CATEGORY },
         className: { control: false, ...COMPONENT_PROPS_CATEGORY },
         children: { control: false, ...COMPONENT_PROPS_CATEGORY },
-        fundingSource: {
-            options: [
-                FUNDING.PAYPAL,
-                FUNDING.CARD,
-                FUNDING.CREDIT,
-                FUNDING.PAYLATER,
-                FUNDING.VENMO,
-                undefined,
-            ],
-            control: {
-                type: "select",
-                labels: {
-                    [FUNDING.PAYPAL]: "paypal",
-                    [FUNDING.CARD]: "card",
-                    [FUNDING.CREDIT]: "credit",
-                    [FUNDING.PAYLATER]: "paylater",
-                    [FUNDING.VENMO]: "venmo",
-                    undefined: "all",
-                },
-            },
-            ...COMPONENT_PROPS_CATEGORY,
-        },
+        fundingSource: FUNDING_SOURCE_ARG,
         createOrder: { table: { category: COMPONENT_EVENTS } },
         createBillingAgreement: { table: { category: COMPONENT_EVENTS } },
         createSubscription: { table: { category: COMPONENT_EVENTS } },
@@ -277,7 +257,10 @@ export const BillingAgreement: FC<StoryProps> = ({
 (Default as Story).parameters = {
     docs: {
         container: ({ context }: { context: StoryContext }) => (
-            <DocPageStructure context={context} code={getDefaultCode(context.args)} />
+            <DocPageStructure
+                context={context}
+                code={getDefaultCode(context.args)}
+            />
         ),
     },
 };
@@ -295,5 +278,5 @@ export const BillingAgreement: FC<StoryProps> = ({
 
 (BillingAgreement as Story).argTypes = {
     amount: { table: { disable: true } },
-    currency: { table: { disable: true } }
-}
+    currency: { table: { disable: true } },
+};

@@ -1,15 +1,27 @@
 import type { Args } from "@storybook/addons/dist/ts3.9/types";
 
-const IMPORT_STATEMENT =
-`import { useState, useEffect } from "react";
+const IMPORT_STATEMENT = `import { useState, useEffect } from "react";
 import {
 	PayPalScriptProvider,
 	BraintreePayPalButtons,
 	usePayPalScriptReducer
 } from "@paypal/react-paypal-js";`;
 
+const AUTH_TOKEN_STATEMENT = `const [clientToken, setClientToken] = useState(null);
+
+	useEffect(() => {
+		(async () => {
+			const response = await (
+				await fetch(
+					"https://braintree-sdk-demo.herokuapp.com/api/braintree/auth"
+				)
+			).json();
+			setClientToken(response?.client_token || response?.clientToken);
+		})();
+	}, []);`;
+
 const getButtonWrapper = (isOrder: boolean, args: Args) =>
-`// Custom component to wrap the PayPalButtons and handle currency changes
+    `// Custom component to wrap the PayPalButtons and handle currency changes
 const ButtonWrapper = ({ currency }) => {
 	// usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
     // This is the main reason to wrap the PayPalButtons in a new component
@@ -28,7 +40,9 @@ const ButtonWrapper = ({ currency }) => {
 	return (<BraintreePayPalButtons
 		style={style}
 		disabled={${args.disabled}}
-		fundingSource="${args.fundingSource || ""}" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]
+		fundingSource="${
+            args.fundingSource || ""
+        }" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]
 		forceReRender={[style, amount]}
 		createOrder={function (data, actions) {
 			return actions.braintree
@@ -65,7 +79,7 @@ const ButtonWrapper = ({ currency }) => {
 			}
 		}
 	/>);
-};`
+};`;
 
 export const getDefaultCode = (args: Args): string =>
     `${IMPORT_STATEMENT}
@@ -77,18 +91,7 @@ const amount = "${args.amount}";
 ${getButtonWrapper(true, args)}
 
 export default function App() {
-	const [clientToken, setClientToken] = useState(null);
-
-	useEffect(() => {
-		(async () => {
-			const response = await (
-				await fetch(
-					"https://braintree-sdk-demo.herokuapp.com/api/braintree/auth"
-				)
-			).json();
-			setClientToken(response?.client_token || response?.clientToken);
-		})();
-	}, []);
+	${AUTH_TOKEN_STATEMENT}
 
 	return (
 		<>
@@ -122,18 +125,7 @@ const style = ${JSON.stringify(args.style)};
 ${getButtonWrapper(false, args)}
 
 export default function App() {
-	const [clientToken, setClientToken] = useState(null);
-
-	useEffect(() => {
-		(async () => {
-			const response = await (
-				await fetch(
-					"https://braintree-sdk-demo.herokuapp.com/api/braintree/auth"
-				)
-			).json();
-			setClientToken(response?.client_token || response?.clientToken);
-		})();
-	}, []);
+	${AUTH_TOKEN_STATEMENT}
 
 	return (
 		<>
@@ -151,7 +143,9 @@ export default function App() {
 						<BraintreePayPalButtons
 							style={style}
 							disabled={${args.disabled}}
-							fundingSource="${args.fundingSource || ""}" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]
+							fundingSource="${
+                                args.fundingSource || ""
+                            }" // Available values are: ["paypal", "card", "credit", "paylater", "venmo"]
 							forceReRender={[style]}
 							createBillingAgreement={function (data, actions) {
 								return actions.braintree.createPayment({
