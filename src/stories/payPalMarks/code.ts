@@ -13,7 +13,7 @@ export default function App() {
 				components: "buttons,marks,funding-eligibility",
 			}}
 		>
-			<PayPalMarks ${generateFundingSource(fundingSource)}/>
+			<PayPalMarks ${generateFundingSource(fundingSource)} />
 		</PayPalScriptProvider>
 	);
 }`;
