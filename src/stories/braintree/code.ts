@@ -74,12 +74,23 @@ const ButtonWrapper = ({ currency }) => {
 				.tokenizePayment(data)
 				.then((payload) => {
 					// Your code here after capture the order
-					alert(JSON.stringify(payload));
+					console.log(JSON.stringify(payload));
 				});
 			}
 		}
 	/>);
 };`;
+
+const getProviderStatement = (args: { intent: string; vault: boolean }) =>
+    `<PayPalScriptProvider
+						options={{
+							"client-id": "test",
+							components: "buttons",
+							"data-client-token": clientToken,
+							intent: "${args.intent}",
+							vault: ${args.vault},
+						}}
+						>`;
 
 export const getDefaultCode = (args: Args): string =>
     `${IMPORT_STATEMENT}
@@ -97,15 +108,7 @@ export default function App() {
 		<>
 			{clientToken ? (
 				<div style={{ maxWidth: "${args.size}px", minHeight: "200px" }}>
-					<PayPalScriptProvider
-						options={{
-							"client-id": "test",
-							components: "buttons",
-							"data-client-token": clientToken,
-							intent: "capture",
-							vault: false,
-						}}
-					>
+					${getProviderStatement({ intent: "capture", vault: false })}
 						<ButtonWrapper currency={"${args.currency}"} />
 					</PayPalScriptProvider>
 				</div>
@@ -131,15 +134,7 @@ export default function App() {
 		<>
 			{clientToken ? (
 				<div style={{ maxWidth: "750px", minHeight: "200px" }}>
-					<PayPalScriptProvider
-						options={{
-							"client-id": "test",
-							components: "buttons",
-							"data-client-token": clientToken,
-							intent: "tokenize",
-							vault: true,
-						}}
-					>
+					${getProviderStatement({ intent: "tokenize", vault: true })}
 						<BraintreePayPalButtons
 							style={style}
 							disabled={${args.disabled}}
@@ -174,7 +169,7 @@ export default function App() {
 									.tokenizePayment(data)
 									.then((payload) => {
 										// Your code here after capture the order
-										alert(JSON.stringify(payload));
+										console.log(JSON.stringify(payload));
 									});
 								}
 							}

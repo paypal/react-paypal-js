@@ -83,8 +83,7 @@ const EXPIRATION_DATE_MULTI_FIELD = `<PayPalHostedField
 								selector: "#expiration-year-1",
 								placeholder: "YYYY",
 							}}
-						/>
-`;
+						/>`;
 
 const CUSTOM_INPUT = `<input
 				id="card-holder"

@@ -9,6 +9,15 @@ import {
     usePayPalScriptReducer
 } from "@paypal/react-paypal-js";`;
 
+const getPayPalScripProvider = (currency: string) =>
+    `<PayPalScriptProvider
+                options={{
+                    "client-id": "test",
+                    components: "buttons",
+                    currency: "${currency}"
+                }}
+            >`;
+
 const buttonWrapperEffect = (
     dependencies: string
 ) => `// usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
@@ -75,13 +84,7 @@ const ButtonWrapper = ({ currency, showSpinner }) => {
 export default function App() {
 	return (
 		<div style={{ maxWidth: "${args.size}px", minHeight: "200px" }}>
-			<PayPalScriptProvider
-				options={{
-					"client-id": "test",
-					components: "buttons",
-                    currency: currency
-				}}
-			>
+            ${getPayPalScripProvider(args.currency)}
 				<ButtonWrapper
                     currency={currency}
                     showSpinner={${args.showSpinner}}
@@ -146,15 +149,10 @@ const ButtonWrapper = ({ currency }) => {
         <div
              style={{ maxWidth: "750px", minHeight: "200px" }}
         >
-            <PayPalScriptProvider
-                options={{
-                    "client-id": "test",
-                    components: "buttons",
-                }}
-            >
-            <ButtonWrapper
-                currency={"${args.currency}"}
-            />
+            ${getPayPalScripProvider(args.currency)}
+                <ButtonWrapper
+                    currency={"${args.currency}"}
+                />
             </PayPalScriptProvider>
         </div>
     );

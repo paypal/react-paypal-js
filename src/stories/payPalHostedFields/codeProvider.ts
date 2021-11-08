@@ -35,9 +35,8 @@ export default function App() {
 				>
 					<PayPalHostedFieldsProvider
 						createOrder={() => {
-							// Server call to create the order
-							// Mock response below 1
-							return Promise.resolve("7NE43326GP4951156");
+							// Here your server call to create the order
+							return Promise.resolve("7NE43326GP4951156"); // This is a mock result
 						}}
 						styles={${JSON.stringify(styles)}}
 					>
