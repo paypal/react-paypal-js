@@ -86,31 +86,34 @@ const EXPIRATION_DATE_MULTI_FIELD = `<PayPalHostedField
 						/>
 `;
 
-const customInput = (includeLabel: boolean) => {
-    const inputField = `<input
-                id="card-holder"
-                ref={cardHolderName}
-                className="card-field"
-                style={{ ...customStyle, outline: "none" }}
-                type="text"
-                placeholder="Full name"
-            />`;
-    return includeLabel
-        ? `<label title="This represents the full name as shown in the card">
-                Card Holder Name
-                <input
-                    id="card-holder"
-                    ref={cardHolderName}
-                    className="card-field"
-                    style={{ ...customStyle, outline: "none" }}
-                    type="text"
-                    placeholder="Full name"
-                />
-                </label>`
-        : inputField;
-};
+const CUSTOM_INPUT = `<input
+				id="card-holder"
+				ref={cardHolderName}
+				className="card-field"
+				style={{ ...customStyle, outline: "none" }}
+				type="text"
+				placeholder="Full name"
+				/>`;
 
-const getCode = (singleField: boolean, includeLabel: boolean, args: Args): string =>
+const CUSTOM_INPUT_WITH_LABEL = `<label title="This represents the full name as shown in the card">
+				Card Holder Name
+				<input
+					id="card-holder"
+					ref={cardHolderName}
+					className="card-field"
+					style={{ ...customStyle, outline: "none" }}
+					type="text"
+					placeholder="Full name"
+				/>
+				</label>`;
+
+const getCode = (
+    {
+        customCardNameField,
+        expirationDateFieldType,
+    }: { expirationDateFieldType: string; customCardNameField: string },
+    args: Args
+): string =>
     `import { useState, useEffect, useRef } from "react";
 import {
 	PayPalScriptProvider,
@@ -172,7 +175,7 @@ const SubmitPayment = ({ customStyle }) => {
 
 	return (
 		<>
-            ${customInput(includeLabel)}
+            ${customCardNameField}
 			<button
 				className={\`btn\${paying ? "" : " btn-primary"}\`}
 				style={{ float: "right" }}
@@ -244,7 +247,7 @@ export default function App() {
 								});
 						}}
 					>
-                        ${singleField ? EXPIRATION_DATE_SINGLE_FIELD : EXPIRATION_DATE_MULTI_FIELD}
+                        ${expirationDateFieldType}
 						<SubmitPayment customStyle={${JSON.stringify(args.style)}} />
 					</PayPalHostedFieldsProvider>
 				</PayPalScriptProvider>
@@ -255,5 +258,19 @@ export default function App() {
 	);
 }`;
 
-export const getDefaultCode = (args: Args): string => getCode(true, true, args);
-export const getExpirationDateCode = (args: Args): string => getCode(false, false, args);
+export const getDefaultCode = (args: Args): string =>
+    getCode(
+        {
+            customCardNameField: CUSTOM_INPUT_WITH_LABEL,
+            expirationDateFieldType: EXPIRATION_DATE_SINGLE_FIELD,
+        },
+        args
+    );
+export const getExpirationDateCode = (args: Args): string =>
+    getCode(
+        {
+            customCardNameField: CUSTOM_INPUT,
+            expirationDateFieldType: EXPIRATION_DATE_MULTI_FIELD,
+        },
+        args
+    );

@@ -20,7 +20,7 @@ const AUTH_TOKEN_STATEMENT = `const [clientToken, setClientToken] = useState(nul
 		})();
 	}, []);`;
 
-const getButtonWrapper = (isOrder: boolean, args: Args) =>
+const getButtonWrapper = (args: Args) =>
     `// Custom component to wrap the PayPalButtons and handle currency changes
 const ButtonWrapper = ({ currency }) => {
 	// usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
@@ -88,7 +88,7 @@ export const getDefaultCode = (args: Args): string =>
 const style = ${JSON.stringify(args.style)};
 const amount = "${args.amount}";
 
-${getButtonWrapper(true, args)}
+${getButtonWrapper(args)}
 
 export default function App() {
 	${AUTH_TOKEN_STATEMENT}
@@ -122,7 +122,7 @@ export const getBillingAgreementCode = (args: Args): string =>
 // This values are the props in the UI
 const style = ${JSON.stringify(args.style)};
 
-${getButtonWrapper(false, args)}
+${getButtonWrapper(args)}
 
 export default function App() {
 	${AUTH_TOKEN_STATEMENT}

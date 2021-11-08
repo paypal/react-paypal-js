@@ -10,7 +10,7 @@ import {
 } from "@paypal/react-paypal-js";`;
 
 const buttonWrapperEffect = (
-    showSpinner?: boolean
+    dependencies: string
 ) => `// usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
     // This is the main reason to wrap the PayPalButtons in a new component
     const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
@@ -23,7 +23,7 @@ const buttonWrapperEffect = (
                 currency: currency,
             },
         });
-    }, [currency${showSpinner ? ", showSpinner" : ""}]);
+    }, [${dependencies}]);
 `;
 
 export const getDefaultCode = (args: Args): string =>
@@ -36,7 +36,7 @@ const style = ${JSON.stringify(args.style)};
 
 // Custom component to wrap the PayPalButtons and handle currency changes
 const ButtonWrapper = ({ currency, showSpinner }) => {
-    ${buttonWrapperEffect(true)}
+    ${buttonWrapperEffect("currency, showSpinner")}
 
     return (<>
             { (showSpinner && isPending) && <div className="spinner" /> }
@@ -95,7 +95,7 @@ export const getDonateCode = (args: Args): string =>
     `${IMPORT_STATEMENT}
 
 const ButtonWrapper = ({ currency }) => {
-    ${buttonWrapperEffect()}
+    ${buttonWrapperEffect("currency")}
  
      return (<PayPalButtons
         fundingSource="paypal"
@@ -154,7 +154,6 @@ const ButtonWrapper = ({ currency }) => {
             >
             <ButtonWrapper
                 currency={"${args.currency}"}
-                showSpinner={${args.showSpinner}}
             />
             </PayPalScriptProvider>
         </div>
