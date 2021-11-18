@@ -10,6 +10,7 @@ import {
     SCRIPT_ID,
     DATA_SDK_INTEGRATION_SOURCE,
     DATA_SDK_INTEGRATION_SOURCE_VALUE,
+    ERROR_LOADING_SDK,
 } from "../constants";
 import type { ScriptProviderProps } from "../types";
 import { SCRIPT_LOADING_STATE, DISPATCH_ACTION } from "../types";
@@ -54,7 +55,8 @@ export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
                     });
                 }
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error(ERROR_LOADING_SDK, err);
                 if (isSubscribed) {
                     dispatch({
                         type: DISPATCH_ACTION.LOADING_STATUS,
