@@ -27,8 +27,7 @@ export default {
         docs: {
             source: { type: "dynamic" },
             description: {
-                component: `
-Pay with Venmo offers a simplified mobile checkout experience at no additional cost to you.
+                component: `Pay with Venmo offers a simplified mobile checkout experience at no additional cost to you.
 
 Your buyers get:
 
