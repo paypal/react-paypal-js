@@ -22,32 +22,6 @@ This `<BraintreePayPalButtons />` component renders the [Braintree PayPal Button
 It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
 
 Use props for customizing your buttons. For example, here's how you would use the `style`, `createOrder`, and `onApprove` options:
-
-```jsx
-    import { PayPalScriptProvider, BraintreePayPalButtons } from "@paypal/react-paypal-js";
-
-    <PayPalScriptProvider options={{ "client-id": "test" }}>
-        <BraintreePayPalButtons
-            style={{ layout: "horizontal" }}
-            createOrder={(data, actions) => {
-                // the paypalCheckoutInstance from the braintree sdk integration is added to `actions.braintree`
-                return actions.braintree.createPayment({
-                    flow: "checkout",
-                    amount: "10.0",
-                    currency: "USD",
-                    intent: "capture"
-                })
-            }}
-            onApprove={(data, actions) => {
-                return actions.braintree.tokenizePayment(data)
-                    .then((payload) => {
-                        // call server-side endpoint to finish the sale
-                    })
-            }
-        />
-    </PayPalScriptProvider>
-```
-
 */
 export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
     ({

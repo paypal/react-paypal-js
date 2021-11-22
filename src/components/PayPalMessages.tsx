@@ -13,6 +13,7 @@ export interface PayPalMessagesComponentProps
     className?: string;
 }
 
+// FIXME: Finish documentation of this component
 export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
     ({
         className = "",
