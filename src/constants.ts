@@ -6,7 +6,7 @@ export const DATA_CLIENT_TOKEN = "data-client-token";
 export const DATA_SDK_INTEGRATION_SOURCE = "data-sdk-integration-source";
 export const DATA_SDK_INTEGRATION_SOURCE_VALUE = "react-paypal-js";
 export const DATA_NAMESPACE = "data-namespace";
-export const ERROR_LOADING_SDK = "The SDK can't be loaded due";
+export const ERROR_LOADING_SDK = "The SDK can't be loaded due ";
 
 /****************************
  * Braintree error messages *
