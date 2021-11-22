@@ -15,6 +15,13 @@ import {
 import type { ScriptProviderProps } from "../types";
 import { SCRIPT_LOADING_STATE, DISPATCH_ACTION } from "../types";
 
+/**
+This `<PayPalScriptProvider />` component handles the SDK loading process.
+The component will load the PayPal SDK library in your page transforming the internal properties into queryParams.
+That means you can set your `client-id` and the components you want to use: [buttons, messages, marks], for example.
+
+Note: You always should use this component as a wrapper for  `PayPalButtons`, `PayPalMarks`, `PayPalMessages` and `BraintreePayPalButtons` components.
+ */
 export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
     options = { "client-id": "test" },
     children,

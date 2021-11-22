@@ -13,7 +13,12 @@ export interface PayPalMessagesComponentProps
     className?: string;
 }
 
-// FIXME: Finish documentation of this component
+/**
+This `<PayPalMessages />` messages component renders a credit messaging on upstream merchant sites.
+It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
+
+Below you can find a good example on how to use it:
+*/
 export const PayPalMessages: FunctionComponent<PayPalMessagesComponentProps> =
     ({
         className = "",
