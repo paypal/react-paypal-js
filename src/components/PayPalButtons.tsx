@@ -11,8 +11,6 @@ import type { PayPalButtonsComponentProps } from "../types";
 /**
 This `<PayPalButtons />` component renders the [Smart Payment Buttons](https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#buttons).
 It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
-
-Use props for customizing your buttons. Below you can find a good example on how to use `style`, `createOrder` and `onApprove`:
 */
 export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
     className = "",

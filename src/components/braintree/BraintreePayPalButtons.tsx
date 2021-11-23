@@ -5,7 +5,7 @@ import {
     DATA_CLIENT_TOKEN,
     BRAINTREE_SOURCE,
     BRAINTREE_PAYPAL_CHECKOUT_SOURCE,
-    ERROR_LOADING_SDK,
+    LOAD_SCRIPT_ERROR,
 } from "../../constants";
 import { PayPalButtons } from "../PayPalButtons";
 import { useScriptProviderContext } from "../../hooks/scriptProviderHooks";
@@ -63,7 +63,7 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                 })
                 .catch((err) => {
                     setErrorState(() => {
-                        throw new Error(`${ERROR_LOADING_SDK}${err}`);
+                        throw new Error(`${LOAD_SCRIPT_ERROR}${err}`);
                     });
                 });
         }, [providerContext.options, dispatch]);
