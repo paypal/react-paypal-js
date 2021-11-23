@@ -20,8 +20,6 @@ import type {
 /**
 This `<BraintreePayPalButtons />` component renders the [Braintree PayPal Buttons](https://developer.paypal.com/braintree/docs/guides/paypal/overview) for Braintree Merchants.
 It relies on the `<PayPalScriptProvider />` parent component for managing state related to loading the JS SDK script.
-
-Use props for customizing your buttons. For example, here's how you would use the `style`, `createOrder`, and `onApprove` options:
 */
 export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
     ({
