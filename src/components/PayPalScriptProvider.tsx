@@ -16,7 +16,8 @@ import type { ScriptProviderProps } from "../types";
 import { SCRIPT_LOADING_STATE, DISPATCH_ACTION } from "../types";
 
 /**
-This `<PayPalScriptProvider />` component handles the SDK loading process.
+This `<PayPalScriptProvider />` component takes care of loading the JS SDK `<script>`.
+It manages state for script loading so children components like `<PayPalButtons />` know when it's safe to use the `window.paypal` global namespace.
 
 Note: You always should use this component as a wrapper for  `PayPalButtons`, `PayPalMarks`, `PayPalMessages` and `BraintreePayPalButtons` components.
  */
