@@ -140,10 +140,7 @@ describe("PayPalHostedFieldsProvider", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should return immediately when script provider is rejected", async () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
+    test("should return inmediatly when script provider is rejected", async () => {
         loadScript.mockRejectedValue(new Error("Unknown error"));
 
         render(
@@ -177,7 +174,6 @@ describe("PayPalHostedFieldsProvider", () => {
         await waitFor(() => {
             expect(loadScript).toBeCalled();
         });
-        spyConsoleError.mockRestore();
     });
 
     test("should remove hostedfields components when unilegible", async () => {

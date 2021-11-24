@@ -62,9 +62,6 @@ describe("<PayPalScriptProvider />", () => {
     });
 
     test('should set "isRejected" state to "true" after failing to load the script', async () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
         (loadScript as jest.Mock).mockRejectedValue(new Error());
         const { state, TestComponent } = setupTestComponent();
         render(
@@ -83,13 +80,9 @@ describe("<PayPalScriptProvider />", () => {
         await waitFor(() => expect(state.isRejected).toBeTruthy());
         expect(state.isPending).toBeFalsy();
         expect(state.isResolved).toBeFalsy();
-        spyConsoleError.mockRestore();
     });
 
     test("shouldn't set isRejected state to true after failing to load the script, because the component was unmount", async () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
         (loadScript as jest.Mock).mockRejectedValue(new Error());
         const { state, TestComponent } = setupTestComponent();
         const { unmount } = render(
@@ -106,7 +99,6 @@ describe("<PayPalScriptProvider />", () => {
         expect(state.isPending).toBeTruthy();
         expect(state.isRejected).toBeFalsy();
         expect(state.isResolved).toBeFalsy();
-        spyConsoleError.mockRestore();
     });
 
     test("should control script loading with the deferLoading prop", async () => {
