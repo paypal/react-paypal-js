@@ -93,7 +93,7 @@ A plan includes pricing and billing cycle information that defines the amount an
 You can also define a fixed plan, such as a $5 basic plan or a volume or graduated-based plan with pricing tiers based on the quantity purchased.
 
 It relies on the \`<PayPalScriptProvider />\` parent component for managing state related to loading the JS SDK script.
-For more information, see [Subscriptions](https://developer.paypal.com/docs/multiparty/subscriptions/)`,
+For more information, see [Subscriptions](https://developer.paypal.com/docs/subscriptions/)`,
             },
         },
         controls: { expanded: true },
