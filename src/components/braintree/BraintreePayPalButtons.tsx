@@ -61,7 +61,7 @@ export const BraintreePayPalButtons: FC<BraintreePayPalButtonsComponentProps> =
                 })
                 .catch((err) => {
                     setErrorState(() => {
-                        throw new Error(`${LOAD_SCRIPT_ERROR}${err}`);
+                        throw new Error(`${LOAD_SCRIPT_ERROR} ${err}`);
                     });
                 });
         }, [providerContext.options, dispatch]);

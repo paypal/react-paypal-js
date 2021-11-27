@@ -62,7 +62,7 @@ export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
                 }
             })
             .catch((err) => {
-                console.error(LOAD_SCRIPT_ERROR, err);
+                console.error(`${LOAD_SCRIPT_ERROR} ${err}`);
                 if (isSubscribed) {
                     dispatch({
                         type: DISPATCH_ACTION.LOADING_STATUS,
