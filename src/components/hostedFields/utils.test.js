@@ -4,6 +4,7 @@ import { PayPalHostedField } from "./PayPalHostedField";
 import {
     generateMissingHostedFieldsError,
     generateHostedFieldsFromChildren,
+    deepFilterChildren,
 } from "./utils";
 import { SDK_SETTINGS } from "../../constants";
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types/enums";
@@ -86,5 +87,49 @@ describe("generateHostedFieldsFromChildren", () => {
                 selector: ".cvv",
             },
         });
+    });
+});
+
+describe("deepFilterChildren", () => {
+    const sourceJsx = (
+        <div>
+            <div>
+                <p>test</p>
+                <div>
+                    <PayPalHostedField hostedFieldType="number" />
+                </div>
+            </div>
+            <PayPalHostedField hostedFieldType="cvv" />
+            <div>
+                <p>test</p>
+                <div>
+                    <h5>title</h5>
+                    <p>
+                        <div>
+                            <PayPalHostedField hostedFieldType="expirationDate" />
+                        </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+    test("should filter component deep", () => {
+        const result = deepFilterChildren(sourceJsx);
+
+        expect(result.length).toBe(3);
+    });
+
+    test("should filter component deeply and return provided array items", () => {
+        const result = deepFilterChildren(<div></div>, [
+            { type: "PayPalHostedField" },
+        ]);
+
+        expect(result.length).toBe(1);
+    });
+
+    test("should filter component deeply and return values by defined type name", () => {
+        const result = deepFilterChildren(sourceJsx, [], "random");
+
+        expect(result.length).toBe(0);
     });
 });

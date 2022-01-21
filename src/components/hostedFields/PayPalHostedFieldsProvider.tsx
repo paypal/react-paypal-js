@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Children } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
 
 import { PayPalHostedFieldsContext } from "../../context/payPalHostedFieldsContext";
@@ -7,6 +7,7 @@ import { SDK_SETTINGS } from "../../constants";
 import {
     generateHostedFieldsFromChildren,
     generateMissingHostedFieldsError,
+    deepFilterChildren,
 } from "./utils";
 import { validateHostedFieldChildren } from "./validators";
 import { SCRIPT_LOADING_STATE } from "../../types/enums";
@@ -29,7 +30,7 @@ Take a look to this link if that is the case: https://developer.paypal.com/docs/
 export const PayPalHostedFieldsProvider: FC<
     PayPalHostedFieldsComponentProps
 > = ({ styles, createOrder, notEligibleError, children }) => {
-    const childrenList = Children.toArray(children);
+    const hostedFieldChildren = deepFilterChildren(children);
     const [{ options, loadingStatus }] = useScriptProviderContext();
     const [isEligible, setIsEligible] = useState(true);
     const [cardFields, setCardFields] = useState<HostedFieldsHandler | null>(
@@ -43,7 +44,7 @@ export const PayPalHostedFieldsProvider: FC<
      * Executed on the mount process to validate the children
      */
     useEffect(() => {
-        validateHostedFieldChildren(childrenList);
+        validateHostedFieldChildren(hostedFieldChildren);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
@@ -60,7 +61,8 @@ export const PayPalHostedFieldsProvider: FC<
             throw new Error(
                 generateMissingHostedFieldsError({
                     components: options.components,
-                    [SDK_SETTINGS.DATA_NAMESPACE]: options[SDK_SETTINGS.DATA_NAMESPACE],
+                    [SDK_SETTINGS.DATA_NAMESPACE]:
+                        options[SDK_SETTINGS.DATA_NAMESPACE],
                 })
             );
         }
@@ -77,7 +79,7 @@ export const PayPalHostedFieldsProvider: FC<
                 // Call your server to set up the transaction
                 createOrder: createOrder,
                 styles: styles,
-                fields: generateHostedFieldsFromChildren(childrenList),
+                fields: generateHostedFieldsFromChildren(hostedFieldChildren),
             })
             .then((cardFieldsInstance) => {
                 setCardFields(cardFieldsInstance);

@@ -1,3 +1,5 @@
+import { Children } from "react";
+import { PayPalHostedField } from "./PayPalHostedField";
 import { DEFAULT_PAYPAL_NAMESPACE, SDK_SETTINGS } from "../../constants";
 
 import { PAYPAL_HOSTED_FIELDS_TYPES } from "../../types";
@@ -13,6 +15,7 @@ import type {
     PayPalHostedFieldProps,
     PayPalHostedFieldOptions,
 } from "../../types/payPalHostedFieldTypes";
+import type { ReactNode, JSXElementConstructor } from "react";
 
 // Define the type of the fields object use in the HostedFields.render options
 type PayPalHostedFieldOption = {
@@ -81,3 +84,39 @@ export const generateHostedFieldsFromChildren = (
         }
         return fields;
     }, {});
+
+/**
+ * Search for a specific type component in a list of children components.
+ * The search will be executed recursively over all the deepness of each child in the list.
+ * This allows founding a child deeper in the JSX declaration.
+ *
+ * @since 7.5.1
+ * @param childrenList the source children list to execute teh filter process
+ * @param result       an optional array reference to add found children
+ * @param typeName     the type name criteria to make the search
+ * @returns a list with found components in the children hierarchy
+ */
+export const deepFilterChildren = (
+    children: ReactNode | ReactNode[],
+    result: (ReactChild | ReactPortal | ReactFragment)[] = [],
+    typeName: string = PayPalHostedField.name
+): (ReactChild | ReactPortal | ReactFragment)[] => {
+    Children.toArray(children).forEach((child) => {
+        if (typeof (child as ReactElement)?.props?.children === "object") {
+            deepFilterChildren(
+                (child as ReactElement).props?.children,
+                result,
+                typeName
+            );
+        }
+
+        if (
+            (child as ReactElement<PayPalHostedFieldProps, FC>)?.type?.name ===
+            typeName
+        ) {
+            result.push(child);
+        }
+    });
+
+    return result;
+};
