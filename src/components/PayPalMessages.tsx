@@ -66,7 +66,7 @@ export const PayPalMessages: FunctionComponent<
             .catch((err) => {
                 // component failed to render, possibly because it was closed or destroyed.
                 if (
-                    messagesContainerRef.current === null ||
+                    !messagesContainerRef.current ||
                     messagesContainerRef.current.children.length === 0
                 ) {
                     // paypal messages container is no longer in the DOM, we can safely ignore the error

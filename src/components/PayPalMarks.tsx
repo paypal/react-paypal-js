@@ -50,7 +50,7 @@ export const PayPalMarks: FC<PayPalMarksComponentProps> = ({
 
         mark.render(current).catch((err) => {
             // component failed to render, possibly because it was closed or destroyed.
-            if (current === null || current.children.length === 0) {
+            if (!current || current.children.length === 0) {
                 // paypal marks container is no longer in the DOM, we can safely ignore the error
                 return;
             }

@@ -29,7 +29,7 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
     const [, setErrorState] = useState(null);
 
     function closeButtonsComponent() {
-        if (buttons.current !== null) {
+        if (buttons.current) {
             buttons.current.close().catch(() => {
                 // ignore errors when closing the component
             });
@@ -101,7 +101,7 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
         buttons.current.render(buttonsContainerRef.current).catch((err) => {
             // component failed to render, possibly because it was closed or destroyed.
             if (
-                buttonsContainerRef.current === null ||
+                !buttonsContainerRef.current ||
                 buttonsContainerRef.current.children.length === 0
             ) {
                 // paypal buttons container is no longer in the DOM, we can safely ignore the error
@@ -121,7 +121,7 @@ export const PayPalButtons: FunctionComponent<PayPalButtonsComponentProps> = ({
 
     // useEffect hook for managing disabled state
     useEffect(() => {
-        if (initActions === null) {
+        if (!initActions) {
             return;
         }
 
