@@ -51,22 +51,22 @@ describe("PayPalHostedFieldsProvider", () => {
         jest.clearAllMocks();
     });
 
-    // test("should throw an Error using the component without the PayPalScriptProvider", () => {
-    //     const spyConsoleError = jest
-    //         .spyOn(console, "error")
-    //         .mockImplementation();
+    test("should throw an Error using the component without the PayPalScriptProvider", () => {
+        const spyConsoleError = jest
+            .spyOn(console, "error")
+            .mockImplementation();
 
-    //     render(
-    //         <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
-    //             <></>
-    //         </PayPalHostedFieldsProvider>,
-    //         { wrapper }
-    //     );
-    //     expect(onError.mock.calls[0][0].message).toEqual(
-    //         "usePayPalScriptReducer must be used within a PayPalScriptProvider"
-    //     );
-    //     spyConsoleError.mockRestore();
-    // });
+        render(
+            <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
+                <></>
+            </PayPalHostedFieldsProvider>,
+            { wrapper }
+        );
+        expect(onError.mock.calls[0][0].message).toEqual(
+            "usePayPalScriptReducer must be used within a PayPalScriptProvider"
+        );
+        spyConsoleError.mockRestore();
+    });
 
     // test("should throw an Error using the component with PayPalScriptProvider without data-client-token", () => {
     //     const spyConsoleError = jest
@@ -285,92 +285,92 @@ describe("PayPalHostedFieldsProvider", () => {
     //     spyConsoleError.mockRestore();
     // });
 
-    test("should render hosted fields", async () => {
-        const { container, rerender } = render(
-            <PayPalScriptProvider
-                options={{
-                    "client-id": "test-client",
-                    currency: "USD",
-                    intent: "authorize",
-                    "data-client-token": "test-data-client-token",
-                    components: "hosted-fields",
-                }}
-            >
-                <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
-                    <PayPalHostedField
-                        className="number"
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                        options={{ selector: ".number" }}
-                    />
-                    <PayPalHostedField
-                        className="expiration"
-                        hostedFieldType={
-                            PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
-                        }
-                        options={{ selector: ".expiration" }}
-                    />
-                    <PayPalHostedField
-                        className="cvv"
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                        options={{ selector: ".cvv" }}
-                    />
-                </PayPalHostedFieldsProvider>
-            </PayPalScriptProvider>
-        );
+    // test("should render hosted fields", async () => {
+    //     const { container, rerender } = render(
+    //         <PayPalScriptProvider
+    //             options={{
+    //                 "client-id": "test-client",
+    //                 currency: "USD",
+    //                 intent: "authorize",
+    //                 "data-client-token": "test-data-client-token",
+    //                 components: "hosted-fields",
+    //             }}
+    //         >
+    //             <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
+    //                 <PayPalHostedField
+    //                     className="number"
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+    //                     options={{ selector: ".number" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     className="expiration"
+    //                     hostedFieldType={
+    //                         PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
+    //                     }
+    //                     options={{ selector: ".expiration" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     className="cvv"
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+    //                     options={{ selector: ".cvv" }}
+    //                 />
+    //             </PayPalHostedFieldsProvider>
+    //         </PayPalScriptProvider>
+    //     );
 
-        await waitFor(() => {
-            expect(window?.paypal?.HostedFields?.render).toBeCalled();
-        });
-        expect(
-            container.querySelector(".number") instanceof HTMLDivElement
-        ).toBeTruthy();
-        expect(
-            container.querySelector(".expiration") instanceof HTMLDivElement
-        ).toBeTruthy();
-        expect(container.querySelector(".cvv")).toBeTruthy();
+    //     await waitFor(() => {
+    //         expect(window?.paypal?.HostedFields?.render).toBeCalled();
+    //     });
+    //     expect(
+    //         container.querySelector(".number") instanceof HTMLDivElement
+    //     ).toBeTruthy();
+    //     expect(
+    //         container.querySelector(".expiration") instanceof HTMLDivElement
+    //     ).toBeTruthy();
+    //     expect(container.querySelector(".cvv")).toBeTruthy();
 
-        // Rerender the component with new styles props
-        // Shouldn't change the hostedFields refs when rerendering
-        rerender(
-            <PayPalScriptProvider
-                options={{
-                    "client-id": "test-client",
-                    currency: "USD",
-                    intent: "authorize",
-                    "data-client-token": "test-data-client-token",
-                }}
-            >
-                <PayPalHostedFieldsProvider
-                    createOrder={mockCreateOrder}
-                    styles={{
-                        ".valid": { color: "#28a745" },
-                        ".invalid": { color: "#dc3545" },
-                    }}
-                >
-                    <PayPalHostedField
-                        className="number"
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                        options={{ selector: ".number" }}
-                    />
-                    <PayPalHostedField
-                        className="expiration"
-                        hostedFieldType={
-                            PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
-                        }
-                        options={{ selector: ".expiration" }}
-                    />
-                    <PayPalHostedField
-                        className="cvv"
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                        options={{ selector: ".cvv" }}
-                    />
-                </PayPalHostedFieldsProvider>
-            </PayPalScriptProvider>
-        );
-        await waitFor(() => {
-            expect(window?.paypal?.HostedFields?.render).toBeCalledTimes(2);
-        });
-    });
+    //     // Rerender the component with new styles props
+    //     // Shouldn't change the hostedFields refs when rerendering
+    //     rerender(
+    //         <PayPalScriptProvider
+    //             options={{
+    //                 "client-id": "test-client",
+    //                 currency: "USD",
+    //                 intent: "authorize",
+    //                 "data-client-token": "test-data-client-token",
+    //             }}
+    //         >
+    //             <PayPalHostedFieldsProvider
+    //                 createOrder={mockCreateOrder}
+    //                 styles={{
+    //                     ".valid": { color: "#28a745" },
+    //                     ".invalid": { color: "#dc3545" },
+    //                 }}
+    //             >
+    //                 <PayPalHostedField
+    //                     className="number"
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+    //                     options={{ selector: ".number" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     className="expiration"
+    //                     hostedFieldType={
+    //                         PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
+    //                     }
+    //                     options={{ selector: ".expiration" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     className="cvv"
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+    //                     options={{ selector: ".cvv" }}
+    //                 />
+    //             </PayPalHostedFieldsProvider>
+    //         </PayPalScriptProvider>
+    //     );
+    //     await waitFor(() => {
+    //         expect(window?.paypal?.HostedFields?.render).toBeCalledTimes(2);
+    //     });
+    // });
 
     test("should not set context state if component is unmounted", async () => {
         jest.useFakeTimers();
