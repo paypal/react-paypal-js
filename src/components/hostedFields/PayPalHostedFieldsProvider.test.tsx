@@ -372,60 +372,60 @@ describe("PayPalHostedFieldsProvider", () => {
     //     });
     // });
 
-    // test("should not set context state if component is unmounted", async () => {
-    //     jest.useFakeTimers();
+    test("should not set context state if component is unmounted", async () => {
+        jest.useFakeTimers();
 
-    //     (
-    //         (window.paypal as PayPalNamespace)
-    //             .HostedFields as PayPalHostedFieldsComponent
-    //     ).render = jest
-    //         .fn()
-    //         .mockImplementation(
-    //             () =>
-    //                 new Promise((resolve) => setTimeout(() => resolve({}), 500))
-    //         );
+        (
+            (window.paypal as PayPalNamespace)
+                .HostedFields as PayPalHostedFieldsComponent
+        ).render = jest
+            .fn()
+            .mockImplementation(
+                () =>
+                    new Promise((resolve) => setTimeout(() => resolve({}), 500))
+            );
 
-    //     const { container, unmount } = render(
-    //         <PayPalScriptProvider
-    //             options={{
-    //                 "client-id": "test-client",
-    //                 currency: "USD",
-    //                 intent: "authorize",
-    //                 "data-client-token": "test-data-client-token",
-    //                 components: "hosted-fields",
-    //             }}
-    //         >
-    //             <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
-    //                 <PayPalHostedField
-    //                     className="number"
-    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-    //                     options={{ selector: ".number" }}
-    //                 />
-    //                 <PayPalHostedField
-    //                     className="expiration"
-    //                     hostedFieldType={
-    //                         PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
-    //                     }
-    //                     options={{ selector: ".expiration" }}
-    //                 />
-    //                 <PayPalHostedField
-    //                     className="cvv"
-    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-    //                     options={{ selector: ".cvv" }}
-    //                 />
-    //             </PayPalHostedFieldsProvider>
-    //         </PayPalScriptProvider>
-    //     );
+        const { container, unmount } = render(
+            <PayPalScriptProvider
+                options={{
+                    "client-id": "test-client",
+                    currency: "USD",
+                    intent: "authorize",
+                    "data-client-token": "test-data-client-token",
+                    components: "hosted-fields",
+                }}
+            >
+                <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
+                    <PayPalHostedField
+                        className="number"
+                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+                        options={{ selector: ".number" }}
+                    />
+                    <PayPalHostedField
+                        className="expiration"
+                        hostedFieldType={
+                            PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
+                        }
+                        options={{ selector: ".expiration" }}
+                    />
+                    <PayPalHostedField
+                        className="cvv"
+                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+                        options={{ selector: ".cvv" }}
+                    />
+                </PayPalHostedFieldsProvider>
+            </PayPalScriptProvider>
+        );
 
-    //     await waitFor(() => {
-    //         expect(window?.paypal?.HostedFields?.render).toBeCalled();
-    //     });
-    //     unmount();
-    //     jest.runAllTimers();
+        await waitFor(() => {
+            expect(window?.paypal?.HostedFields?.render).toBeCalled();
+        });
+        unmount();
+        jest.runAllTimers();
 
-    //     expect(
-    //         container.querySelector(".number") instanceof HTMLDivElement
-    //     ).toBeFalsy();
-    //     jest.useRealTimers();
-    // });
+        expect(
+            container.querySelector(".number") instanceof HTMLDivElement
+        ).toBeFalsy();
+        jest.useRealTimers();
+    });
 });
