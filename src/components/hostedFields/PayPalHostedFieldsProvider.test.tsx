@@ -87,32 +87,32 @@ describe("PayPalHostedFieldsProvider", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should throw an Error using the component without children", () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
+    // test("should throw an Error using the component without children", () => {
+    //     const spyConsoleError = jest
+    //         .spyOn(console, "error")
+    //         .mockImplementation();
 
-        render(
-            <PayPalScriptProvider
-                options={{
-                    "client-id": "test-client",
-                    currency: "USD",
-                    intent: "authorize",
-                    components: "hosted-fields",
-                    "data-client-token": "test-data-client-token",
-                }}
-            >
-                <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
-                    <></>
-                </PayPalHostedFieldsProvider>
-            </PayPalScriptProvider>,
-            { wrapper }
-        );
-        expect(onError.mock.calls[0][0].message).toEqual(
-            "To use HostedFields you must use it with at least 3 children with types: [number, cvv, expirationDate] includes"
-        );
-        spyConsoleError.mockRestore();
-    });
+    //     render(
+    //         <PayPalScriptProvider
+    //             options={{
+    //                 "client-id": "test-client",
+    //                 currency: "USD",
+    //                 intent: "authorize",
+    //                 components: "hosted-fields",
+    //                 "data-client-token": "test-data-client-token",
+    //             }}
+    //         >
+    //             <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
+    //                 <></>
+    //             </PayPalHostedFieldsProvider>
+    //         </PayPalScriptProvider>,
+    //         { wrapper }
+    //     );
+    //     expect(onError.mock.calls[0][0].message).toEqual(
+    //         "To use HostedFields you must use it with at least 3 children with types: [number, cvv, expirationDate] includes"
+    //     );
+    //     spyConsoleError.mockRestore();
+    // });
 
     // test("should throw an Error about missing HostedFields in paypal SDK because hosted-fields isn't imported in components", async () => {
     //     const spyConsoleError = jest
