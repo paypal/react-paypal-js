@@ -114,50 +114,50 @@ describe("PayPalHostedFieldsProvider", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should throw an Error about missing HostedFields in paypal SDK because hosted-fields isn't imported in components", async () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
-        window.paypal = { version: "" };
+    // test("should throw an Error about missing HostedFields in paypal SDK because hosted-fields isn't imported in components", async () => {
+    //     const spyConsoleError = jest
+    //         .spyOn(console, "error")
+    //         .mockImplementation();
+    //     window.paypal = { version: "" };
 
-        render(
-            <PayPalScriptProvider
-                options={{
-                    "client-id": "test-client",
-                    currency: "USD",
-                    intent: "authorize",
-                    "data-client-token": "test-data-client-token",
-                }}
-            >
-                <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
-                    <PayPalHostedField
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                        options={{ selector: "number" }}
-                    />
-                    <PayPalHostedField
-                        hostedFieldType={
-                            PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
-                        }
-                        options={{ selector: "expiration" }}
-                    />
-                    <PayPalHostedField
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                        options={{ selector: "cvv" }}
-                    />
-                </PayPalHostedFieldsProvider>
-            </PayPalScriptProvider>,
-            { wrapper }
-        );
+    //     render(
+    //         <PayPalScriptProvider
+    //             options={{
+    //                 "client-id": "test-client",
+    //                 currency: "USD",
+    //                 intent: "authorize",
+    //                 "data-client-token": "test-data-client-token",
+    //             }}
+    //         >
+    //             <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
+    //                 <PayPalHostedField
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+    //                     options={{ selector: "number" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     hostedFieldType={
+    //                         PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
+    //                     }
+    //                     options={{ selector: "expiration" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+    //                     options={{ selector: "cvv" }}
+    //                 />
+    //             </PayPalHostedFieldsProvider>
+    //         </PayPalScriptProvider>,
+    //         { wrapper }
+    //     );
 
-        await waitFor(() => {
-            expect(onError.mock.calls[0][0].message).toEqual(
-                "Unable to render <PayPalHostedFieldsProvider /> because window.paypal.HostedFields is undefined." +
-                    "\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: " +
-                    "<PayPalScriptProvider options={{ components: 'hosted-fields'}}>"
-            );
-        });
-        spyConsoleError.mockRestore();
-    });
+    //     await waitFor(() => {
+    //         expect(onError.mock.calls[0][0].message).toEqual(
+    //             "Unable to render <PayPalHostedFieldsProvider /> because window.paypal.HostedFields is undefined." +
+    //                 "\nTo fix the issue, add 'hosted-fields' to the list of components passed to the parent PayPalScriptProvider: " +
+    //                 "<PayPalScriptProvider options={{ components: 'hosted-fields'}}>"
+    //         );
+    //     });
+    //     spyConsoleError.mockRestore();
+    // });
 
     // test("should return immediately when script provider is rejected", async () => {
     //     const spyConsoleError = jest
