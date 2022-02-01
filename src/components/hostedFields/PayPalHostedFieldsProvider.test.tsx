@@ -52,9 +52,9 @@ describe("PayPalHostedFieldsProvider", () => {
     });
 
     test("should throw an Error using the component without the PayPalScriptProvider", () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
+        // const spyConsoleError = jest
+        //     .spyOn(console, "error")
+        //     .mockImplementation();
 
         render(
             <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
@@ -65,7 +65,7 @@ describe("PayPalHostedFieldsProvider", () => {
         expect(onError.mock.calls[0][0].message).toEqual(
             "usePayPalScriptReducer must be used within a PayPalScriptProvider"
         );
-        spyConsoleError.mockRestore();
+        // spyConsoleError.mockRestore();
     });
 
     // test("should throw an Error using the component with PayPalScriptProvider without data-client-token", () => {
