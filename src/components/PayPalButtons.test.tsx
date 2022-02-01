@@ -405,7 +405,7 @@ describe("<PayPalButtons />", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should safely ignore error on render process when paypal buttons container is no longer in the DOM ", async () => {
+    test("should safely ignore error on render process when paypal buttons container is no longer in the DOM", async () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();
