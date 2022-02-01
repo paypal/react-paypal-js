@@ -371,6 +371,7 @@ describe("PayPalHostedFieldsProvider", () => {
             expect(window?.paypal?.HostedFields?.render).toBeCalledTimes(2);
         });
     });
+
     test("should not set context state if component is unmounted", async () => {
         jest.useFakeTimers();
 
