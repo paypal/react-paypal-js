@@ -237,53 +237,53 @@ describe("PayPalHostedFieldsProvider", () => {
         expect(container.querySelector(".cvv")).toEqual(null);
     });
 
-    test("should throw an Error on hosted fields render process exception", async () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
-        (
-            (window.paypal as PayPalNamespace)
-                .HostedFields as PayPalHostedFieldsComponent
-        ).render = jest
-            .fn()
-            .mockRejectedValue(new Error("Failing rendering hostedFields"));
+    // test("should throw an Error on hosted fields render process exception", async () => {
+    //     const spyConsoleError = jest
+    //         .spyOn(console, "error")
+    //         .mockImplementation();
+    //     (
+    //         (window.paypal as PayPalNamespace)
+    //             .HostedFields as PayPalHostedFieldsComponent
+    //     ).render = jest
+    //         .fn()
+    //         .mockRejectedValue(new Error("Failing rendering hostedFields"));
 
-        render(
-            <PayPalScriptProvider
-                options={{
-                    "client-id": "test-client",
-                    currency: "USD",
-                    intent: "authorize",
-                    "data-client-token": "test-data-client-token",
-                }}
-            >
-                <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
-                    <PayPalHostedField
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                        options={{ selector: "number" }}
-                    />
-                    <PayPalHostedField
-                        hostedFieldType={
-                            PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
-                        }
-                        options={{ selector: "expiration" }}
-                    />
-                    <PayPalHostedField
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                        options={{ selector: "cvv" }}
-                    />
-                </PayPalHostedFieldsProvider>
-            </PayPalScriptProvider>,
-            { wrapper }
-        );
+    //     render(
+    //         <PayPalScriptProvider
+    //             options={{
+    //                 "client-id": "test-client",
+    //                 currency: "USD",
+    //                 intent: "authorize",
+    //                 "data-client-token": "test-data-client-token",
+    //             }}
+    //         >
+    //             <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
+    //                 <PayPalHostedField
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+    //                     options={{ selector: "number" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     hostedFieldType={
+    //                         PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
+    //                     }
+    //                     options={{ selector: "expiration" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+    //                     options={{ selector: "cvv" }}
+    //                 />
+    //             </PayPalHostedFieldsProvider>
+    //         </PayPalScriptProvider>,
+    //         { wrapper }
+    //     );
 
-        await waitFor(() => {
-            expect(onError.mock.calls[0][0].message).toEqual(
-                "Failed to render <PayPalHostedFieldsProvider /> component. Error: Failing rendering hostedFields"
-            );
-        });
-        spyConsoleError.mockRestore();
-    });
+    //     await waitFor(() => {
+    //         expect(onError.mock.calls[0][0].message).toEqual(
+    //             "Failed to render <PayPalHostedFieldsProvider /> component. Error: Failing rendering hostedFields"
+    //         );
+    //     });
+    //     spyConsoleError.mockRestore();
+    // });
 
     // test("should render hosted fields", async () => {
     //     const { container, rerender } = render(
