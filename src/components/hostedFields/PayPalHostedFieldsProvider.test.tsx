@@ -68,24 +68,24 @@ describe("PayPalHostedFieldsProvider", () => {
     //     spyConsoleError.mockRestore();
     // });
 
-    test("should throw an Error using the component with PayPalScriptProvider without data-client-token", () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
+    // test("should throw an Error using the component with PayPalScriptProvider without data-client-token", () => {
+    //     const spyConsoleError = jest
+    //         .spyOn(console, "error")
+    //         .mockImplementation();
 
-        render(
-            <PayPalScriptProvider options={{ "client-id": "" }}>
-                <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
-                    <></>
-                </PayPalHostedFieldsProvider>
-            </PayPalScriptProvider>,
-            { wrapper }
-        );
-        expect(onError.mock.calls[0][0].message).toEqual(
-            EMPTY_BRAINTREE_AUTHORIZATION_ERROR_MESSAGE
-        );
-        spyConsoleError.mockRestore();
-    });
+    //     render(
+    //         <PayPalScriptProvider options={{ "client-id": "" }}>
+    //             <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
+    //                 <></>
+    //             </PayPalHostedFieldsProvider>
+    //         </PayPalScriptProvider>,
+    //         { wrapper }
+    //     );
+    //     expect(onError.mock.calls[0][0].message).toEqual(
+    //         EMPTY_BRAINTREE_AUTHORIZATION_ERROR_MESSAGE
+    //     );
+    //     spyConsoleError.mockRestore();
+    // });
 
     // test("should throw an Error using the component without children", () => {
     //     const spyConsoleError = jest
