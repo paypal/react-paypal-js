@@ -51,7 +51,7 @@ describe("PayPalHostedFieldsProvider", () => {
         jest.clearAllMocks();
     });
 
-    test("should throw an Error using the component without the PayPalScriptProvider", async () => {
+    test("should throw an Error using the component without the PayPalScriptProvider", () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();
@@ -62,11 +62,7 @@ describe("PayPalHostedFieldsProvider", () => {
             </PayPalHostedFieldsProvider>,
             { wrapper }
         );
-        await waitFor(() =>
-            expect(onError.mock.calls[0][0].message).toEqual(
-                "usePayPalScriptReducer must be used within a PayPalScriptProvider"
-            )
-        );
+        expect(onError.mock.calls[0][0].message).toMatchSnapshot();
         spyConsoleError.mockRestore();
     });
 

@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PayPalHostedFieldsProvider should throw an Error using the component without the PayPalScriptProvider 1`] = `"usePayPalScriptReducer must be used within a PayPalScriptProvider"`;
