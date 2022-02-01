@@ -159,45 +159,45 @@ describe("PayPalHostedFieldsProvider", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should return immediately when script provider is rejected", async () => {
-        const spyConsoleError = jest
-            .spyOn(console, "error")
-            .mockImplementation();
-        (loadScript as jest.Mock).mockRejectedValue(new Error("Unknown error"));
+    // test("should return immediately when script provider is rejected", async () => {
+    //     const spyConsoleError = jest
+    //         .spyOn(console, "error")
+    //         .mockImplementation();
+    //     (loadScript as jest.Mock).mockRejectedValue(new Error("Unknown error"));
 
-        render(
-            <PayPalScriptProvider
-                options={{
-                    "client-id": "test-client",
-                    currency: "USD",
-                    intent: "authorize",
-                    components: "hosted-fields",
-                    "data-client-token": "test-data-client-token",
-                }}
-            >
-                <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
-                    <PayPalHostedField
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
-                        options={{ selector: "number" }}
-                    />
-                    <PayPalHostedField
-                        hostedFieldType={
-                            PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
-                        }
-                        options={{ selector: "expiration" }}
-                    />
-                    <PayPalHostedField
-                        hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
-                        options={{ selector: "cvv" }}
-                    />
-                </PayPalHostedFieldsProvider>
-            </PayPalScriptProvider>
-        );
-        await waitFor(() => {
-            expect(loadScript).toBeCalled();
-        });
-        spyConsoleError.mockRestore();
-    });
+    //     render(
+    //         <PayPalScriptProvider
+    //             options={{
+    //                 "client-id": "test-client",
+    //                 currency: "USD",
+    //                 intent: "authorize",
+    //                 components: "hosted-fields",
+    //                 "data-client-token": "test-data-client-token",
+    //             }}
+    //         >
+    //             <PayPalHostedFieldsProvider createOrder={mockCreateOrder}>
+    //                 <PayPalHostedField
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.NUMBER}
+    //                     options={{ selector: "number" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     hostedFieldType={
+    //                         PAYPAL_HOSTED_FIELDS_TYPES.EXPIRATION_DATE
+    //                     }
+    //                     options={{ selector: "expiration" }}
+    //                 />
+    //                 <PayPalHostedField
+    //                     hostedFieldType={PAYPAL_HOSTED_FIELDS_TYPES.CVV}
+    //                     options={{ selector: "cvv" }}
+    //                 />
+    //             </PayPalHostedFieldsProvider>
+    //         </PayPalScriptProvider>
+    //     );
+    //     await waitFor(() => {
+    //         expect(loadScript).toBeCalled();
+    //     });
+    //     spyConsoleError.mockRestore();
+    // });
 
     // test("should remove hostedfields components when unilegible", async () => {
     //     isEligible.mockReturnValue(false);
