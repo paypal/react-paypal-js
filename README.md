@@ -265,12 +265,11 @@ import {
 
 const SubmitPayment = () => {
     // Here declare the variable containing the hostedField instance
-    const hostedFieldsWrapper = usePayPalHostedFields();
+    const { cardFields } = usePayPalHostedFields();
 
     const submitHandler = () => {
-        if (typeof hostedFieldsWrapper.cardFields.submit !== "function") return; // validate that `submit()` exists before using it
-        hostedFieldsWrapper
-            .cardFields
+        if (typeof cardFields.submit !== "function") return; // validate that `submit()` exists before using it
+        cardFields
             .submit({
                 // The full name as shown in the card and billing address
                 cardholderName: "John Wick",
