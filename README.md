@@ -265,11 +265,12 @@ import {
 
 const SubmitPayment = () => {
     // Here declare the variable containing the hostedField instance
-    const hostedFields = usePayPalHostedFields();
+    const hostedFieldsWrapper = usePayPalHostedFields();
 
     const submitHandler = () => {
-        if (!typeof hostedFields.submit !== "function") return; // validate that `submit()` exists before using it
-        hostedFields
+        if (typeof hostedFieldsWrapper.cardFields.submit !== "function") return; // validate that `submit()` exists before using it
+        hostedFieldsWrapper
+            .cardFields
             .submit({
                 // The full name as shown in the card and billing address
                 cardholderName: "John Wick",
@@ -336,6 +337,7 @@ export default function App() {
     );
 }
 ```
+Here is an example- https://codesandbox.io/s/paypal-custom-payment-integration-b9il3r?file=/pages/components/cardForm.js
 
 ### Browser Support
 
