@@ -35,4 +35,4 @@ jobs:
               uses: wagoid/commitlint-github-action@v2
 
             - name: ⬆️ Upload coverage report
-              uses: codecov/codecov-action@v1
+              uses: codecov/codecov-action@v2
