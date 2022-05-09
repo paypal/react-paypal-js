@@ -198,18 +198,16 @@ describe("getBraintreeNamespace", () => {
 });
 
 describe("getMerchantId", () => {
-    test("should return undefined", () => {
-        expect(getMerchantId(undefined)).toBeUndefined();
-    });
-
-    test("should return an empty string", () => {
-        expect(getMerchantId([])).toBe("");
+    test.each([undefined, []])("should return undefined", (value) => {
+        expect(getMerchantId(value)).toEqual(expect.objectContaining({}));
     });
 
     test.each(["merchantId", ["merchantId"]])(
         "should return the merchant when is string or an array with one value",
         (value) => {
-            expect(getMerchantId(value)).toBe("merchantId");
+            expect(getMerchantId(value)).toEqual(
+                expect.objectContaining({ merchantAccountId: "merchantId" })
+            );
         }
     );
 

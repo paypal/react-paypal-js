@@ -46,6 +46,7 @@ type StoryProps = {
 const uid = generateRandomString();
 const scriptProviderOptions: PayPalScriptOptions = {
     "client-id": "test",
+    "merchant-id": "PZ9S7J5YJKLNS",
     components: "buttons",
     ...getOptionsFromQueryString(),
 };

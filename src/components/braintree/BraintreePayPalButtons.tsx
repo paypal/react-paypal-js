@@ -46,12 +46,12 @@ export const BraintreePayPalButtons: FC<
                     })
                     .then((clientInstance) => {
                         return braintree.paypalCheckout.create({
-                            client: clientInstance,
-                            merchantAccountId: getMerchantId(
+                            ...getMerchantId(
                                 providerContext.options[
                                     SDK_SETTINGS.MERCHANT_CLIENT_ID
                                 ]
                             ),
+                            client: clientInstance,
                         });
                     })
                     .then((paypalCheckoutInstance) => {

@@ -108,12 +108,12 @@ export const getBraintreeNamespace = (
  */
 export const getMerchantId = (
     source?: Array<string> | string
-): string | undefined => {
+): { merchantAccountId?: string } => {
     const isSourceArray = Array.isArray(source);
 
     if (isSourceArray && source.length > 1) {
         throw new Error(BRAINTREE_MULTIPLE_MERCHANT_IDS_ERROR_MESSAGE);
     }
 
-    return source?.toString();
+    return source ? { merchantAccountId: source.toString() } : {};
 };
