@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer, useRef } from "react";
 import { loadScript } from "@paypal/paypal-js";
 
 import {
@@ -7,7 +7,13 @@ import {
     scriptReducer,
 } from "../context/scriptProviderContext";
 import { SCRIPT_ID, SDK_SETTINGS, LOAD_SCRIPT_ERROR } from "../constants";
-import { SCRIPT_LOADING_STATE, DISPATCH_ACTION } from "../types";
+import {
+    SCRIPT_LOADING_STATE,
+    DISPATCH_ACTION,
+    ReactPayPalScriptOptions,
+    ScriptContextState,
+} from "../types";
+import { shallowCompareObjects } from "../utils";
 
 import type { FC } from "react";
 import type { ScriptProviderProps } from "../types";
@@ -35,6 +41,23 @@ export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
             : SCRIPT_LOADING_STATE.PENDING,
     });
 
+    const stateOptionsRef = useRef<ReactPayPalScriptOptions>();
+
+    /**
+    This memoization is used to avoid re-rendering the children components when the state changes.
+    The state reference changes when the loading status changes, but the children components don't need to re-render when there is no change in state value.
+     */
+    const memoizedStateOptions = useMemo<ReactPayPalScriptOptions>(() => {
+        if (
+            stateOptionsRef.current !== undefined &&
+            shallowCompareObjects(stateOptionsRef.current, state.options)
+        ) {
+            return stateOptionsRef.current;
+        }
+        stateOptionsRef.current = state.options;
+        return state.options;
+    }, [state.options]);
+
     useEffect(() => {
         if (
             deferLoading === false &&
@@ -52,7 +75,7 @@ export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
 
         let isSubscribed = true;
 
-        loadScript(state.options)
+        loadScript(memoizedStateOptions)
             .then(() => {
                 if (isSubscribed) {
                     dispatch({
@@ -73,10 +96,25 @@ export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
         return () => {
             isSubscribed = false;
         };
-    }, [state.options, deferLoading, state.loadingStatus]);
+    }, [deferLoading, memoizedStateOptions, state.loadingStatus]);
+
+    const contextValue = useMemo<ScriptContextState>(
+        () => ({
+            options: memoizedStateOptions,
+            loadingStatus: state.loadingStatus,
+            braintreePayPalCheckoutInstance:
+                state.braintreePayPalCheckoutInstance,
+            dispatch,
+        }),
+        [
+            memoizedStateOptions,
+            state.loadingStatus,
+            state.braintreePayPalCheckoutInstance,
+        ]
+    );
 
     return (
-        <ScriptContext.Provider value={{ ...state, dispatch }}>
+        <ScriptContext.Provider value={contextValue}>
             {children}
         </ScriptContext.Provider>
     );

@@ -91,3 +91,13 @@ export function generateErrorMessage({
 
     return errorMessage;
 }
+
+export function shallowCompareObjects(
+    objA: Record<string, unknown>,
+    objB: Record<string, unknown>
+): boolean {
+    if (Object.keys(objA).length !== Object.keys(objB).length) {
+        return false;
+    }
+    return Object.keys(objA).every((key) => objA[key] === objB[key]);
+}
