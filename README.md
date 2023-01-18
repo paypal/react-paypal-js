@@ -75,7 +75,6 @@ const initialOptions = {
     "client-id": "test",
     currency: "USD",
     intent: "capture",
-    "data-client-token": "abc123xyz==",
 };
 
 export default function App() {
@@ -218,7 +217,6 @@ export default function App() {
         <PayPalScriptProvider
             options={{
                 "client-id": "test",
-                "data-client-token": "abc123xyz==",
             }}
         >
             <BraintreePayPalButtons
@@ -296,7 +294,6 @@ export default function App() {
         <PayPalScriptProvider
             options={{
                 "client-id": "your-client-id",
-                "data-client-token": "your-data-client-token",
             }}
         >
             <PayPalHostedFieldsProvider
