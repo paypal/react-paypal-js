@@ -131,6 +131,14 @@ return (
 
 The `usePayPalScriptReducer` hook can be used to reload the JS SDK script when parameters like currency change. It provides the action `resetOptions` for reloading with new parameters. For example, here's how you can use it to change currency.
 
+The PayPal Script has several loading states and with the `usePayPalScriptReducer()` we can track it in an easier way. This state can be used to show a loading spinner while the script loads or an error message if it fails to load.
+
+Loading states:
+- isInitial - not started (only used when passing deferLoading={true})
+- isPending -  (default)
+- isResolved - successfully loaded
+- isRejected - failed to load
+
 ```jsx
 // get the state for the sdk script and the dispatch method
 const [{ options }, dispatch] = usePayPalScriptReducer();
