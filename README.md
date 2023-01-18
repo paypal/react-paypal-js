@@ -127,8 +127,6 @@ return (
 );
 ```
 
-To learn more, check out the [loading spinner example in storybook](https://paypal.github.io/react-paypal-js/?path=/story/example-usepaypalscriptreducer--loading-spinner).
-
 #### Reloading when parameters change
 
 The `usePayPalScriptReducer` hook can be used to reload the JS SDK script when parameters like currency change. It provides the action `resetOptions` for reloading with new parameters. For example, here's how you can use it to change currency.
