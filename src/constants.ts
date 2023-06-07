@@ -1,13 +1,16 @@
 /*********************************************
  * Common reference to the script identifier *
  *********************************************/
+
+// keep this script id value in kebab-case format
 export const SCRIPT_ID = "data-react-paypal-script-id";
+
 export const SDK_SETTINGS = {
-    DATA_CLIENT_TOKEN: "data-client-token",
-    DATA_USER_ID_TOKEN: "data-user-id-token",
-    DATA_SDK_INTEGRATION_SOURCE: "data-sdk-integration-source",
+    DATA_CLIENT_TOKEN: "dataClientToken",
+    DATA_USER_ID_TOKEN: "dataUserIdToken",
+    DATA_SDK_INTEGRATION_SOURCE: "dataSdkIntegrationSource",
     DATA_SDK_INTEGRATION_SOURCE_VALUE: "react-paypal-js",
-    DATA_NAMESPACE: "data-namespace",
+    DATA_NAMESPACE: "dataNamespace",
 };
 export const LOAD_SCRIPT_ERROR = "Failed to load the PayPal JS SDK script.";
 

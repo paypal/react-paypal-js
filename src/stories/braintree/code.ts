@@ -85,7 +85,7 @@ const ButtonWrapper = ({ currency }) => {
 const getProviderStatement = (args: { intent: string; vault: boolean }) =>
     `<PayPalScriptProvider
 						options={{
-							"client-id": "test",
+							clientId: "test",
 							components: "buttons",
 							// "data-user-id-token": "your-tokenization-key-here",
 							"data-client-token": clientToken,

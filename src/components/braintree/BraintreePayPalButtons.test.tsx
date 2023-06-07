@@ -117,7 +117,7 @@ describe("Braintree PayPal button fail in mount process", () => {
 
         try {
             render(
-                <PayPalScriptProvider options={{ "client-id": "test" }}>
+                <PayPalScriptProvider options={{ clientId: "test" }}>
                     <BraintreePayPalButtons />
                 </PayPalScriptProvider>
             );
@@ -138,8 +138,8 @@ describe("Braintree PayPal button fail in mount process", () => {
             render(
                 <PayPalScriptProvider
                     options={{
-                        "client-id": "test",
-                        "data-client-token": "",
+                        clientId: "test",
+                        dataClientToken: "",
                     }}
                 >
                     <BraintreePayPalButtons />
@@ -167,8 +167,8 @@ describe("Braintree PayPal button fail in mount process", () => {
             render(
                 <PayPalScriptProvider
                     options={{
-                        "client-id": "test",
-                        "data-client-token": CLIENT_TOKEN,
+                        clientId: "test",
+                        dataClientToken: CLIENT_TOKEN,
                     }}
                 >
                     <BraintreePayPalButtons />
@@ -195,8 +195,8 @@ describe("Braintree PayPal button fail in mount process", () => {
         render(
             <PayPalScriptProvider
                 options={{
-                    "client-id": "test",
-                    "data-client-token": CLIENT_TOKEN,
+                    clientId: "test",
+                    dataClientToken: CLIENT_TOKEN,
                 }}
             >
                 <BraintreePayPalButtons />
@@ -225,8 +225,8 @@ describe("Braintree PayPal button fail in mount process", () => {
         render(
             <PayPalScriptProvider
                 options={{
-                    "client-id": "test",
-                    "data-client-token": CLIENT_TOKEN,
+                    clientId: "test",
+                    dataClientToken: CLIENT_TOKEN,
                 }}
             >
                 <BraintreePayPalButtons />
@@ -253,8 +253,8 @@ describe("Braintree PayPal button fail in mount process", () => {
         render(
             <PayPalScriptProvider
                 options={{
-                    "client-id": "test",
-                    "data-client-token": CLIENT_TOKEN,
+                    clientId: "test",
+                    dataClientToken: CLIENT_TOKEN,
                 }}
             >
                 <BraintreePayPalButtons />
@@ -279,8 +279,8 @@ describe("render Braintree PayPal button component", () => {
         render(
             <PayPalScriptProvider
                 options={{
-                    "client-id": "test",
-                    "data-client-token": CLIENT_TOKEN,
+                    clientId: "test",
+                    dataClientToken: CLIENT_TOKEN,
                 }}
             >
                 <BraintreePayPalButtons />
@@ -290,8 +290,8 @@ describe("render Braintree PayPal button component", () => {
         await waitFor(() => {
             expect(loadScript).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    "client-id": "test",
-                    "data-client-token": CLIENT_TOKEN,
+                    clientId: "test",
+                    dataClientToken: CLIENT_TOKEN,
                     "data-react-paypal-script-id": expect.any(String),
                 })
             );
@@ -310,8 +310,8 @@ describe("render Braintree PayPal button component", () => {
         render(
             <PayPalScriptProvider
                 options={{
-                    "client-id": "test",
-                    "data-client-token": CLIENT_TOKEN,
+                    clientId: "test",
+                    dataClientToken: CLIENT_TOKEN,
                 }}
             >
                 <BraintreePayPalButtons
@@ -340,8 +340,8 @@ describe("render Braintree PayPal button component", () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mockFuntion = (window as any).braintree.paypalCheckout.create;
         const options = {
-            "client-id": "test",
-            "data-client-token": CLIENT_TOKEN,
+            clientId: "test",
+            dataClientToken: CLIENT_TOKEN,
         };
 
         render(

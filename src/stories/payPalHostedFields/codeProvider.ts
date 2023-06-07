@@ -26,7 +26,7 @@ export default function App() {
 			{clientToken ? (
 				<PayPalScriptProvider
 					options={{
-						"client-id":
+						clientId:
 							"AdOu-W3GPkrfuTbJNuW9dWVijxvhaXHFIRuKrLDwu14UDwTTHWMFkUwuu9D8I1MAQluERl9cFOd7Mfqe",
 						components: "buttons,hosted-fields",
 						"data-client-token": clientToken,
