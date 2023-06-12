@@ -111,7 +111,7 @@ describe("Braintree PayPal button fail in mount process", () => {
         expect(console.error).toHaveBeenCalled();
     });
 
-    test("should fail rendering the BraintreePayPalButton component if the data-client-token is not set in the options", () => {
+    test("should fail rendering the BraintreePayPalButton component if the dataClientToken is not set in the options", () => {
         console.error = jest.fn();
         let errorMessage = null;
 
@@ -130,7 +130,7 @@ describe("Braintree PayPal button fail in mount process", () => {
         expect(console.error).toHaveBeenCalled();
     });
 
-    test("should fail rendering the BraintreePayPalButton component if the data-client-token is empty string", () => {
+    test("should fail rendering the BraintreePayPalButton component if the dataClientToken is empty string", () => {
         let errorMessage = null;
         console.error = jest.fn();
 

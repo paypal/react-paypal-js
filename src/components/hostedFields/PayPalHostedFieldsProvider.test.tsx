@@ -68,7 +68,7 @@ describe("PayPalHostedFieldsProvider", () => {
         spyConsoleError.mockRestore();
     });
 
-    test("should throw an Error using the component with PayPalScriptProvider without data-client-token", () => {
+    test("should throw an Error using the component with PayPalScriptProvider without dataClientToken", () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();

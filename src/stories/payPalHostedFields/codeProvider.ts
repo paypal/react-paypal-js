@@ -29,7 +29,7 @@ export default function App() {
 						clientId:
 							"AdOu-W3GPkrfuTbJNuW9dWVijxvhaXHFIRuKrLDwu14UDwTTHWMFkUwuu9D8I1MAQluERl9cFOd7Mfqe",
 						components: "buttons,hosted-fields",
-						"data-client-token": clientToken,
+						dataClientToken: clientToken,
 						intent: "capture",
 						vault: false,
 					}}
