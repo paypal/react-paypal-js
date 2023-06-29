@@ -56,13 +56,14 @@ describe("<PayPalScriptProvider />", () => {
         await waitFor(() => expect(state.isResolved).toBeTruthy());
         expect(state.isPending).toBeFalsy();
         expect(state.isRejected).toBeFalsy();
+        expect(state.criticalError).toBeFalsy();
     });
 
     test('should set "isRejected" state to "true" after failing to load the script', async () => {
         const spyConsoleError = jest
             .spyOn(console, "error")
             .mockImplementation();
-        (loadScript as jest.Mock).mockRejectedValue(new Error());
+        (loadScript as jest.Mock).mockRejectedValue(new Error("test error"));
         const { state, TestComponent } = setupTestComponent();
         render(
             <PayPalScriptProvider options={{ clientId: "test" }}>
@@ -79,6 +80,9 @@ describe("<PayPalScriptProvider />", () => {
         // verify initial loading state
         expect(state.isPending).toBeTruthy();
         await waitFor(() => expect(state.isRejected).toBeTruthy());
+        await waitFor(() =>
+            expect(state.criticalError).toBe("Error: test error")
+        );
         expect(state.isPending).toBeFalsy();
         expect(state.isResolved).toBeFalsy();
         spyConsoleError.mockRestore();
@@ -99,6 +103,7 @@ describe("<PayPalScriptProvider />", () => {
         unmount();
 
         await waitFor(() => expect(loadScript).toBeCalled());
+        await waitFor(() => expect(state.criticalError).toBeFalsy());
         // verify initial loading state
         expect(state.isInitial).toBeFalsy();
         expect(state.isPending).toBeTruthy();
@@ -142,6 +147,7 @@ describe("<PayPalScriptProvider />", () => {
 
         expect(state.isPending).toBe(true);
         await waitFor(() => expect(state.isResolved).toBe(true));
+        expect(state.criticalError).toBeFalsy();
     });
 
     test("should remount without reloading the sdk script when the options have not changed", async () => {
@@ -251,6 +257,7 @@ describe("usePayPalScriptReducer", () => {
 
 function setupTestComponent() {
     const state = {
+        criticalError: "",
         options: { "data-react-paypal-script-id": "" },
         isInitial: true,
         isPending: false,

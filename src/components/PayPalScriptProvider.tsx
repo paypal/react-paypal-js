@@ -68,6 +68,10 @@ export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
                         type: DISPATCH_ACTION.LOADING_STATUS,
                         value: SCRIPT_LOADING_STATE.REJECTED,
                     });
+                    dispatch({
+                        type: DISPATCH_ACTION.CRITICAL_ERROR,
+                        value: String(err),
+                    });
                 }
             });
         return () => {
