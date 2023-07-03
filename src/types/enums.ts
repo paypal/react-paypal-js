@@ -17,7 +17,6 @@ export enum SCRIPT_LOADING_STATE {
  */
 export enum DISPATCH_ACTION {
     LOADING_STATUS = "setLoadingStatus",
-    LOADING_STATUS_ERROR_MESSAGE = "loadingStatusErrorMessage",
     RESET_OPTIONS = "resetOptions",
     SET_BRAINTREE_INSTANCE = "braintreeInstance",
 }

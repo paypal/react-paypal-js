@@ -18,10 +18,6 @@ export type ScriptReducerAction =
           value: { state: SCRIPT_LOADING_STATE; message: string };
       }
     | {
-          type: `${DISPATCH_ACTION.LOADING_STATUS_ERROR_MESSAGE}`;
-          value: string;
-      }
-    | {
           type: `${DISPATCH_ACTION.RESET_OPTIONS}`;
           value: ReactPayPalScriptOptions;
       }
