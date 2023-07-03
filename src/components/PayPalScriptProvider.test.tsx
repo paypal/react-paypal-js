@@ -80,9 +80,7 @@ describe("<PayPalScriptProvider />", () => {
         // verify initial loading state
         expect(state.isPending).toBeTruthy();
         await waitFor(() => expect(state.isRejected).toBeTruthy());
-        await waitFor(() =>
-            expect(state.loadingStatusErrorMessage).toBe("Error: test error")
-        );
+        expect(state.loadingStatusErrorMessage).toBe("Error: test error");
         expect(state.isPending).toBeFalsy();
         expect(state.isResolved).toBeFalsy();
         spyConsoleError.mockRestore();
@@ -103,9 +101,7 @@ describe("<PayPalScriptProvider />", () => {
         unmount();
 
         await waitFor(() => expect(loadScript).toBeCalled());
-        await waitFor(() =>
-            expect(state.loadingStatusErrorMessage).toBeFalsy()
-        );
+        expect(state.loadingStatusErrorMessage).toBeFalsy();
         // verify initial loading state
         expect(state.isInitial).toBeFalsy();
         expect(state.isPending).toBeTruthy();
