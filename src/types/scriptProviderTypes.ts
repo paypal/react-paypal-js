@@ -14,7 +14,7 @@ export type ScriptReducerAction =
           value: SCRIPT_LOADING_STATE;
       }
     | {
-          type: `${DISPATCH_ACTION.CRITICAL_ERROR}`;
+          type: `${DISPATCH_ACTION.LOADING_STATUS_ERROR_MESSAGE}`;
           value: string;
       }
     | {
@@ -34,7 +34,7 @@ export type InitialState = {
 export interface ScriptContextState {
     options: ReactPayPalScriptOptions;
     loadingStatus: SCRIPT_LOADING_STATE;
-    criticalError?: string;
+    loadingStatusErrorMessage?: string;
     braintreePayPalCheckoutInstance?: BraintreePayPalCheckout;
     dispatch?: Dispatch<ScriptReducerAction>;
 }

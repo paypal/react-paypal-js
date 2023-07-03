@@ -55,10 +55,10 @@ export function scriptReducer(
                 ...state,
                 loadingStatus: action.value as SCRIPT_LOADING_STATE,
             };
-        case DISPATCH_ACTION.CRITICAL_ERROR:
+        case DISPATCH_ACTION.LOADING_STATUS_ERROR_MESSAGE:
             return {
                 ...state,
-                criticalError: action.value,
+                loadingStatusErrorMessage: action.value,
             };
         case DISPATCH_ACTION.RESET_OPTIONS:
             // destroy existing script to make sure only one script loads at a time
