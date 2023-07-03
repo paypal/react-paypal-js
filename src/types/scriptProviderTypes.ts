@@ -14,6 +14,10 @@ export type ScriptReducerAction =
           value: SCRIPT_LOADING_STATE;
       }
     | {
+          type: `${DISPATCH_ACTION.LOADING_STATUS}`;
+          value: { state: SCRIPT_LOADING_STATE; message: string };
+      }
+    | {
           type: `${DISPATCH_ACTION.LOADING_STATUS_ERROR_MESSAGE}`;
           value: string;
       }

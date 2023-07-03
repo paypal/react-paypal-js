@@ -51,14 +51,17 @@ export function scriptReducer(
 ): ScriptContextState {
     switch (action.type) {
         case DISPATCH_ACTION.LOADING_STATUS:
+            if (typeof action.value === "object") {
+                return {
+                    ...state,
+                    loadingStatus: action.value.state as SCRIPT_LOADING_STATE,
+                    loadingStatusErrorMessage: action.value.message,
+                };
+            }
+
             return {
                 ...state,
                 loadingStatus: action.value as SCRIPT_LOADING_STATE,
-            };
-        case DISPATCH_ACTION.LOADING_STATUS_ERROR_MESSAGE:
-            return {
-                ...state,
-                loadingStatusErrorMessage: action.value,
             };
         case DISPATCH_ACTION.RESET_OPTIONS:
             // destroy existing script to make sure only one script loads at a time
