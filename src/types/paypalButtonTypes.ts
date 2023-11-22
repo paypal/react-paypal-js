@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { PayPalButtonsComponentOptions } from "@paypal/paypal-js";
+import { PayPalHostedButtons } from "../components/PayPalHostedButtons";
 
 export interface PayPalButtonsComponentProps
     extends PayPalButtonsComponentOptions {

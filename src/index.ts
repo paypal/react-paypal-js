@@ -3,6 +3,7 @@ export * from "./context/scriptProviderContext";
 export * from "./hooks/scriptProviderHooks";
 export { usePayPalHostedFields } from "./hooks/payPalHostedFieldsHooks";
 export * from "./components/PayPalButtons";
+export * from "./components/PayPalHostedButtons";
 export * from "./components/braintree/BraintreePayPalButtons";
 export * from "./components/PayPalMarks";
 export * from "./components/PayPalMessages";
