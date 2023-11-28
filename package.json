@@ -21,7 +21,7 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "lint": "eslint .",
-        "prepare": "npm run build && husky install",
+        "prepare": "npm run prepack && husky install",
         "prepack": "rimraf dist && npm run build && npm run type-declarations",
         "test": "jest --env=jsdom",
         "start": "npm run check-node-version && npm run storybook",
