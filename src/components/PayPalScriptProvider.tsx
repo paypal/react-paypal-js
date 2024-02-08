@@ -1,12 +1,16 @@
 import React, { useEffect, useReducer } from "react";
 import { loadScript } from "@paypal/paypal-js";
+import {
+    SDK_SETTINGS,
+    SDK_INTEGRATION_SOURCES,
+} from "@paypal/sdk-constants/dist/module";
 
 import {
     getScriptID,
     ScriptContext,
     scriptReducer,
 } from "../context/scriptProviderContext";
-import { SCRIPT_ID, SDK_SETTINGS, LOAD_SCRIPT_ERROR } from "../constants";
+import { SCRIPT_ID, LOAD_SCRIPT_ERROR } from "../constants";
 import { SCRIPT_LOADING_STATE, DISPATCH_ACTION } from "../types";
 
 import type { FC } from "react";
@@ -25,8 +29,8 @@ export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
 }: ScriptProviderProps) => {
     const [state, dispatch] = useReducer(scriptReducer, {
         options: {
-            [SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE]:
-                SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE_VALUE,
+            [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
+                SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
             ...options,
             [SCRIPT_ID]: `${getScriptID(options)}`,
         },

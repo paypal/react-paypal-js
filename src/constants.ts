@@ -8,8 +8,6 @@ export const SCRIPT_ID = "data-react-paypal-script-id";
 export const SDK_SETTINGS = {
     DATA_CLIENT_TOKEN: "dataClientToken",
     DATA_USER_ID_TOKEN: "dataUserIdToken",
-    DATA_SDK_INTEGRATION_SOURCE: "dataSdkIntegrationSource",
-    DATA_SDK_INTEGRATION_SOURCE_VALUE: "react-paypal-js",
     DATA_NAMESPACE: "dataNamespace",
 };
 export const LOAD_SCRIPT_ERROR = "Failed to load the PayPal JS SDK script.";

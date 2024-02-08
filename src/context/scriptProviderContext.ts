@@ -1,7 +1,11 @@
 import { createContext } from "react";
+import {
+    SDK_SETTINGS,
+    SDK_INTEGRATION_SOURCES,
+} from "@paypal/sdk-constants/dist/module";
 
 import { hashStr } from "../utils";
-import { SCRIPT_ID, SDK_SETTINGS } from "../constants";
+import { SCRIPT_ID } from "../constants";
 import { DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "../types";
 
 import type { BraintreePayPalCheckout } from "../types/braintree/paypalCheckout";
@@ -71,8 +75,8 @@ export function scriptReducer(
                 ...state,
                 loadingStatus: SCRIPT_LOADING_STATE.PENDING,
                 options: {
-                    [SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE]:
-                        SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE_VALUE,
+                    [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
+                        SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
                     ...action.value,
                     [SCRIPT_ID]: `${getScriptID(action.value)}`,
                 },

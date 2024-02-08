@@ -1,10 +1,14 @@
 import React from "react";
 import { render, waitFor, fireEvent, screen } from "@testing-library/react";
 import { loadScript, PayPalScriptOptions } from "@paypal/paypal-js";
+import {
+    SDK_SETTINGS,
+    SDK_INTEGRATION_SOURCES,
+} from "@paypal/sdk-constants/dist/module";
 
 import { PayPalScriptProvider } from "./PayPalScriptProvider";
 import { usePayPalScriptReducer } from "../hooks/scriptProviderHooks";
-import { SCRIPT_ID, SDK_SETTINGS } from "../constants";
+import { SCRIPT_ID } from "../constants";
 
 jest.mock("@paypal/paypal-js", () => ({
     loadScript: jest.fn(),
@@ -47,8 +51,8 @@ describe("<PayPalScriptProvider />", () => {
         expect(loadScript).toHaveBeenCalledWith({
             clientId: "test",
             [SCRIPT_ID]: expect.stringContaining("react-paypal-js"),
-            [SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE]:
-                SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE_VALUE,
+            [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
+                SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
         });
 
         // verify initial loading state
@@ -73,8 +77,8 @@ describe("<PayPalScriptProvider />", () => {
         expect(loadScript).toHaveBeenCalledWith({
             clientId: "test",
             [SCRIPT_ID]: expect.stringContaining("react-paypal-js"),
-            [SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE]:
-                SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE_VALUE,
+            [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
+                SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
         });
 
         // verify initial loading state
@@ -139,8 +143,8 @@ describe("<PayPalScriptProvider />", () => {
         expect(loadScript).toHaveBeenCalledWith({
             clientId: "test",
             [SCRIPT_ID]: expect.stringContaining("react-paypal-js"),
-            [SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE]:
-                SDK_SETTINGS.DATA_SDK_INTEGRATION_SOURCE_VALUE,
+            [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
+                SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
         });
 
         expect(state.isPending).toBe(true);
