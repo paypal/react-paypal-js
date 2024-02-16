@@ -3,7 +3,7 @@ import { render, waitFor, fireEvent, screen } from "@testing-library/react";
 import { loadScript, PayPalScriptOptions } from "@paypal/paypal-js";
 import {
     SDK_SETTINGS,
-    SDK_INTEGRATION_SOURCES,
+    JS_SDK_LIBRARIES,
 } from "@paypal/sdk-constants/dist/module";
 
 import { PayPalScriptProvider } from "./PayPalScriptProvider";
@@ -52,7 +52,7 @@ describe("<PayPalScriptProvider />", () => {
             clientId: "test",
             [SCRIPT_ID]: expect.stringContaining("react-paypal-js"),
             [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
-                SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
+                JS_SDK_LIBRARIES.REACT_PAYPAL_JS,
         });
 
         // verify initial loading state
@@ -78,7 +78,7 @@ describe("<PayPalScriptProvider />", () => {
             clientId: "test",
             [SCRIPT_ID]: expect.stringContaining("react-paypal-js"),
             [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
-                SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
+                JS_SDK_LIBRARIES.REACT_PAYPAL_JS,
         });
 
         // verify initial loading state
@@ -144,7 +144,7 @@ describe("<PayPalScriptProvider />", () => {
             clientId: "test",
             [SCRIPT_ID]: expect.stringContaining("react-paypal-js"),
             [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
-                SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
+                JS_SDK_LIBRARIES.REACT_PAYPAL_JS,
         });
 
         expect(state.isPending).toBe(true);

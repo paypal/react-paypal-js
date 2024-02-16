@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from "react";
 import { loadScript } from "@paypal/paypal-js";
 import {
     SDK_SETTINGS,
-    SDK_INTEGRATION_SOURCES,
+    JS_SDK_LIBRARIES,
 } from "@paypal/sdk-constants/dist/module";
 
 import {
@@ -30,7 +30,7 @@ export const PayPalScriptProvider: FC<ScriptProviderProps> = ({
     const [state, dispatch] = useReducer(scriptReducer, {
         options: {
             [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
-                SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
+                JS_SDK_LIBRARIES.REACT_PAYPAL_JS,
             ...options,
             [SCRIPT_ID]: `${getScriptID(options)}`,
         },

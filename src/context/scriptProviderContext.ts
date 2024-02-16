@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import {
     SDK_SETTINGS,
-    SDK_INTEGRATION_SOURCES,
+    JS_SDK_LIBRARIES,
 } from "@paypal/sdk-constants/dist/module";
 
 import { hashStr } from "../utils";
@@ -76,7 +76,7 @@ export function scriptReducer(
                 loadingStatus: SCRIPT_LOADING_STATE.PENDING,
                 options: {
                     [SDK_SETTINGS.SDK_INTEGRATION_SOURCE]:
-                        SDK_INTEGRATION_SOURCES.REACT_PAYPAL_JS,
+                        JS_SDK_LIBRARIES.REACT_PAYPAL_JS,
                     ...action.value,
                     [SCRIPT_ID]: `${getScriptID(action.value)}`,
                 },
