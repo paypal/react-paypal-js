@@ -9,6 +9,17 @@ import type {
     PayPalCardFieldsIndividualFieldOptions,
 } from "../../types";
 
+/**
+Individual fields include:
+
+    `<PayPalNameField />` (optional)
+
+    `<PayPalNumberField />` *required
+
+    `<PayPalExpiryField />` *required
+    
+    `<PayPalCVVField />` *required
+*/
 export const PayPalCardField: React.FC<
     PayPalCardFieldsIndividualFieldOptions & {
         fieldName: FieldComponentName;
